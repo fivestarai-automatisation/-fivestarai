@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI — Démo interactive</title>
+  <meta name="description" content="Voyez FiveStar AI en action. Simulation complète du système en temps réel."/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444;--blue:#3b82f6}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}
+    .logo span{color:var(--gold)}
+    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}
+    .nav-back:hover{color:var(--gold)}
+    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none}
+    .page{max-width:1000px;margin:0 auto;padding:100px 24px 80px}
+    .hero-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .hero-h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:14px;line-height:1.08}
+    .hero-h1 em{font-style:normal;color:var(--gold)}
+    .hero-p{font-size:16px;color:var(--muted);max-width:500px;line-height:1.75;margin-bottom:48px}
+    /* DEMO LAYOUT */
+    .demo-layout{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+    /* PHONE */
+    .phone{background:#111;border:3px solid #222;border-radius:36px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:sticky;top:90px}
+    .phone-notch{width:80px;height:6px;background:#222;border-radius:3px;margin:0 auto 12px}
+    .phone-screen{background:#000;border-radius:24px;overflow:hidden;min-height:480px}
+    .phone-status{background:#111;padding:8px 16px;display:flex;justify-content:space-between;font-size:11px;color:#888}
+    .sms-thread{padding:12px;background:#000;min-height:420px}
+    .sms-header{text-align:center;padding:8px;border-bottom:1px solid #1a1a1a;margin-bottom:12px}
+    .sms-contact{font-size:13px;font-weight:700;color:#fff}
+    .sms-biz{font-size:11px;color:#666}
+    .sms-bubble{max-width:78%;padding:9px 12px;border-radius:14px;font-size:12.5px;line-height:1.5;margin-bottom:8px;word-break:break-word;opacity:0;transform:translateY(6px);transition:all .4s ease}
+    .sms-bubble.show{opacity:1;transform:none}
+    .sms-in{background:#1c1c1e;color:#e8e8e8;align-self:flex-start;border-bottom-left-radius:3px;margin-right:auto}
+    .sms-out{background:var(--blue);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;margin-left:auto}
+    .sms-time{font-size:10px;color:#555;text-align:center;margin:4px 0 8px}
+    /* STEPS */
+    .steps-panel{display:flex;flex-direction:column;gap:16px}
+    .demo-step{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+    .demo-step::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border);transition:background .25s}
+    .demo-step.active{border-color:rgba(245,200,66,.25);background:rgba(245,200,66,.03)}
+    .demo-step.active::before{background:var(--gold)}
+    .demo-step.done{border-color:rgba(34,197,94,.2)}
+    .demo-step.done::before{background:var(--green)}
+    .ds-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+    .ds-num{width:28px;height:28px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .25s}
+    .demo-step.active .ds-num{background:rgba(245,200,66,.1);border-color:var(--gold);color:var(--gold)}
+    .demo-step.done .ds-num{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)}
+    .ds-title{font-size:14px;font-weight:700;color:var(--muted);transition:color .25s}
+    .demo-step.active .ds-title,.demo-step.done .ds-title{color:#fff}
+    .ds-desc{font-size:12.5px;color:var(--muted);line-height:1.6;display:none}
+    .demo-step.active .ds-desc,.demo-step.done .ds-desc{display:block}
+    .ds-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;margin-top:10px}
+    .tag-wait{background:rgba(245,200,66,.08);color:var(--gold)}
+    .tag-sent{background:rgba(59,130,246,.08);color:var(--blue)}
+    .tag-done{background:rgba(34,197,94,.08);color:var(--green)}
+    .tag-ai{background:rgba(139,92,246,.08);color:#a78bfa}
+    .progress-bar{background:var(--surface2);border-radius:99px;height:4px;margin-top:12px;overflow:hidden}
+    .progress-fill{height:100%;border-radius:99px;background:var(--gold);width:0%;transition:width 1s ease}
+    /* CONTROLS */
+    .controls{margin-top:24px;display:flex;gap:12px}
+    .ctrl-btn{padding:11px 22px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+    .ctrl-play{background:var(--gold);color:#000}
+    .ctrl-play:hover{background:var(--gold2)}
+    .ctrl-reset{background:transparent;border:1px solid var(--border)!important;color:var(--muted)}
+    .ctrl-reset:hover{border-color:rgba(255,255,255,.2)!important;color:#fff}
+    /* AI RESPONSE */
+    .ai-box{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.6}
+    .ai-label{font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:1px;margin-bottom:6px}
+    /* CTA */
+    .demo-cta{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:32px;text-align:center;margin-top:32px}
+    .demo-cta h3{font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:10px}
+    .demo-cta p{font-size:14px;color:var(--muted);margin-bottom:20px}
+    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:14px 34px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-g:hover{background:var(--gold2);transform:translateY(-1px)}
+    footer{padding:32px 24px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
+    footer p{font-size:12.5px;color:var(--muted)}
+    footer a{color:var(--gold);text-decoration:none}
+    @media(max-width:700px){
+      nav{padding:0 20px}
+      .demo-layout{grid-template-columns:1fr}
+      .phone{max-width:280px;margin:0 auto}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+  <a href="dashboard.html?signup=true&plan=pro" class="nav-cta">Commencer →</a>
+</nav>
+
+<div class="page">
+  <div class="hero-label">Démo interactive</div>
+  <h1 class="hero-h1">Voyez FiveStar AI<br><em>en action.</em></h1>
+  <p class="hero-p">Simulation complète du système — de la visite du client jusqu'à la réponse automatique à un avis négatif. Cliquez "Lancer la démo" pour commencer.</p>
+
+  <div class="demo-layout">
+    <!-- PHONE -->
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:41</span><span>📶 100%</span></div>
+        <div class="sms-thread">
+          <div class="sms-header">
+            <div class="sms-contact">Restaurant Le Bon Goût</div>
+            <div class="sms-biz">Messages SMS</div>
+          </div>
+          <div id="sms-container" style="display:flex;flex-direction:column"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div>
+      <div class="steps-panel" id="steps">
+        <div class="demo-step active" id="s0">
+          <div class="ds-header"><div class="ds-num">1</div><div class="ds-title">Client visite le restaurant</div></div>
+          <div class="ds-desc">Marie T. vient de dîner au Restaurant Le Bon Goût. À la caisse, elle scanne le QR Code FiveStar AI avec son téléphone.<div class="ds-tag tag-wait">⏳ En cours...</div></div>
+          <div class="progress-bar"><div class="progress-fill" id="p0"></div></div>
+        </div>
+        <div class="demo-step" id="s1">
+          <div class="ds-header"><div class="ds-num">2</div><div class="ds-title">Numéro capturé automatiquement</div></div>
+          <div class="ds-desc">Le numéro de Marie (+1 514 ***-**42) est enregistré dans Airtable. Make.com déclenche un timer de 2 heures.<div class="ds-tag tag-wait">⏱️ Attente 2h</div></div>
+        </div>
+        <div class="demo-step" id="s2">
+          <div class="ds-header"><div class="ds-num">3</div><div class="ds-title">SMS envoyé via Twilio</div></div>
+          <div class="ds-desc">2 heures après sa visite, Marie reçoit automatiquement un SMS personnalisé avec le lien direct vers la fiche Google.<div class="ds-tag tag-sent">📤 SMS envoyé</div></div>
+        </div>
+        <div class="demo-step" id="s3">
+          <div class="ds-header"><div class="ds-num">4</div><div class="ds-title">Marie laisse un avis</div></div>
+          <div class="ds-desc">Marie clique sur le lien et laisse un avis 2 étoiles — elle a attendu trop longtemps. FiveStar AI détecte l'avis négatif.<div class="ds-tag tag-ai">🤖 IA activée</div></div>
+        </div>
+        <div class="demo-step" id="s4">
+          <div class="ds-header"><div class="ds-num">5</div><div class="ds-title">Claude IA génère une réponse</div></div>
+          <div class="ds-desc">
+            En moins de 60 secondes, Claude IA analyse l'avis et génère une réponse professionnelle personnalisée.
+            <div class="ai-box">
+              <div class="ai-label">RÉPONSE GÉNÉRÉE PAR CLAUDE IA</div>
+              Bonjour Marie, merci d'avoir pris le temps de nous laisser votre avis. Nous sommes sincèrement désolés que vous ayez eu à attendre trop longtemps — ce n'est clairement pas l'expérience que nous souhaitons vous offrir. Nous avons identifié le problème en cuisine ce soir-là et avons déjà pris des mesures correctives. Nous aimerions vous inviter à revenir pour vous faire vivre l'expérience que vous méritez. N'hésitez pas à nous contacter directement.
+            </div>
+            <div class="ds-tag tag-done">✓ Réponse publiée sur Google</div>
+          </div>
+        </div>
+        <div class="demo-step" id="s5">
+          <div class="ds-header"><div class="ds-num">6</div><div class="ds-title">Gérant notifié</div></div>
+          <div class="ds-desc">Le gérant reçoit un SMS résumé : avis négatif reçu + réponse IA publiée. Il n'a rien eu à faire.<div class="ds-tag tag-done">✅ Terminé — 0 intervention humaine</div></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn ctrl-play" id="play-btn" onclick="startDemo()">▶ Lancer la démo</button>
+        <button class="ctrl-btn ctrl-reset" onclick="resetDemo()">↺ Recommencer</button>
+      </div>
+
+      <div class="demo-cta" id="demo-cta" style="display:none">
+        <h3>Impressionné ? Nous aussi. 🚀</h3>
+        <p>Ce système tourne automatiquement pour votre commerce — 24h/24, 7j/7. Setup en 10 minutes.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · fivestarautomatisation@gmail.com</p>
+</footer>
+
+<script>
+let running=false,timer=null,step=0
+
+const steps=[
+  {delay:0,progress:100,sms:null},
+  {delay:1800,progress:100,sms:null},
+  {delay:2800,progress:100,sms:{type:'in',text:'Merci de votre visite au Restaurant Le Bon Goût ! 🍽️ Vous avez apprécié ? Laissez-nous un avis Google ⭐ → g.page/lebongouit',time:'21:32'}},
+  {delay:5000,progress:100,sms:{type:'out',text:'2 étoiles — J\'ai attendu 45 minutes pour être servie. Décevant.',time:'21:45'}},
+  {delay:7500,progress:100,sms:null},
+  {delay:10000,progress:100,sms:{type:'in',text:'📊 Avis négatif détecté. Réponse IA publiée sur Google. ✓',time:'21:46'}},
+]
+
+function startDemo(){
+  if(running)return
+  running=true
+  document.getElementById('play-btn').textContent='⏳ En cours...'
+  document.getElementById('play-btn').disabled=true
+  runStep(0)
+}
+
+function runStep(i){
+  if(i>=steps.length){
+    document.getElementById('demo-cta').style.display='block'
+    document.getElementById('play-btn').textContent='✓ Démo terminée'
+    return
+  }
+  const s=steps[i]
+  setTimeout(()=>{
+    // Activate step
+    document.querySelectorAll('.demo-step').forEach((el,j)=>{
+      if(j<i)el.classList.add('done')
+      el.classList.toggle('active',j===i)
+    })
+    // Progress bar
+    const pb=document.getElementById('p'+i)
+    if(pb){pb.style.width='0%';setTimeout(()=>{pb.style.width='100%'},100)}
+    // SMS
+    if(s.sms){
+      const c=document.getElementById('sms-container')
+      const div=document.createElement('div')
+      div.className=`sms-bubble sms-${s.sms.type}`
+      div.textContent=s.sms.text
+      c.appendChild(div)
+      const t=document.createElement('div')
+      t.className='sms-time'
+      t.textContent=s.sms.time
+      c.appendChild(t)
+      setTimeout(()=>div.classList.add('show'),100)
+      c.scrollTop=c.scrollHeight
+    }
+    runStep(i+1)
+  },i===0?0:steps[i].delay-steps[i-1].delay)
+}
+
+function resetDemo(){
+  running=false
+  step=0
+  document.getElementById('play-btn').textContent='▶ Lancer la démo'
+  document.getElementById('play-btn').disabled=false
+  document.getElementById('sms-container').innerHTML=''
+  document.getElementById('demo-cta').style.display='none'
+  document.querySelectorAll('.demo-step').forEach((el,i)=>{
+    el.classList.remove('active','done')
+    if(i===0)el.classList.add('active')
+    const pb=el.querySelector('.progress-fill')
+    if(pb)pb.style.width='0%'
+  })
+}
+</script>
+</body>
+</html>

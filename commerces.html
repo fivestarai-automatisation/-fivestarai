@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI — Pour votre type de commerce</title>
+  <meta name="description" content="FiveStar AI pour restaurants, salons, gyms, cafés, garages et cliniques. Arguments spécifiques à votre industrie."/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}
+    .logo span{color:var(--gold)}
+    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}
+    .nav-back:hover{color:var(--gold)}
+    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none}
+    .page{max-width:1060px;margin:0 auto;padding:100px 24px 80px}
+    .hero-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;text-align:center}
+    .hero-h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:16px;line-height:1.08;text-align:center}
+    .hero-h1 em{font-style:normal;color:var(--gold)}
+    .hero-p{font-size:16px;color:var(--muted);max-width:520px;line-height:1.75;margin-bottom:48px;text-align:center;margin-left:auto;margin-right:auto}
+    /* TABS */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+    .tab{background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:9px 18px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px}
+    .tab:hover{border-color:rgba(245,200,66,.25);color:#fff}
+    .tab.active{background:rgba(245,200,66,.08);border-color:var(--gold);color:var(--gold)}
+    /* CONTENT */
+    .commerce-content{display:none}
+    .commerce-content.show{display:block}
+    .commerce-hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px}
+    .commerce-icon{font-size:64px;margin-bottom:16px}
+    .commerce-h2{font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:-1px;color:#fff;margin-bottom:12px;line-height:1.1}
+    .commerce-h2 em{font-style:normal;color:var(--gold)}
+    .commerce-p{font-size:15.5px;color:var(--muted);line-height:1.75;margin-bottom:24px}
+    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:14px 32px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-g:hover{background:var(--gold2);transform:translateY(-1px)}
+    /* STATS COMMERCE */
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
+    .stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+    .stat-n{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--gold);line-height:1}
+    .stat-l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+    /* PAIN POINTS */
+    .pain-section{margin-bottom:32px}
+    .pain-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:16px}
+    .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pain-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:10px}
+    .pain-icon{font-size:20px;flex-shrink:0}
+    .pain-text{font-size:13px;color:var(--muted);line-height:1.5}
+    .pain-text strong{color:#fff;display:block;margin-bottom:3px;font-size:13.5px}
+    /* SMS EXAMPLE */
+    .sms-example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:32px}
+    .sms-ex-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .sms-bubble-ex{background:var(--surface2);border:1px solid var(--border);border-radius:12px;border-bottom-left-radius:3px;padding:12px 16px;font-size:13.5px;color:var(--text);line-height:1.6;max-width:80%}
+    /* CTA */
+    .cta-box{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:32px;text-align:center}
+    .cta-box h3{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:10px}
+    .cta-box p{font-size:14px;color:var(--muted);margin-bottom:20px}
+    footer{padding:32px 24px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
+    footer p{font-size:12.5px;color:var(--muted)}
+    footer a{color:var(--gold);text-decoration:none}
+    @media(max-width:700px){
+      nav{padding:0 20px}
+      .commerce-hero{grid-template-columns:1fr}
+      .pain-grid{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+  <a href="dashboard.html?signup=true&plan=pro" class="nav-cta">Commencer →</a>
+</nav>
+
+<div class="page">
+  <div class="hero-label">Par type de commerce</div>
+  <h1 class="hero-h1">FiveStar AI pour<br><em>votre industrie.</em></h1>
+  <p class="hero-p">Chaque commerce a ses défis uniques. Voyez comment FiveStar AI s'adapte exactement à votre réalité.</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showCommerce('restaurant',this)">🍽️ Restaurant</div>
+    <div class="tab" onclick="showCommerce('salon',this)">✂️ Salon</div>
+    <div class="tab" onclick="showCommerce('gym',this)">💪 Gym</div>
+    <div class="tab" onclick="showCommerce('cafe',this)">☕ Café</div>
+    <div class="tab" onclick="showCommerce('garage',this)">🔧 Garage</div>
+    <div class="tab" onclick="showCommerce('clinique',this)">🏥 Clinique</div>
+  </div>
+
+  <!-- RESTAURANT -->
+  <div class="commerce-content show" id="c-restaurant">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">🍽️</div>
+        <h2 class="commerce-h2">Pour les<br><em>restaurants & bars</em></h2>
+        <p class="commerce-p">Un restaurant sur cinq ferme dans sa première année. La note Google est souvent le facteur décisif. Un client qui hésite entre deux restaurants choisira celui avec 4.5 étoiles, pas 3.8.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">87%</div><div class="stat-l">des gens vérifient les avis avant de choisir un restaurant</div></div>
+          <div class="stat"><div class="stat-n">4.0+</div><div class="stat-l">Note minimale pour qu'un client vous considère</div></div>
+          <div class="stat"><div class="stat-n">3x</div><div class="stat-l">Plus de réservations avec 4.5+ étoiles vs 3.5</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">😤</div><div class="pain-text"><strong>Client insatisfait du temps d'attente</strong>Il laisse un 1 étoile sans vous en parler. L'IA répond professionnellement avant même que vous le voyiez.</div></div>
+        <div class="pain-item"><div class="pain-icon">📱</div><div class="pain-text"><strong>Clients satisfaits qui n'écrivent rien</strong>95% des clients contents ne laissent pas d'avis. Le SMS automatique 2h après change ça.</div></div>
+        <div class="pain-item"><div class="pain-icon">🌙</div><div class="pain-text"><strong>Avis négatifs à 2h du matin</strong>Quelqu'un écrit un avis quand vous dormez. L'IA répond en moins de 2 minutes, 24/7.</div></div>
+        <div class="pain-item"><div class="pain-icon">📊</div><div class="pain-text"><strong>Concurrents avec plus d'avis</strong>Le restaurant d'à côté a 200 avis, vous en avez 40. FiveStar AI rattrape ce retard rapidement.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos clients</div>
+      <div class="sms-bubble-ex">Merci d'avoir dîné chez nous ce soir ! 🍽️ Vous avez passé un bon moment ? Ça nous ferait vraiment plaisir que vous nous laissiez un avis Google ⭐ → g.page/restaurant</div>
+    </div>
+    <div class="cta-box">
+      <h3>Votre restaurant mérite une note 5 étoiles.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+
+  <!-- SALON -->
+  <div class="commerce-content" id="c-salon">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">✂️</div>
+        <h2 class="commerce-h2">Pour les<br><em>salons & spas</em></h2>
+        <p class="commerce-p">Dans l'industrie de la beauté, la confiance est tout. Un nouveau client cherche un salon — il lit les avis en premier. Votre note Google, c'est votre réputation numérique. FiveStar AI la bâtit automatiquement.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">91%</div><div class="stat-l">des gens choisissent leur salon via les avis en ligne</div></div>
+          <div class="stat"><div class="stat-n">+40%</div><div class="stat-l">De nouveaux clients avec une note 4.5+ vs 3.5</div></div>
+          <div class="stat"><div class="stat-n">6x</div><div class="stat-l">Plus de chance qu'un client revienne après un SMS de suivi</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">💇</div><div class="pain-text"><strong>Clients fidèles qui ne laissent jamais d'avis</strong>Ils viennent depuis 3 ans mais n'ont jamais écrit un mot. Le SMS de suivi les encourage gentiment.</div></div>
+        <div class="pain-item"><div class="pain-icon">⭐</div><div class="pain-text"><strong>Un seul mauvais avis qui ruine tout</strong>Un avis 1 étoile non répondu chasse 10 nouveaux clients. L'IA répond professionnellement.</div></div>
+        <div class="pain-item"><div class="pain-icon">📅</div><div class="pain-text"><strong>Agenda vide en semaine</strong>Le SMS promotionnel mensuel relance vos clients inactifs pour remplir vos heures creuses.</div></div>
+        <div class="pain-item"><div class="pain-icon">🆕</div><div class="pain-text"><strong>Difficulté à attirer de nouveaux clients</strong>Une note Google élevée = plus de visibilité dans les recherches locales = plus de nouveaux clients.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos clients</div>
+      <div class="sms-bubble-ex">Merci de votre visite au Salon Bella ! ✂️ Vous aimez votre nouvelle coupe ? On serait ravis de lire votre avis Google ⭐ → g.page/salon-bella</div>
+    </div>
+    <div class="cta-box">
+      <h3>Votre talent mérite d'être vu.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+
+  <!-- GYM -->
+  <div class="commerce-content" id="c-gym">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">💪</div>
+        <h2 class="commerce-h2">Pour les<br><em>gyms & studios</em></h2>
+        <p class="commerce-p">L'industrie du fitness est ultra-compétitive. Quand quelqu'un cherche un gym, il compare 3-4 options en 2 minutes sur Google. Votre note et vos avis sont votre argument de vente numéro un.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">78%</div><div class="stat-l">des gens choisissent leur gym en lisant les avis Google</div></div>
+          <div class="stat"><div class="stat-n">+25%</div><div class="stat-l">De membres en plus avec une note 4.5+ vs 4.0</div></div>
+          <div class="stat"><div class="stat-n">48%</div><div class="stat-l">Des gyms perdent des membres sans le savoir (pas de suivi)</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">😤</div><div class="pain-text"><strong>Membre qui part sans explication</strong>Il n'a jamais dit pourquoi. Le SMS de suivi et les avis vous donnent des indices précieux.</div></div>
+        <div class="pain-item"><div class="pain-icon">🏋️</div><div class="pain-text"><strong>Concurrents boutique qui volent vos membres</strong>Un petit studio avec 150 avis 5 étoiles bat un grand gym avec 20 avis. FiveStar AI corrige ça.</div></div>
+        <div class="pain-item"><div class="pain-icon">📣</div><div class="pain-text"><strong>Promotions qui n'atteignent personne</strong>Le SMS promotionnel mensuel touche directement votre base de membres actuels et anciens.</div></div>
+        <div class="pain-item"><div class="pain-icon">🌙</div><div class="pain-text"><strong>Avis écrits après une mauvaise séance</strong>Un entraîneur absent, un équipement brisé. L'IA répond et montre votre réactivité.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos membres</div>
+      <div class="sms-bubble-ex">Merci d'être passé au Gym Force aujourd'hui ! 💪 Belle séance ? Partagez votre expérience sur Google, ça aide vraiment ⭐ → g.page/gym-force</div>
+    </div>
+    <div class="cta-box">
+      <h3>Transformez vos membres en ambassadeurs.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+
+  <!-- CAFÉ -->
+  <div class="commerce-content" id="c-cafe">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">☕</div>
+        <h2 class="commerce-h2">Pour les<br><em>cafés & boulangeries</em></h2>
+        <p class="commerce-p">Les cafés ont un avantage énorme : des clients quotidiens. Ce sont ces habitués qui, avec un petit coup de pouce, deviennent vos meilleurs ambassadeurs en ligne. FiveStar AI transforme chaque visite en opportunité.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">72%</div><div class="stat-l">des gens choisissent un café via Google Maps</div></div>
+          <div class="stat"><div class="stat-n">5x</div><div class="stat-l">Plus de visibilité sur Google Maps avec 50+ avis récents</div></div>
+          <div class="stat"><div class="stat-n">+30%</div><div class="stat-l">De clients en plus pour les cafés notés 4.6+ étoiles</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">☕</div><div class="pain-text"><strong>Habitués qui ne pensent jamais aux avis</strong>Ils adorent votre café mais n'y pensent pas. Un SMS gentil fait la différence.</div></div>
+        <div class="pain-item"><div class="pain-icon">📍</div><div class="pain-text"><strong>Invisibilité sur Google Maps</strong>Plus vous avez d'avis récents, plus Google vous met en avant dans les recherches locales.</div></div>
+        <div class="pain-item"><div class="pain-icon">😤</div><div class="pain-text"><strong>Critique sur le WiFi ou la musique</strong>Ces avis semblent anodins mais impactent votre note. L'IA répond avec tact et professionnalisme.</div></div>
+        <div class="pain-item"><div class="pain-icon">🎉</div><div class="pain-text"><strong>Nouveaux produits ignorés</strong>Le SMS promotionnel mensuel annonce vos nouveautés directement à vos clients réguliers.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos clients</div>
+      <div class="sms-bubble-ex">Merci de votre passage au Café Lumière aujourd'hui ! ☕ Vous avez aimé ? Un petit avis Google nous ferait chaud au cœur ⭐ → g.page/cafe-lumiere</div>
+    </div>
+    <div class="cta-box">
+      <h3>Votre café mérite d'être le préféré du quartier.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+
+  <!-- GARAGE -->
+  <div class="commerce-content" id="c-garage">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">🔧</div>
+        <h2 class="commerce-h2">Pour les<br><em>garages & autos</em></h2>
+        <p class="commerce-p">La confiance est la clé dans l'industrie automobile. Un client qui cherche un mécanicien lit les avis avec attention. Un seul mauvais avis sans réponse peut chasser des dizaines de clients potentiels.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">89%</div><div class="stat-l">des clients lisent les avis avant de choisir un garage</div></div>
+          <div class="stat"><div class="stat-n">450$</div><div class="stat-l">Valeur moyenne d'un client garage sur 12 mois</div></div>
+          <div class="stat"><div class="stat-n">92%</div><div class="stat-l">Des clients font confiance aux avis autant qu'aux recommandations</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">💬</div><div class="pain-text"><strong>Avis sur le prix "trop cher"</strong>Souvent injuste et subjectif. L'IA répond en expliquant la valeur de votre travail avec professionnalisme.</div></div>
+        <div class="pain-item"><div class="pain-icon">🛠️</div><div class="pain-text"><strong>Clients satisfaits qui disparaissent</strong>Le SMS 2h après le service les rappelle et les encourage à partager leur expérience positive.</div></div>
+        <div class="pain-item"><div class="pain-icon">📊</div><div class="pain-text"><strong>Peu d'avis face aux concurrents</strong>Un garage avec 80 avis 4.7 étoiles gagne face à un avec 15 avis 4.9. FiveStar AI augmente votre volume.</div></div>
+        <div class="pain-item"><div class="pain-icon">🔄</div><div class="pain-text"><strong>Clients qui ne reviennent pas</strong>Le SMS promotionnel mensuel rappelle à vos anciens clients que vous êtes là pour leur prochain entretien.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos clients</div>
+      <div class="sms-bubble-ex">Merci d'avoir fait confiance à Garage Pro pour votre véhicule ! 🔧 Tout s'est bien passé ? Votre avis Google nous aide vraiment ⭐ → g.page/garage-pro</div>
+    </div>
+    <div class="cta-box">
+      <h3>Bâtissez la confiance en ligne que vous méritez.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+
+  <!-- CLINIQUE -->
+  <div class="commerce-content" id="c-clinique">
+    <div class="commerce-hero">
+      <div>
+        <div class="commerce-icon">🏥</div>
+        <h2 class="commerce-h2">Pour les<br><em>cliniques & santé</em></h2>
+        <p class="commerce-p">En santé, la confiance est absolue. Un patient potentiel lit en moyenne 7 avis avant de choisir une clinique. Une note Google élevée n'est pas un luxe — c'est une nécessité pour croître.</p>
+        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">94%</div><div class="stat-l">des patients consultent les avis avant de choisir une clinique</div></div>
+          <div class="stat"><div class="stat-n">7</div><div class="stat-l">Avis lus en moyenne avant de prendre un rendez-vous</div></div>
+          <div class="stat"><div class="stat-n">+35%</div><div class="stat-l">De nouveaux patients pour les cliniques notées 4.5+ étoiles</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-section">
+      <div class="pain-title">Les problèmes que FiveStar AI résout pour vous</div>
+      <div class="pain-grid">
+        <div class="pain-item"><div class="pain-icon">⏰</div><div class="pain-text"><strong>Plaintes sur le temps d'attente</strong>L'avis le plus fréquent en santé. L'IA répond avec empathie et explique votre processus.</div></div>
+        <div class="pain-item"><div class="pain-icon">😊</div><div class="pain-text"><strong>Patients satisfaits qui gardent ça pour eux</strong>La santé est privée. Un SMS discret et professionnel les encourage à partager leur expérience.</div></div>
+        <div class="pain-item"><div class="pain-icon">📋</div><div class="pain-text"><strong>Recrutement difficile pour le Premium</strong>L'IA trie automatiquement les candidatures pour vos postes. Vous recevez seulement les bons profils.</div></div>
+        <div class="pain-item"><div class="pain-icon">🔄</div><div class="pain-text"><strong>Patients qui ne reviennent pas</strong>Le SMS de rappel mensuel maintient le lien et rappelle l'importance des suivis réguliers.</div></div>
+      </div>
+    </div>
+    <div class="sms-example">
+      <div class="sms-ex-title">💬 Exemple de SMS envoyé à vos patients</div>
+      <div class="sms-bubble-ex">Merci de votre visite à la Clinique Santé Plus ! 🏥 Nous espérons que vous vous sentez bien. Si vous souhaitez partager votre expérience, votre avis Google nous aide à servir plus de patients ⭐ → g.page/clinique-sante</div>
+    </div>
+    <div class="cta-box">
+      <h3>Votre clinique mérite la confiance qu'elle inspire.</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Sans contrat.</p>
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer pour 297$/mois →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · fivestarautomatisation@gmail.com</p>
+</footer>
+
+<script>
+function showCommerce(id,tab){
+  document.querySelectorAll('.commerce-content').forEach(el=>el.classList.remove('show'))
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'))
+  document.getElementById('c-'+id).classList.add('show')
+  tab.classList.add('active')
+  // URL hash
+  window.location.hash=id
+}
+// Check hash on load
+const hash=window.location.hash.slice(1)
+if(hash){
+  const tab=document.querySelector(`.tab[onclick*="'${hash}'"]`)
+  if(tab)showCommerce(hash,tab)
+}
+</script>
+</body>
+</html>

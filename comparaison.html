@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI vs agence vs manuel — Comparaison complète</title>
+  <meta name="description" content="FiveStar AI comparé à une agence marketing et à la gestion manuelle de vos avis Google. Prix, temps, résultats."/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}.logo span{color:var(--gold)}
+    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}.nav-back:hover{color:var(--gold)}
+    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none}
+    .page{max-width:1060px;margin:0 auto;padding:100px 24px 80px}
+    .page-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;text-align:center}
+    .page-h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:16px;line-height:1.08;text-align:center}
+    .page-h1 em{font-style:normal;color:var(--gold)}
+    .page-p{font-size:16px;color:var(--muted);max-width:520px;line-height:1.75;margin:0 auto 56px;text-align:center}
+    /* HEADER COLUMNS */
+    .compare-header{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:1px;background:var(--border);border-radius:16px 16px 0 0;overflow:hidden;margin-bottom:1px}
+    .ch-cell{padding:20px 16px;background:var(--surface)}
+    .ch-cell:first-child{background:var(--bg)}
+    .ch-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .ch-name{font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.3px}
+    .ch-price{font-size:13px;color:var(--muted);margin-top:3px}
+    .ch-cell.winner{background:rgba(245,200,66,.06);border-top:2px solid var(--gold)}
+    .ch-cell.winner .ch-name{color:var(--gold)}
+    /* TABLE */
+    .compare-table{border-radius:0 0 16px 16px;overflow:hidden;border:1px solid var(--border);border-top:none;margin-bottom:48px}
+    .compare-row{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+    .compare-row:last-child{border-bottom:none}
+    .cr-cell{padding:16px;background:var(--surface);display:flex;align-items:center;justify-content:center;text-align:center}
+    .cr-cell:first-child{background:var(--bg);justify-content:flex-start;text-align:left}
+    .cr-cell.winner{background:rgba(245,200,66,.03)}
+    .cr-label{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+    .cr-desc{font-size:12px;color:var(--muted);line-height:1.5}
+    .check{font-size:18px}
+    .val-green{font-size:14px;font-weight:700;color:var(--green)}
+    .val-red{font-size:14px;font-weight:700;color:var(--red)}
+    .val-orange{font-size:14px;font-weight:700;color:#f97316}
+    .val-gold{font-size:14px;font-weight:700;color:var(--gold)}
+    .val-muted{font-size:13px;color:var(--muted)}
+    /* SECTION DETAIL */
+    .detail-section{margin-bottom:48px}
+    .detail-h2{font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:24px}
+    .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .detail-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;position:relative}
+    .detail-card.winner-card{border-color:var(--gold);background:linear-gradient(135deg,var(--surface),rgba(245,200,66,.02))}
+    .detail-crown{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:3px 12px;border-radius:99px;white-space:nowrap}
+    .detail-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .detail-item{display:flex;gap:10px;margin-bottom:12px;font-size:13.5px;color:var(--muted);line-height:1.5;align-items:flex-start}
+    .detail-item.pro::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+    .detail-item.con::before{content:'✗';color:var(--red);font-weight:700;flex-shrink:0;margin-top:1px}
+    .detail-item.neutral::before{content:'·';color:var(--muted);flex-shrink:0;font-size:18px;margin-top:-2px}
+    /* VERDICT */
+    .verdict{background:linear-gradient(135deg,rgba(245,200,66,.07),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.18);border-radius:20px;padding:40px;text-align:center;margin-bottom:40px}
+    .verdict h2{font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:14px}
+    .verdict p{font-size:16px;color:var(--muted);max-width:580px;margin:0 auto 28px;line-height:1.75}
+    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:14px 34px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-g:hover{background:var(--gold2);transform:translateY(-1px)}
+    .btn-o{background:transparent;color:var(--text);font-weight:600;font-size:15px;padding:14px 34px;border-radius:9px;border:1px solid var(--border);text-decoration:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-o:hover{border-color:rgba(245,200,66,.35);color:var(--gold)}
+    footer{padding:32px 24px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
+    footer p{font-size:12.5px;color:var(--muted)}
+    footer a{color:var(--gold);text-decoration:none}
+    @media(max-width:800px){
+      nav{padding:0 20px}
+      .compare-header,.compare-row{grid-template-columns:1.5fr 1fr 1fr}
+      .ch-cell:nth-child(3),.cr-cell:nth-child(3){display:none}
+      .detail-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+  <a href="dashboard.html?signup=true&plan=pro" class="nav-cta">Commencer →</a>
+</nav>
+
+<div class="page">
+  <div class="page-label">Comparaison</div>
+  <h1 class="page-h1">FiveStar AI vs<br><em>les alternatives.</em></h1>
+  <p class="page-p">Gérer vos avis Google manuellement, engager une agence, ou automatiser avec FiveStar AI. Voici la comparaison honnête.</p>
+
+  <!-- TABLE HEADER -->
+  <div class="compare-header">
+    <div class="ch-cell"></div>
+    <div class="ch-cell">
+      <div class="ch-label">Option 1</div>
+      <div class="ch-name">Manuel</div>
+      <div class="ch-price">Vous le faites vous-même</div>
+    </div>
+    <div class="ch-cell">
+      <div class="ch-label">Option 2</div>
+      <div class="ch-name">Agence</div>
+      <div class="ch-price">1 500–3 500$/mois</div>
+    </div>
+    <div class="ch-cell winner">
+      <div class="ch-label">Option 3</div>
+      <div class="ch-name">FiveStar AI ⭐</div>
+      <div class="ch-price">297–599$/mois</div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="compare-table">
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Coût mensuel</div><div class="cr-desc">Ce que vous payez chaque mois</div></div>
+      <div class="cr-cell"><div class="val-green">0$</div><div class="val-muted" style="margin-top:3px">Votre temps vaut quelque chose</div></div>
+      <div class="cr-cell"><div class="val-red">1 500–3 500$</div></div>
+      <div class="cr-cell winner"><div class="val-gold">297–599$</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Temps requis par semaine</div><div class="cr-desc">Votre implication personnelle</div></div>
+      <div class="cr-cell"><div class="val-red">3–5h</div><div class="val-muted" style="margin-top:3px">Surveiller, répondre, relancer</div></div>
+      <div class="cr-cell"><div class="val-orange">30 min</div><div class="val-muted" style="margin-top:3px">Réunions, approbations</div></div>
+      <div class="cr-cell winner"><div class="val-green">0 min</div><div class="val-muted" style="margin-top:3px">100% automatique</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Collecte d'avis automatique</div><div class="cr-desc">SMS envoyés automatiquement</div></div>
+      <div class="cr-cell"><div class="check">❌</div></div>
+      <div class="cr-cell"><div class="check">⚠️</div><div class="val-muted" style="margin-top:3px">Dépend de l'agence</div></div>
+      <div class="cr-cell winner"><div class="check">✅</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Réponses aux avis négatifs</div><div class="cr-desc">Automatique 24/7</div></div>
+      <div class="cr-cell"><div class="check">❌</div><div class="val-muted" style="margin-top:3px">Vous devez le faire</div></div>
+      <div class="cr-cell"><div class="check">⚠️</div><div class="val-muted" style="margin-top:3px">Délai de 24-48h</div></div>
+      <div class="cr-cell winner"><div class="check">✅</div><div class="val-muted" style="margin-top:3px">En moins de 2 min</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Setup initial</div><div class="cr-desc">Temps pour être opérationnel</div></div>
+      <div class="cr-cell"><div class="val-orange">1–2 semaines</div><div class="val-muted" style="margin-top:3px">Apprendre et organiser</div></div>
+      <div class="cr-cell"><div class="val-red">2–4 semaines</div><div class="val-muted" style="margin-top:3px">Onboarding agence</div></div>
+      <div class="cr-cell winner"><div class="val-green">10 minutes</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Résultats premiers avis</div><div class="cr-desc">Délai avant de voir des résultats</div></div>
+      <div class="cr-cell"><div class="val-red">4–8 semaines</div></div>
+      <div class="cr-cell"><div class="val-orange">2–4 semaines</div></div>
+      <div class="cr-cell winner"><div class="val-green">Cette semaine</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Dashboard & statistiques</div><div class="cr-desc">Suivi de vos performances</div></div>
+      <div class="cr-cell"><div class="check">❌</div></div>
+      <div class="cr-cell"><div class="check">✅</div><div class="val-muted" style="margin-top:3px">Rapports mensuels</div></div>
+      <div class="cr-cell winner"><div class="check">✅</div><div class="val-muted" style="margin-top:3px">Temps réel</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">SMS promotionnels clients</div><div class="cr-desc">Fidélisation automatique</div></div>
+      <div class="cr-cell"><div class="check">❌</div></div>
+      <div class="cr-cell"><div class="check">⚠️</div><div class="val-muted" style="margin-top:3px">En option, coût +</div></div>
+      <div class="cr-cell winner"><div class="check">✅</div><div class="val-muted" style="margin-top:3px">Inclus en Pro</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">Sans contrat</div><div class="cr-desc">Flexibilité d'annulation</div></div>
+      <div class="cr-cell"><div class="check">✅</div></div>
+      <div class="cr-cell"><div class="check">❌</div><div class="val-muted" style="margin-top:3px">Contrat 6–12 mois</div></div>
+      <div class="cr-cell winner"><div class="check">✅</div><div class="val-muted" style="margin-top:3px">Mois par mois</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="cr-cell"><div class="cr-label">ROI estimé (12 mois)</div><div class="cr-desc">Retour sur investissement</div></div>
+      <div class="cr-cell"><div class="val-orange">Difficile à mesurer</div></div>
+      <div class="cr-cell"><div class="val-orange">2–4x</div><div class="val-muted" style="margin-top:3px">Si l'agence performe</div></div>
+      <div class="cr-cell winner"><div class="val-gold">6–12x</div><div class="val-muted" style="margin-top:3px">Basé sur nos clients</div></div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="detail-section">
+    <div class="detail-h2">Le détail de chaque option</div>
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-title">⚒️ Gérer manuellement</div>
+        <div class="detail-item pro">Aucun coût direct</div>
+        <div class="detail-item pro">Contrôle total sur les réponses</div>
+        <div class="detail-item con">3–5h par semaine minimum</div>
+        <div class="detail-item con">Avis négatifs la nuit = pas de réponse</div>
+        <div class="detail-item con">Aucune collecte systématique d'avis</div>
+        <div class="detail-item con">Résultats inconstants selon votre disponibilité</div>
+        <div class="detail-item con">Vous faites le travail au lieu de gérer votre commerce</div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-title">🏢 Engager une agence</div>
+        <div class="detail-item pro">Expertise humaine dédiée</div>
+        <div class="detail-item pro">Stratégie marketing complète possible</div>
+        <div class="detail-item con">1 500–3 500$/mois minimum</div>
+        <div class="detail-item con">Contrat de 6 à 12 mois souvent requis</div>
+        <div class="detail-item con">Délai de réponse aux avis de 24–48h</div>
+        <div class="detail-item con">Réunions et approbations = votre temps quand même</div>
+        <div class="detail-item con">Résultats variables selon l'agence choisie</div>
+      </div>
+      <div class="detail-card winner-card">
+        <div class="detail-crown">⭐ RECOMMANDÉ</div>
+        <div class="detail-title">🤖 FiveStar AI</div>
+        <div class="detail-item pro">297–599$/mois, sans contrat</div>
+        <div class="detail-item pro">Setup en 10 minutes, résultats cette semaine</div>
+        <div class="detail-item pro">Réponses aux avis en moins de 2 minutes, 24/7</div>
+        <div class="detail-item pro">0 heure de votre temps après le setup</div>
+        <div class="detail-item pro">Dashboard temps réel, rapports mensuels</div>
+        <div class="detail-item pro">SMS promotionnels inclus (Pro et Premium)</div>
+        <div class="detail-item pro">Annulez à tout moment si pas satisfait</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <h2>La conclusion honnête</h2>
+    <p>Si vous avez 3–5 heures par semaine à consacrer à votre réputation en ligne et que vous êtes discipliné, la gestion manuelle peut fonctionner. Si vous avez un budget de 2 000$/mois et voulez une stratégie marketing complète, une agence peut valoir le coup.</p>
+    <p>Mais si vous voulez des résultats rapides, automatiques, sans effort, pour un prix accessible, FiveStar AI est la meilleure option pour un commerce local.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Essayer FiveStar AI →</a>
+      <a href="roi.html" class="btn-o">Calculer mon ROI</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · <a href="conditions.html">CGU</a> · fivestarautomatisation@gmail.com</p>
+</footer>
+</body>
+</html>

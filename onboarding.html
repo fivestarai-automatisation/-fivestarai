@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI — Bienvenue ! Configuration de votre commerce</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+    .page{max-width:680px;margin:0 auto;padding:48px 24px 80px}
+    /* PROGRESS */
+    .progress-header{text-align:center;margin-bottom:48px}
+    .progress-logo{font-size:18px;font-weight:900;color:#fff;margin-bottom:24px}
+    .progress-logo span{color:var(--gold)}
+    .steps-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:12px}
+    .sp-step{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .sp-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .3s}
+    .sp-num.done{background:var(--green);color:#fff}
+    .sp-num.active{background:var(--gold);color:#000}
+    .sp-num.todo{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+    .sp-label{font-size:11px;color:var(--muted);white-space:nowrap}
+    .sp-step.active .sp-label{color:var(--gold);font-weight:600}
+    .sp-line{width:40px;height:2px;background:var(--border);margin:0 4px;margin-bottom:16px;transition:background .3s}
+    .sp-line.done{background:var(--green)}
+    .progress-bar-wrap{background:var(--surface2);border-radius:99px;height:4px;margin-top:8px;overflow:hidden;max-width:400px;margin-left:auto;margin-right:auto}
+    .progress-bar-fill{height:100%;border-radius:99px;background:var(--gold);transition:width .5s ease}
+    /* STEPS */
+    .step-view{display:none}
+    .step-view.show{display:block}
+    .step-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:20px}
+    .step-icon{font-size:44px;margin-bottom:18px;text-align:center}
+    .step-title{font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:10px;text-align:center}
+    .step-desc{font-size:15px;color:var(--muted);line-height:1.75;text-align:center;margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+    .field input,.field select,.field textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s;resize:none}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(245,200,66,.3)}
+    .field select option{background:var(--surface2)}
+    .field-hint{font-size:12px;color:var(--muted);margin-top:5px}
+    .btn-next{width:100%;background:var(--gold);color:#000;border:none;border-radius:10px;padding:15px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:8px}
+    .btn-next:hover{background:var(--gold2);transform:translateY(-1px)}
+    .btn-back{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:13px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:8px}
+    .btn-back:hover{border-color:rgba(255,255,255,.15);color:#fff}
+    /* CHECKLIST */
+    .checklist{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+    .check-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s}
+    .check-item:hover{border-color:rgba(245,200,66,.2)}
+    .check-item.checked{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2)}
+    .check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+    .check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+    .check-text{font-size:14px;color:var(--text);line-height:1.4}
+    .check-sub{font-size:12px;color:var(--muted);margin-top:2px}
+    /* SUCCESS */
+    .success-box{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1px solid rgba(34,197,94,.2);border-radius:20px;padding:40px;text-align:center;margin-bottom:20px}
+    .success-icon{font-size:56px;margin-bottom:16px}
+    .success-title{font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.8px;margin-bottom:10px}
+    .success-desc{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:28px;max-width:440px;margin-left:auto;margin-right:auto}
+    .next-steps{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;text-align:left}
+    .ns-title{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+    .ns-item{display:flex;gap:10px;font-size:13.5px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--border);line-height:1.5}
+    .ns-item:last-child{border-bottom:none}
+    .ns-num{width:20px;height:20px;border-radius:50%;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.2);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .btn-dashboard{display:block;text-align:center;width:100%;background:var(--gold);color:#000;border:none;border-radius:10px;padding:15px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;font-family:inherit;text-decoration:none}
+    .btn-dashboard:hover{background:var(--gold2)}
+    /* QR PREVIEW */
+    .qr-preview{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px}
+    .qr-box{width:120px;height:120px;background:#fff;border-radius:10px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#333;padding:8px}
+    .qr-label{font-size:13px;color:var(--muted)}
+    /* SMS PREVIEW */
+    .sms-preview{background:#000;border-radius:14px;padding:16px;margin-bottom:16px}
+    .sms-from{font-size:11px;color:#666;margin-bottom:8px}
+    .sms-bubble{background:#1c1c1e;border-radius:14px;border-bottom-left-radius:3px;padding:12px 14px;font-size:13.5px;color:#e8e8e8;line-height:1.55;display:inline-block;max-width:85%}
+    @media(max-width:600px){
+      .page{padding:32px 16px 60px}
+      .step-card{padding:28px 20px}
+      .sp-label{font-size:10px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="progress-header">
+    <div class="progress-logo">⭐ Five<span>Star</span> AI</div>
+    <div class="steps-progress" id="steps-progress">
+      <div class="sp-step active"><div class="sp-num active" id="sn0">1</div><div class="sp-label">Commerce</div></div>
+      <div class="sp-line" id="sl0"></div>
+      <div class="sp-step"><div class="sp-num todo" id="sn1">2</div><div class="sp-label">Google</div></div>
+      <div class="sp-line" id="sl1"></div>
+      <div class="sp-step"><div class="sp-num todo" id="sn2">3</div><div class="sp-label">SMS</div></div>
+      <div class="sp-line" id="sl2"></div>
+      <div class="sp-step"><div class="sp-num todo" id="sn3">4</div><div class="sp-label">QR Code</div></div>
+      <div class="sp-line" id="sl3"></div>
+      <div class="sp-step"><div class="sp-num todo" id="sn4">5</div><div class="sp-label">Prêt !</div></div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-fill" style="width:10%"></div></div>
+  </div>
+
+  <!-- STEP 1 — COMMERCE INFO -->
+  <div class="step-view show" id="step-0">
+    <div class="step-card">
+      <div class="step-icon">🏪</div>
+      <div class="step-title">Parlez-nous de votre commerce</div>
+      <div class="step-desc">Ces informations permettent de personnaliser vos SMS et vos réponses IA aux avis.</div>
+      <div class="field">
+        <label>Nom du commerce</label>
+        <input id="f-nom" placeholder="Restaurant Le Bon Goût" oninput="updatePreviews()"/>
+      </div>
+      <div class="field">
+        <label>Type de commerce</label>
+        <select id="f-type" onchange="updatePreviews()">
+          <option value="">Sélectionnez...</option>
+          <option>Restaurant / Bar</option>
+          <option>Salon de coiffure / Spa</option>
+          <option>Gym / Studio fitness</option>
+          <option>Café / Boulangerie</option>
+          <option>Garage / Auto</option>
+          <option>Clinique / Santé</option>
+          <option>Boutique / Retail</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Adresse (ville et province)</label>
+        <input id="f-ville" placeholder="Montréal, QC"/>
+      </div>
+      <div class="field">
+        <label>Téléphone du gérant</label>
+        <input id="f-tel" placeholder="+1 514 000-0000" type="tel"/>
+        <div class="field-hint">Pour recevoir les alertes et rapports FiveStar AI</div>
+      </div>
+      <button class="btn-next" onclick="goStep(1)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 — GOOGLE BUSINESS -->
+  <div class="step-view" id="step-1">
+    <div class="step-card">
+      <div class="step-icon">🗺️</div>
+      <div class="step-title">Votre fiche Google Business</div>
+      <div class="step-desc">FiveStar AI va diriger vos clients directement vers cette fiche pour laisser leur avis. Trouvez votre lien en cherchant votre commerce sur Google Maps.</div>
+      <div class="field">
+        <label>Lien Google Business (URL de votre fiche)</label>
+        <input id="f-google" placeholder="https://g.page/votre-commerce" type="url"/>
+        <div class="field-hint">Trouvez-le sur Google Maps → votre fiche → Partager → Copier le lien</div>
+      </div>
+      <div class="field">
+        <label>Note Google actuelle (optionnel)</label>
+        <select id="f-note">
+          <option value="">Je ne sais pas</option>
+          <option>Moins de 3.0 ⭐</option>
+          <option>3.0 – 3.5 ⭐</option>
+          <option>3.5 – 4.0 ⭐</option>
+          <option>4.0 – 4.5 ⭐</option>
+          <option>4.5 – 5.0 ⭐</option>
+        </select>
+        <div class="field-hint">On utilisera ça pour mesurer votre progression</div>
+      </div>
+      <div class="field">
+        <label>Nombre d'avis actuels (optionnel)</label>
+        <input id="f-avis" placeholder="Ex: 24" type="number"/>
+      </div>
+      <button class="btn-next" onclick="goStep(2)">Continuer →</button>
+      <button class="btn-back" onclick="goStep(0)">← Retour</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 — SMS PERSONNALISATION -->
+  <div class="step-view" id="step-2">
+    <div class="step-card">
+      <div class="step-icon">💬</div>
+      <div class="step-title">Personnalisez votre SMS</div>
+      <div class="step-desc">C'est le message que vos clients recevront 2 heures après leur visite. On a créé un modèle optimisé — vous pouvez l'ajuster.</div>
+      <div class="field">
+        <label>Message SMS</label>
+        <textarea id="f-sms" rows="4" oninput="updateSMSPreview()">Merci de votre visite chez [Commerce] ! Vous avez passé un bon moment ? Ça nous ferait vraiment plaisir de lire votre avis Google ⭐ → [lien]</textarea>
+        <div class="field-hint">Max 160 caractères recommandé. [Commerce] et [lien] seront remplacés automatiquement.</div>
+      </div>
+      <div class="sms-preview">
+        <div class="sms-from">FiveStar AI · Il y a 2h</div>
+        <div class="sms-bubble" id="sms-bubble-preview">Merci de votre visite ! Laissez-nous un avis Google ⭐</div>
+      </div>
+      <div class="field">
+        <label>Délai d'envoi après la visite</label>
+        <select id="f-delai">
+          <option value="2">2 heures (recommandé)</option>
+          <option value="1">1 heure</option>
+          <option value="3">3 heures</option>
+          <option value="24">Le lendemain</option>
+        </select>
+      </div>
+      <button class="btn-next" onclick="goStep(3)">Continuer →</button>
+      <button class="btn-back" onclick="goStep(1)">← Retour</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 — QR CODE -->
+  <div class="step-view" id="step-3">
+    <div class="step-card">
+      <div class="step-icon">📱</div>
+      <div class="step-title">Votre QR Code est prêt</div>
+      <div class="step-desc">Imprimez-le et affichez-le à votre caisse. Quand un client le scanne, son numéro est capturé automatiquement.</div>
+      <div class="qr-preview">
+        <div class="qr-box">
+          <div style="font-size:8px;text-align:center;color:#333;line-height:1.4">QR Code personnalisé<br/><span id="qr-nom" style="font-weight:700">votre commerce</span><br/>sera généré après<br/>activation</div>
+        </div>
+        <div class="qr-label">Votre QR Code personnalisé</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div><div class="check-text">J'ai imprimé le QR Code</div><div class="check-sub">Format recommandé : 10x10 cm minimum</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div><div class="check-text">Je l'ai affiché à la caisse ou sur les tables</div><div class="check-sub">Endroit visible par le client au moment de payer</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div><div class="check-text">J'ai testé le scan avec mon téléphone</div><div class="check-sub">Le formulaire doit s'ouvrir correctement</div></div>
+        </div>
+      </div>
+      <button class="btn-next" onclick="goStep(4)">Terminer le setup →</button>
+      <button class="btn-back" onclick="goStep(2)">← Retour</button>
+    </div>
+  </div>
+
+  <!-- STEP 5 — SUCCESS -->
+  <div class="step-view" id="step-4">
+    <div class="success-box">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Votre système est actif !</div>
+      <div class="success-desc">FiveStar AI est maintenant configuré pour votre commerce. Le premier client qui scanne votre QR Code recevra un SMS automatiquement 2 heures après sa visite.</div>
+    </div>
+    <div class="next-steps">
+      <div class="ns-title">Ce qui va se passer</div>
+      <div class="ns-item"><div class="ns-num">1</div><span>Un client scanne votre QR Code → son numéro est capturé automatiquement</span></div>
+      <div class="ns-item"><div class="ns-num">2</div><span>2 heures après sa visite → il reçoit votre SMS personnalisé avec le lien Google</span></div>
+      <div class="ns-item"><div class="ns-num">3</div><span>Il laisse un avis positif → votre note Google monte</span></div>
+      <div class="ns-item"><div class="ns-num">4</div><span>Avis négatif → Claude IA répond automatiquement en moins de 2 minutes</span></div>
+      <div class="ns-item"><div class="ns-num">5</div><span>Vous recevez vos stats dans votre dashboard chaque semaine</span></div>
+    </div>
+    <a href="dashboard.html" class="btn-dashboard">Accéder à mon dashboard →</a>
+  </div>
+</div>
+
+<script>
+let currentStep=0
+function goStep(n){
+  document.getElementById('step-'+currentStep).classList.remove('show')
+  currentStep=n
+  document.getElementById('step-'+n).classList.add('show')
+  window.scrollTo({top:0,behavior:'smooth'})
+  updateProgress(n)
+}
+function updateProgress(n){
+  const pct=[10,30,50,72,100]
+  document.getElementById('prog-fill').style.width=pct[n]+'%'
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('sn'+i)
+    const line=document.getElementById('sl'+i)
+    el.className='sp-num '+(i<n?'done':i===n?'active':'todo')
+    el.textContent=i<n?'✓':(i+1)
+    if(line)line.className='sp-line '+(i<n?'done':'')
+    el.closest('.sp-step').classList.toggle('active',i===n)
+  }
+}
+function updatePreviews(){
+  const nom=document.getElementById('f-nom').value||'votre commerce'
+  document.getElementById('qr-nom').textContent=nom
+  updateSMSPreview()
+}
+function updateSMSPreview(){
+  const sms=document.getElementById('f-sms').value
+  const nom=document.getElementById('f-nom').value||'[Commerce]'
+  document.getElementById('sms-bubble-preview').textContent=sms.replace('[Commerce]',nom).replace('[lien]','g.page/commerce')
+}
+function toggleCheck(el){
+  el.classList.toggle('checked')
+  const box=el.querySelector('.check-box')
+  box.textContent=el.classList.contains('checked')?'✓':''
+}
+updateSMSPreview()
+</script>
+</body>
+</html>
