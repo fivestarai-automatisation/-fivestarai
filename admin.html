@@ -173,7 +173,7 @@
   <div class="login-page">
     <div class="login-glow"></div>
     <div class="login-card">
-      <div class="login-logo">⭐ Five<span>Star</span> AI</div>
+      <div class="login-logo">⭐ FiveStar AI</div>
       <div class="login-badge">Accès fondateurs uniquement</div>
       <div id="login-err"></div>
       <div class="field"><label>Email admin</label><input id="a-email" type="email" placeholder="admin@fivestarai.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
@@ -193,7 +193,7 @@
     <div class="sidebar">
       <div class="sb-logo">
         <div>
-          <div class="sb-logo-text">⭐ Five<span>Star</span> AI</div>
+          <div class="sb-logo-text">⭐ FiveStar AI</div>
         </div>
         <div class="sb-badge">ADMIN</div>
       </div>
@@ -207,6 +207,7 @@
         <div class="sb-section">Opérations</div>
         <div class="sb-item" onclick="showPage('setup',this)"><span>⚙️</span> Setups à faire</div>
         <div class="sb-item" onclick="showPage('annulations',this)"><span>❌</span> Annulations</div>
+        <div class="sb-item" onclick="showPage('recrutement',this)"><span>👥</span> Recrutement IA</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-founders">
@@ -362,6 +363,85 @@
           </div>
         </div>
 
+        <!-- RECRUTEMENT IA -->
+        <div id="page-recrutement" class="client-detail">
+          <div style="margin-bottom:24px">
+            <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:6px">👥 Générateur de lien recrutement</div>
+            <div style="font-size:14px;color:var(--muted)">Créez un lien unique + QR Code pour chaque client Premium en quelques secondes.</div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px">
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">⚙️ Configurer le lien</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div>
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Nom du commerce</label>
+                <input id="r-commerce" placeholder="Ex: Restaurant Le Bon Goût" oninput="genLien()"
+                  style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px;color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Ville</label>
+                <input id="r-ville" placeholder="Ex: Montréal" oninput="genLien()"
+                  style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px;color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Type de commerce</label>
+                <select id="r-type" onchange="genLien()"
+                  style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px;color:#fff;font-size:14px;outline:none;font-family:inherit;cursor:pointer">
+                  <option value="restaurant">🍽️ Restaurant / Bar</option>
+                  <option value="salon">✂️ Salon / Spa</option>
+                  <option value="gym">💪 Gym / Studio</option>
+                  <option value="cafe">☕ Café / Boulangerie</option>
+                  <option value="garage">🔧 Garage / Auto</option>
+                  <option value="clinique">🏥 Clinique / Santé</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Poste (optionnel)</label>
+                <input id="r-poste" placeholder="Ex: Serveur" oninput="genLien()"
+                  style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px;color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+              </div>
+            </div>
+          </div>
+
+          <div id="r-result" style="display:none;background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.2);border-radius:16px;padding:28px;margin-bottom:20px">
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(245,200,66,.1)">✅ Lien généré pour <span id="r-nom-affiche" style="color:var(--gold)"></span></div>
+            <div style="margin-bottom:20px">
+              <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Lien de candidature</div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div id="r-lien-display" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:12.5px;color:var(--gold);font-family:monospace;word-break:break-all;line-height:1.5"></div>
+                <button onclick="copyLien()" style="background:var(--gold);color:#000;border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit">Copier</button>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">QR Code</div>
+                <div id="r-qr" style="background:#fff;border-radius:10px;padding:12px;display:inline-block"></div>
+                <div style="margin-top:10px">
+                  <button onclick="downloadQR()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">⬇ Télécharger PNG</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Comment l'utiliser</div>
+                <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+                  <div style="font-size:13px;color:var(--muted);line-height:1.8">
+                    <div style="padding:5px 0;border-bottom:1px solid var(--border)">1. Envoie ce lien au gérant par email</div>
+                    <div style="padding:5px 0;border-bottom:1px solid var(--border)">2. Il partage le lien sur ses réseaux ou affiche le QR Code</div>
+                    <div style="padding:5px 0;border-bottom:1px solid var(--border)">3. Les candidats remplissent le formulaire en 4 étapes</div>
+                    <div style="padding:5px 0">4. Les candidatures arrivent à admin@fivestarai.ca</div>
+                  </div>
+                </div>
+                <button id="r-email-btn" onclick="emailGerant()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;width:100%">📧 Envoyer le lien au gérant</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="r-placeholder" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center">
+            <div style="font-size:36px;margin-bottom:12px">👆</div>
+            <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Entrez le nom du commerce</div>
+            <div style="font-size:13px;color:var(--muted)">Le lien et le QR Code apparaîtront automatiquement.</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -433,8 +513,8 @@ const SETUP_PENDING = [
 
 // ── AUTH ──
 const ADMINS = {
-  'admin@fivestarai.com': 'fivestar2026',
-  'oli@fivestarai.com': 'fivestar2026',
+  'admin@fivestarai.ca': 'fivestar2026',
+  'oli@fivestarai.ca': 'fivestar2026',
 }
 
 function doLogin() {
@@ -479,8 +559,99 @@ function showPage(page, el) {
   document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'))
   document.getElementById('page-' + page).classList.add('show')
   if (el) el.classList.add('active')
-  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client'}
+  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client', recrutement:'👥 Recrutement IA'}
   document.querySelector('.tb-title').innerHTML = '<span>' + (titles[page] || '📊') + '</span>'
+}
+
+// ── GÉNÉRATEUR LIEN RECRUTEMENT ──
+let currentLien = ''
+
+function genLien() {
+  const commerce = document.getElementById('r-commerce').value.trim()
+  const ville = document.getElementById('r-ville').value.trim()
+  const type = document.getElementById('r-type').value
+  const poste = document.getElementById('r-poste').value.trim()
+
+  if (!commerce) {
+    document.getElementById('r-result').style.display = 'none'
+    document.getElementById('r-placeholder').style.display = 'block'
+    return
+  }
+
+  const base = 'https://fivestarai.ca/candidature.html'
+  const params = new URLSearchParams()
+  params.set('commerce', commerce)
+  params.set('type', type)
+  if (ville) params.set('ville', ville)
+  if (poste) params.set('poste', poste)
+  currentLien = base + '?' + params.toString()
+
+  document.getElementById('r-nom-affiche').textContent = commerce
+  document.getElementById('r-lien-display').textContent = currentLien
+  document.getElementById('r-result').style.display = 'block'
+  document.getElementById('r-placeholder').style.display = 'none'
+
+  genQR(currentLien)
+}
+
+function genQR(url) {
+  const qrContainer = document.getElementById('r-qr')
+  qrContainer.innerHTML = ''
+  const size = 140
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+  script.onload = () => {
+    new QRCode(qrContainer, {
+      text: url,
+      width: size,
+      height: size,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    })
+  }
+  if (window.QRCode) {
+    script.onload()
+  } else {
+    document.head.appendChild(script)
+  }
+}
+
+function copyLien() {
+  if (!currentLien) return
+  navigator.clipboard.writeText(currentLien).then(() => {
+    const btn = event.target
+    btn.textContent = '✓ Copié !'
+    btn.style.background = 'var(--green)'
+    setTimeout(() => { btn.textContent = 'Copier'; btn.style.background = 'var(--gold)' }, 2000)
+  })
+}
+
+function downloadQR() {
+  const canvas = document.querySelector('#r-qr canvas')
+  if (!canvas) return alert('Générez d\'abord un lien.')
+  const link = document.createElement('a')
+  link.download = 'qrcode-candidature.png'
+  link.href = canvas.toDataURL()
+  link.click()
+}
+
+function emailGerant() {
+  const commerce = document.getElementById('r-commerce').value.trim()
+  if (!currentLien) return
+  const subj = encodeURIComponent('Votre lien de candidature FiveStar AI — ' + commerce)
+  const body = encodeURIComponent(
+    'Bonjour,\n\nVoici votre lien de candidature FiveStar AI pour ' + commerce + ' :\n\n' +
+    currentLien + '\n\n' +
+    'Vous pouvez :\n' +
+    '• Partager ce lien sur vos réseaux sociaux\n' +
+    '• L\'afficher sur votre site web\n' +
+    '• Générer un QR Code pour l\'afficher dans votre commerce\n\n' +
+    'Les candidatures vous seront transmises automatiquement après analyse par notre IA.\n\n' +
+    'Bonne chance dans votre recrutement !\n\n' +
+    'L\'équipe FiveStar AI\nadmin@fivestarai.ca'
+  )
+  window.open('mailto:?subject=' + subj + '&body=' + body)
 }
 
 // ── CHART ──
