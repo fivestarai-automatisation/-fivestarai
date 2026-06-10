@@ -41,11 +41,16 @@
     .nav-login:hover{border-color:rgba(255,255,255,.15)!important;color:#fff!important}
     .nav-cta{background:var(--gold)!important;color:#000!important;font-weight:700!important;padding:9px 20px;border-radius:8px;transition:all .2s!important}
     .nav-cta:hover{background:var(--gold2)!important;transform:translateY(-1px)}
-    .hamburger{display:none;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px}
-    .mob-menu{display:none;position:fixed;top:62px;inset-x:0;background:rgba(5,8,16,.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px;flex-direction:column;gap:2px;z-index:999}
-    .mob-menu.open{display:flex}
-    .mob-menu a{color:var(--muted);text-decoration:none;font-size:15px;padding:12px 16px;border-radius:8px;font-weight:500;transition:all .2s}
-    .mob-menu a:hover,.mob-menu a:last-child{color:var(--gold)}
+    .hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;transition:transform .3s;line-height:1}
+    .hamburger.open{transform:rotate(90deg)}
+    .mob-menu{position:fixed;top:62px;inset-x:0;background:rgba(5,8,16,.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px;flex-direction:column;gap:2px;z-index:999;transform:translateY(-10px);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;display:flex}
+    .mob-menu.open{transform:translateY(0);opacity:1;pointer-events:all}
+    .mob-menu a{color:var(--muted);text-decoration:none;font-size:15px;padding:13px 18px;border-radius:9px;font-weight:500;transition:all .2s;display:block}
+    .mob-menu a:hover{background:rgba(255,255,255,.04);color:#fff}
+    .mob-cta-wrap{padding:6px 0 4px}
+    .mob-menu .mob-cta{background:var(--gold);color:#000;font-weight:700;text-align:center;border-radius:9px;padding:13px 18px;display:block;text-decoration:none;transition:background .2s}
+    .mob-menu .mob-cta:hover{background:var(--gold2)}
+    .mob-divider{height:1px;background:var(--border);margin:6px 0}
 
     /* ── HERO ── */
     .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 72px;position:relative;overflow:hidden}
@@ -253,12 +258,14 @@
       .price-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}
       .faq-layout{grid-template-columns:1fr}
       .ft-main{grid-template-columns:1fr 1fr;gap:28px}
+      .how-layout{grid-template-columns:1fr}
     }
     @media(max-width:580px){
       .feat-grid{grid-template-columns:1fr}
       .ft-main{grid-template-columns:1fr}
       .hero-h1{letter-spacing:-1.8px}
       .ba-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
@@ -272,21 +279,25 @@
     <a href="commerces.html">Par commerce</a>
     <a href="#forfaits">Forfaits</a>
     <a href="demo.html">Démo</a>
-    <a href="roi.html">Calculateur ROI</a>
+    <a href="resultats.html">Estimez vos résultats</a>
     <a href="dashboard.html" class="nav-login">Mon compte</a>
     <a href="#forfaits" class="nav-cta">Commencer →</a>
   </div>
-  <button class="hamburger" onclick="toggleMob()">☰</button>
+  <button class="hamburger" id="ham" onclick="toggleMob()">☰</button>
 </nav>
 <div class="mob-menu" id="mob">
-  <a href="#comment" onclick="closeMob()">Comment ça marche</a>
-  <a href="commerces.html" onclick="closeMob()">Par commerce</a>
-  <a href="demo.html" onclick="closeMob()">Démo</a>
-  <a href="roi.html" onclick="closeMob()">Calculateur ROI</a>
-  <a href="#forfaits" onclick="closeMob()">Forfaits</a>
-  <a href="blog.html">Blog</a>
-  <a href="dashboard.html">Mon compte</a>
-  <a href="#forfaits" onclick="closeMob()">Commencer →</a>
+  <a href="#comment" onclick="closeMob()">📋 Comment ça marche</a>
+  <a href="commerces.html" onclick="closeMob()">🏪 Par type de commerce</a>
+  <a href="demo.html" onclick="closeMob()">🎬 Démo interactive</a>
+  <a href="resultats.html" onclick="closeMob()">📊 Estimez vos résultats</a>
+  <a href="blog.html" onclick="closeMob()">✍️ Blog</a>
+  <a href="comparaison.html" onclick="closeMob()">⚖️ Comparaison</a>
+  <div class="mob-divider"></div>
+  <a href="#forfaits" onclick="closeMob()">💳 Voir les forfaits</a>
+  <a href="dashboard.html" onclick="closeMob()">👤 Mon compte</a>
+  <div class="mob-cta-wrap">
+    <a href="#forfaits" class="mob-cta" onclick="closeMob()">Commencer maintenant →</a>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -309,20 +320,20 @@
     <div class="trust-i"><div class="trust-dot"></div>Aucun contrat</div>
     <div class="trust-i"><div class="trust-dot"></div>Setup 10 minutes</div>
     <div class="trust-i"><div class="trust-dot"></div>Résultats dès la 1re semaine</div>
-    <div class="trust-i"><div class="trust-dot"></div>Paiement sécurisé Stripe</div>
+    <div class="trust-i"><div class="trust-dot"></div>Paiement 100% sécurisé</div>
   </div>
 </section>
 
 <!-- LOGOS -->
 <div class="logos sr">
   <div class="logos-inner">
-    <span class="logos-label">Fonctionne avec</span>
-    <span class="logo-i">Google Business</span>
-    <span class="logo-i">Twilio SMS</span>
-    <span class="logo-i">Claude AI</span>
-    <span class="logo-i">Stripe</span>
-    <span class="logo-i">Make.com</span>
-    <span class="logo-i">Airtable</span>
+    <span class="logos-label">Notre technologie</span>
+    <span class="logo-i">Intelligence Artificielle</span>
+    <span class="logo-i">SMS Automatisés</span>
+    <span class="logo-i">QR Code Intelligent</span>
+    <span class="logo-i">Réponses IA 24/7</span>
+    <span class="logo-i">Dashboard Temps Réel</span>
+    <span class="logo-i">Paiement Sécurisé</span>
   </div>
 </div>
 
@@ -358,7 +369,7 @@
         </div>
         <div class="step" onclick="setStep(3,this)">
           <div class="sn">4</div>
-          <div class="sb"><h3>Avis négatif → IA répond pour vous</h3><p>Claude IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.</p></div>
+          <div class="sb"><h3>Avis négatif → IA répond pour vous</h3><p>Notre IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.</p></div>
         </div>
       </div>
       <div class="vis sr-r">
@@ -424,7 +435,7 @@
     <div class="feat-grid">
       <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📲</div><div class="feat-t">Capture via QR Code</div><div class="feat-d">Un QR Code personnalisé à la caisse. Le client scanne — numéro capturé automatiquement. Aucune friction.</div><div class="feat-tag ft-all">Tous les plans</div></div>
       <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">⏱️</div><div class="feat-t">SMS 2h après la visite</div><div class="feat-d">Timing parfait. Le client est encore dans sa lancée positive. Taux de conversion 3x supérieur aux demandes tardives.</div><div class="feat-tag ft-all">Tous les plans</div></div>
-      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">🤖</div><div class="feat-t">IA répond aux négatifs</div><div class="feat-d">Claude IA (Anthropic) génère des réponses professionnelles et personnalisées aux avis négatifs. 24/7.</div><div class="feat-tag ft-all">Tous les plans</div></div>
+      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">🤖</div><div class="feat-t">IA répond aux négatifs</div><div class="feat-d">Notre intelligence artificielle génère des réponses professionnelles et personnalisées aux avis négatifs. 24/7.</div><div class="feat-tag ft-all">Tous les plans</div></div>
       <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📊</div><div class="feat-t">Dashboard en temps réel</div><div class="feat-d">Suivez votre note Google, vos avis, votre taux de conversion depuis votre espace personnel sécurisé.</div><div class="feat-tag ft-pro">Pro & Premium</div></div>
       <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">📣</div><div class="feat-t">SMS promotionnels</div><div class="feat-d">Un SMS promo mensuel à toute votre base clients. On rédige et envoie pour vous. Fidélisation automatique.</div><div class="feat-tag ft-pro">Pro & Premium</div></div>
       <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">👥</div><div class="feat-t">Recrutement IA</div><div class="feat-d">L'IA trie les CV entrants automatiquement. Vous recevez seulement les profils qui correspondent à vos critères.</div><div class="feat-tag ft-prem">Premium</div></div>
@@ -501,7 +512,7 @@
         <button class="pc-btn pc-btn-b" onclick="goSignup('premium')">Choisir Premium →</button>
       </div>
     </div>
-    <div class="guarantee sr"><span>✓</span> Sans contrat · Annulez à tout moment · Paiement sécurisé Stripe</div>
+    <div class="guarantee sr"><span>✓</span> Sans contrat · Annulez à tout moment · Paiement 100% sécurisé</div>
   </div>
 </section>
 
@@ -512,14 +523,14 @@
     <h2 class="h2 sr">Vos questions,<br><em>nos réponses.</em></h2>
     <div class="faq-layout">
       <div class="faq-col">
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Est-ce que je dois signer un contrat ?<div class="fplus">+</div></div><div class="fa">Non. FiveStar AI fonctionne sans engagement. Vous payez mois par mois et pouvez annuler à tout moment en nous écrivant à fivestarautomatisation@gmail.com.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq">Est-ce que je dois signer un contrat ?<div class="fplus">+</div></div><div class="fa">Non. FiveStar AI fonctionne sans engagement. Vous payez mois par mois et pouvez annuler à tout moment en nous écrivant à admin@fivestarai.ca.</div></div>
         <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne le QR Code ?<div class="fplus">+</div></div><div class="fa">On crée un QR Code personnalisé pour votre commerce. Vous l'affichez à la caisse. Le client scanne — son numéro est capturé automatiquement. Aucune action de votre part.</div></div>
         <div class="fi sr" onclick="faq(this)"><div class="fq">Combien de temps avant les premiers résultats ?<div class="fplus">+</div></div><div class="fa">En général dès la première semaine. Le premier client qui scanne votre QR Code reçoit un SMS 2h après sa visite. Si tout se passe bien, vous avez votre premier avis Google dans les jours qui suivent.</div></div>
       </div>
       <div class="faq-col">
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne la réponse aux avis négatifs ?<div class="fplus">+</div></div><div class="fa">Quand un avis négatif apparaît sur votre fiche Google, Claude IA génère automatiquement une réponse professionnelle et personnalisée selon le contenu de l'avis. Vous n'écrivez rien.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne la réponse aux avis négatifs ?<div class="fplus">+</div></div><div class="fa">Quand un avis négatif apparaît sur votre fiche Google, Notre IA génère automatiquement une réponse professionnelle et personnalisée selon le contenu de l'avis. Vous n'écrivez rien.</div></div>
         <div class="fi sr" onclick="faq(this)"><div class="fq">Est-ce que je dois faire quelque chose après le setup ?<div class="fplus">+</div></div><div class="fa">Non. C'est le but. Une fois le setup de 10 minutes terminé, le système tourne seul. SMS automatiques, réponses automatiques. Vous n'avez plus rien à faire.</div></div>
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne le paiement ?<div class="fplus">+</div></div><div class="fa">Le paiement est traité de façon sécurisée via Stripe (certifié PCI DSS). Vous recevez une facture par email chaque mois. Vos informations bancaires ne sont jamais stockées par FiveStar AI.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne le paiement ?<div class="fplus">+</div></div><div class="fa">Le paiement est traité de façon sécurisée de façon sécurisée. Vous recevez une facture par email chaque mois. Vos informations bancaires ne sont jamais stockées par FiveStar AI.</div></div>
       </div>
     </div>
   </div>
@@ -534,9 +545,9 @@
       <p style="color:var(--muted);font-size:16px;margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.75">Setup en 10 minutes. Premier avis Google dès cette semaine.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
         <a href="#forfaits" class="btn-g">Voir les forfaits →</a>
-        <a href="mailto:fivestarautomatisation@gmail.com" class="btn-o">✉️ Nous écrire</a>
+        <a href="mailto:admin@fivestarai.ca" class="btn-o">✉️ Nous écrire</a>
       </div>
-      <div style="font-size:13px;color:var(--muted)">fivestarautomatisation@gmail.com</div>
+      <div style="font-size:13px;color:var(--muted)">admin@fivestarai.ca</div>
     </div>
   </div>
 </section>
@@ -553,7 +564,8 @@
       <a href="#comment">Comment ça marche</a>
       <a href="commerces.html">Par type de commerce</a>
       <a href="demo.html">Démo interactive</a>
-      <a href="roi.html">Calculateur de ROI</a>
+      <a href="resultats.html">Estimez vos résultats</a>
+      <a href="comparaison.html">Comparaison</a>
       <a href="#forfaits">Forfaits</a>
       <a href="#faq">FAQ</a>
     </div>
@@ -563,21 +575,16 @@
       <a href="dashboard.html?signup=true&plan=starter">Forfait Starter</a>
       <a href="dashboard.html?signup=true&plan=pro">Forfait Pro</a>
       <a href="dashboard.html?signup=true&plan=premium">Forfait Premium</a>
+      <a href="onboarding.html">Guide de démarrage</a>
+      <a href="annulation.html">Annuler mon abonnement</a>
     </div>
     <div class="ft-col">
       <div class="ft-col-t">Ressources</div>
       <a href="blog.html">Blog</a>
-      <a href="demo.html">Démo interactive</a>
-      <a href="roi.html">Calculateur ROI</a>
-      <a href="comparaison.html">Comparaison</a>
-      <a href="commerces.html">Par commerce</a>
-    </div>
-    <div class="ft-col">
-      <div class="ft-col-t">Légal & contact</div>
-      <a href="mailto:fivestarautomatisation@gmail.com">Nous écrire</a>
+      <a href="a-propos.html">À propos</a>
       <a href="politique.html">Confidentialité</a>
       <a href="conditions.html">Conditions d'utilisation</a>
-      <a href="404.html">404</a>
+      <a href="mailto:admin@fivestarai.ca">Nous écrire</a>
     </div>
   </div>
   <div class="ft-bottom">
@@ -609,8 +616,20 @@
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>48))
 
 // MOBILE
-function toggleMob(){document.getElementById('mob').classList.toggle('open')}
-function closeMob(){document.getElementById('mob').classList.remove('open')}
+function toggleMob(){
+  const mob=document.getElementById('mob')
+  const ham=document.getElementById('ham')
+  const isOpen=mob.classList.contains('open')
+  mob.classList.toggle('open')
+  ham.classList.toggle('open')
+  ham.textContent=isOpen?'☰':'✕'
+}
+function closeMob(){
+  document.getElementById('mob').classList.remove('open')
+  const ham=document.getElementById('ham')
+  ham.classList.remove('open')
+  ham.textContent='☰'
+}
 
 // SCROLL REVEAL
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')})},{threshold:.08,rootMargin:'0px 0px -28px 0px'})
@@ -632,7 +651,7 @@ const vd=[
   {i:'📱',t:'QR Code personnalisé',d:'Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.',b:'✓ Aucune action requise',sms:null},
   {i:'💬',t:'SMS envoyé automatiquement',d:'2h après la visite, le client reçoit :',b:null,sms:{f:'FiveStar AI · Il y a 2h',m:'Merci de votre visite ! Vous avez apprécié ? Laissez-nous un avis Google ⭐ → g.page/votre-commerce'}},
   {i:'⭐',t:'Avis 5 étoiles reçu',d:'Le client clique et laisse son avis directement sur votre fiche Google. Votre note monte.',b:'✓ Note Google en hausse',sms:null},
-  {i:'🤖',t:'Réponse IA aux avis négatifs',d:'Claude IA génère une réponse professionnelle en quelques secondes. Votre réputation protégée 24/7.',b:'✓ Réponse en moins de 2 min',sms:null},
+  {i:'🤖',t:'Réponse IA aux avis négatifs',d:'Notre IA génère une réponse professionnelle en quelques secondes. Votre réputation protégée 24/7.',b:'✓ Réponse en moins de 2 min',sms:null},
 ]
 let si=0
 function setStep(i,el){
@@ -674,7 +693,7 @@ function sendChat(){
   m.scrollTop=9999
   setTimeout(()=>{
     m.querySelector('.typing')?.remove()
-    m.innerHTML+=`<div class="cm bot">Merci ! On vous répond à <strong>fivestarautomatisation@gmail.com</strong> dans les 24h 📧</div>`
+    m.innerHTML+=`<div class="cm bot">Merci ! On vous répond à <strong>admin@fivestarai.ca</strong> dans les 24h 📧</div>`
     m.scrollTop=9999
   },1100)
 }
