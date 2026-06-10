@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Postuler — [Commerce]</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+    /* NAV */
+    .top-bar{padding:18px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(5,8,16,.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+    .commerce-logo{display:flex;align-items:center;gap:10px}
+    .commerce-icon{width:36px;height:36px;border-radius:9px;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.2);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .commerce-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px}
+    .commerce-type{font-size:12px;color:var(--muted)}
+    .powered{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+    .powered span{color:var(--gold);font-weight:600}
+
+    /* LAYOUT */
+    .page{max-width:680px;margin:0 auto;padding:40px 24px 80px}
+
+    /* HERO */
+    .job-header{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px;margin-bottom:24px}
+    .job-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--green);font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;margin-bottom:14px}
+    .job-title{font-size:clamp(22px,4vw,32px);font-weight:900;color:#fff;letter-spacing:-.8px;margin-bottom:10px;line-height:1.1}
+    .job-meta{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px}
+    .job-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+    .job-desc{font-size:14.5px;color:var(--muted);line-height:1.75;padding-top:18px;border-top:1px solid var(--border)}
+
+    /* STEPS */
+    .steps-bar{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px}
+    .step-dot{display:flex;flex-direction:column;align-items:center;gap:5px}
+    .sd-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .3s}
+    .sd-circle.done{background:var(--green);color:#fff}
+    .sd-circle.active{background:var(--gold);color:#000}
+    .sd-circle.todo{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+    .sd-label{font-size:10px;color:var(--muted);white-space:nowrap}
+    .step-dot.active .sd-label{color:var(--gold);font-weight:600}
+    .step-line{width:48px;height:2px;background:var(--border);margin-bottom:14px;transition:background .3s}
+    .step-line.done{background:var(--green)}
+
+    /* FORM */
+    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px;margin-bottom:16px}
+    .form-section-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+    .field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(245,200,66,.35)}
+    .field select option{background:var(--surface2)}
+    .field textarea{resize:none;line-height:1.6}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .field-hint{font-size:12px;color:var(--muted);margin-top:5px}
+    .required{color:var(--red);margin-left:2px}
+
+    /* RATING */
+    .rating-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .rating-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px}
+    .rating-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+    .rating-stars{display:flex;gap:4px}
+    .star{width:24px;height:24px;border-radius:5px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .15s}
+    .star.on{background:rgba(245,200,66,.15);border-color:var(--gold)}
+
+    /* CV UPLOAD */
+    .upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+    .upload-zone:hover,.upload-zone.dragover{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.03)}
+    .upload-zone.has-file{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.03)}
+    .upload-icon{font-size:28px;margin-bottom:8px}
+    .upload-text{font-size:14px;color:var(--muted);margin-bottom:4px}
+    .upload-sub{font-size:12px;color:#3a4560}
+    .upload-filename{font-size:13.5px;color:var(--green);font-weight:600;margin-top:6px}
+    input[type=file]{display:none}
+
+    /* DISPONIBILITE */
+    .dispo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .dispo-opt{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:center;cursor:pointer;font-size:13px;color:var(--muted);font-weight:500;transition:all .2s}
+    .dispo-opt.sel{background:rgba(245,200,66,.08);border-color:rgba(245,200,66,.3);color:var(--gold);font-weight:600}
+
+    /* BTN */
+    .btn-next{width:100%;background:var(--gold);color:#000;border:none;border-radius:10px;padding:15px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-next:hover{background:var(--gold2);transform:translateY(-1px)}
+    .btn-next:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-back{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:13px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:8px}
+    .btn-back:hover{border-color:rgba(255,255,255,.15);color:#fff}
+
+    /* SUCCESS */
+    .success-screen{text-align:center;padding:20px 0}
+    .success-icon{font-size:56px;margin-bottom:16px}
+    .success-title{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:10px}
+    .success-desc{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto}
+    .success-steps{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:left;margin-bottom:20px}
+    .ss-item{display:flex;gap:10px;font-size:13.5px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--border);line-height:1.5}
+    .ss-item:last-child{border-bottom:none}
+    .ss-num{width:20px;height:20px;border-radius:50%;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.2);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+    /* AI BADGE */
+    .ai-notice{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:12px 15px;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:16px}
+    .ai-notice strong{color:var(--purple)}
+
+    @media(max-width:600px){
+      .page{padding:24px 16px 60px}
+      .form-card{padding:22px 18px}
+      .field-row{grid-template-columns:1fr}
+      .rating-grid{grid-template-columns:1fr}
+      .dispo-grid{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="commerce-logo">
+    <div class="commerce-icon" id="commerce-icon">🏪</div>
+    <div>
+      <div class="commerce-name" id="commerce-name">Chargement...</div>
+      <div class="commerce-type" id="commerce-type">—</div>
+    </div>
+  </div>
+  <div class="powered">Propulsé par <span>⭐ FiveStar AI</span></div>
+</div>
+
+<div class="page">
+
+  <!-- JOB HEADER -->
+  <div class="job-header" id="job-header">
+    <div class="job-tag">🟢 Poste ouvert</div>
+    <div class="job-title" id="job-title">Chargement du poste...</div>
+    <div class="job-meta">
+      <div class="job-meta-item">📍 <span id="job-location">—</span></div>
+      <div class="job-meta-item">⏰ <span id="job-type">—</span></div>
+      <div class="job-meta-item">💰 <span id="job-salary">—</span></div>
+    </div>
+    <div class="job-desc" id="job-desc">—</div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-bar" id="steps-bar">
+    <div class="step-dot active"><div class="sd-circle active" id="sc0">1</div><div class="sd-label">Infos</div></div>
+    <div class="step-line" id="sl0"></div>
+    <div class="step-dot"><div class="sd-circle todo" id="sc1">2</div><div class="sd-label">Expérience</div></div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-dot"><div class="sd-circle todo" id="sc2">3</div><div class="sd-label">CV</div></div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-dot"><div class="sd-circle todo" id="sc3">4</div><div class="sd-label">Envoi</div></div>
+  </div>
+
+  <!-- ÉTAPE 1 — INFOS PERSONNELLES -->
+  <div id="step-0">
+    <div class="form-card">
+      <div class="form-section-title">👤 Informations personnelles</div>
+      <div class="field-row">
+        <div class="field"><label>Prénom<span class="required">*</span></label><input id="f-prenom" placeholder="Jean"/></div>
+        <div class="field"><label>Nom<span class="required">*</span></label><input id="f-nom" placeholder="Tremblay"/></div>
+      </div>
+      <div class="field"><label>Email<span class="required">*</span></label><input id="f-email" type="email" placeholder="jean@email.com"/></div>
+      <div class="field"><label>Téléphone<span class="required">*</span></label><input id="f-tel" type="tel" placeholder="+1 514 000-0000"/></div>
+      <div class="field">
+        <label>Ville de résidence</label>
+        <input id="f-ville" placeholder="Montréal, QC"/>
+      </div>
+      <div class="field">
+        <label>Poste visé<span class="required">*</span></label>
+        <select id="f-poste">
+          <option value="">Sélectionnez un poste...</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>À partir de quand êtes-vous disponible ?</label>
+        <div class="dispo-grid" id="dispo-debut-grid">
+          <div class="dispo-opt" onclick="selDispoDebut(this)">Immédiatement</div>
+          <div class="dispo-opt" onclick="selDispoDebut(this)">Dans 2 semaines</div>
+          <div class="dispo-opt" onclick="selDispoDebut(this)">Dans 1 mois</div>
+          <div class="dispo-opt" onclick="selDispoDebut(this)">Dans 2 mois et +</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Quel horaire recherchez-vous ?</label>
+        <div class="dispo-grid" id="dispo-horaire-grid">
+          <div class="dispo-opt" onclick="selDispoHoraire(this)">Temps plein</div>
+          <div class="dispo-opt" onclick="selDispoHoraire(this)">Temps partiel</div>
+          <div class="dispo-opt" onclick="selDispoHoraire(this)">Soirs / fins de semaine</div>
+          <div class="dispo-opt" onclick="selDispoHoraire(this)">Flexible</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next" onclick="goStep(1)">Continuer →</button>
+  </div>
+
+  <!-- ÉTAPE 2 — EXPÉRIENCE -->
+  <div id="step-1" style="display:none">
+    <div class="form-card">
+      <div class="form-section-title">💼 Expérience & compétences</div>
+      <div class="field">
+        <label>Années d'expérience dans le domaine<span class="required">*</span></label>
+        <select id="f-exp">
+          <option value="">Sélectionnez...</option>
+          <option>Moins de 1 an</option>
+          <option>1–2 ans</option>
+          <option>2–5 ans</option>
+          <option>5–10 ans</option>
+          <option>Plus de 10 ans</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Décrivez votre expérience la plus pertinente<span class="required">*</span></label>
+        <textarea id="f-experience" rows="4" placeholder="Décrivez votre expérience la plus pertinente pour ce poste..."></textarea>
+      </div>
+      <div class="field">
+        <label>Pourquoi voulez-vous travailler ici ?<span class="required">*</span></label>
+        <textarea id="f-motivation" rows="3" placeholder="Qu'est-ce qui vous attire dans ce poste et ce commerce ?"></textarea>
+      </div>
+      <div class="field">
+        <label>Évaluez vos compétences</label>
+        <div class="rating-grid" id="rating-grid"></div>
+      </div>
+    </div>
+    <button class="btn-next" onclick="goStep(2)">Continuer →</button>
+    <button class="btn-back" onclick="goStep(0)">← Retour</button>
+  </div>
+
+  <!-- ÉTAPE 3 — CV -->
+  <div id="step-2" style="display:none">
+    <div class="ai-notice">
+      <span style="font-size:18px">🤖</span>
+      <span>Notre <strong>IA analyse automatiquement</strong> votre CV et vos réponses pour identifier les meilleurs profils. Seuls les candidats correspondant aux critères du poste seront contactés.</span>
+    </div>
+    <div class="form-card">
+      <div class="form-section-title">📄 Votre CV</div>
+      <div class="field">
+        <label>Téléverser votre CV<span class="required">*</span></label>
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('cv-file').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+          <div class="upload-icon">📎</div>
+          <div class="upload-text">Cliquez ou glissez votre CV ici</div>
+          <div class="upload-sub">PDF, Word ou image · Max 10 MB</div>
+          <div class="upload-filename" id="upload-filename" style="display:none"></div>
+        </div>
+        <input type="file" id="cv-file" accept=".pdf,.doc,.docx,.jpg,.png" onchange="fileSelected(this)"/>
+      </div>
+      <div class="field">
+        <label>Lien LinkedIn (optionnel)</label>
+        <input id="f-linkedin" placeholder="linkedin.com/in/votre-profil" type="url"/>
+      </div>
+      <div class="field">
+        <label>Informations supplémentaires (optionnel)</label>
+        <textarea id="f-extra" rows="3" placeholder="Certifications, langues parlées, références disponibles..."></textarea>
+      </div>
+    </div>
+    <button class="btn-next" onclick="goStep(3)">Continuer →</button>
+    <button class="btn-back" onclick="goStep(1)">← Retour</button>
+  </div>
+
+  <!-- ÉTAPE 4 — RÉVISION ET ENVOI -->
+  <div id="step-3" style="display:none">
+    <div class="form-card">
+      <div class="form-section-title">✅ Révision de votre candidature</div>
+      <div id="review-content" style="font-size:13.5px;color:var(--muted);line-height:1.8"></div>
+    </div>
+    <div class="ai-notice">
+      <span style="font-size:18px">⚡</span>
+      <span>Votre candidature sera <strong>analysée par notre IA</strong> dans les minutes suivant l'envoi. Si votre profil correspond aux critères, le gérant recevra votre dossier automatiquement.</span>
+    </div>
+    <button class="btn-next" id="submit-btn" onclick="submitCandidature()">🚀 Envoyer ma candidature</button>
+    <button class="btn-back" onclick="goStep(2)">← Retour</button>
+  </div>
+
+  <!-- SUCCÈS -->
+  <div id="step-success" style="display:none">
+    <div class="form-card">
+      <div class="success-screen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Candidature envoyée !</div>
+        <div class="success-desc">Merci <strong id="success-prenom" style="color:#fff"></strong> ! Votre candidature pour le poste de <strong id="success-poste" style="color:#fff"></strong> a bien été reçue.</div>
+        <div class="success-steps">
+          <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">Ce qui va se passer</div>
+          <div class="ss-item"><div class="ss-num">1</div><span>Notre IA analyse votre CV et vos réponses automatiquement</span></div>
+          <div class="ss-item"><div class="ss-num">2</div><span>Si votre profil correspond, le gérant reçoit votre dossier dans les minutes suivantes</span></div>
+          <div class="ss-item"><div class="ss-num">3</div><span>Vous recevrez une réponse par email dans les 48-72h ouvrables</span></div>
+        </div>
+        <div style="font-size:13px;color:var(--muted)">Confirmation envoyée à <strong id="success-email" style="color:#fff"></strong></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DONNÉES DYNAMIQUES VIA URL ──
+// URL format: candidature.html?commerce=Restaurant+Le+Bon+Goût&type=restaurant&poste=Serveur
+const params = new URLSearchParams(window.location.search)
+const commerceNom = params.get('commerce') || 'Notre Commerce'
+const commerceType = params.get('type') || 'Commerce local'
+const posteParam = params.get('poste') || ''
+const ville = params.get('ville') || 'Québec'
+
+// Icônes par type
+const icons = {restaurant:'🍽️',salon:'✂️',gym:'💪',cafe:'☕',garage:'🔧',clinique:'🏥',default:'🏪'}
+const icon = icons[commerceType] || icons.default
+
+// Postes par type de commerce
+const postesParType = {
+  restaurant:['Serveur / Serveuse','Cuisiner / Cuisinière','Chef de partie','Plongeur','Caissier / Caissière','Gérant de quart'],
+  salon:['Coiffeur / Coiffeuse','Barbier','Réceptionniste','Apprenti coiffeur','Esthéticienne'],
+  gym:['Entraîneur personnel','Réceptionniste','Instructeur de cours','Préposé à l\'entretien'],
+  cafe:['Barista','Caissier / Caissière','Préposé cuisine','Gérant de quart'],
+  garage:['Mécanicien automobile','Conseiller service','Préposé aux pièces','Réceptionniste'],
+  clinique:['Réceptionniste médical','Assistant clinique','Infirmier / Infirmière','Agent administratif'],
+  default:['Employé polyvalent','Gérant de quart','Réceptionniste','Agent service clientèle']
+}
+
+// Compétences par type
+const compsByType = {
+  restaurant:['Service à la clientèle','Rapidité d\'exécution','Travail d\'équipe','Gestion du stress'],
+  salon:['Techniques de coiffure','Service clientèle','Sens artistique','Ponctualité'],
+  gym:['Condition physique','Communication','Motivation','Connaissance fitness'],
+  cafe:['Préparation café','Service rapide','Propreté','Sens du détail'],
+  garage:['Mécanique','Diagnostic','Service client','Sécurité'],
+  clinique:['Accueil patient','Confidentialité','Organisation','Communication'],
+  default:['Service clientèle','Travail d\'équipe','Ponctualité','Communication']
+}
+
+// Init page
+document.getElementById('commerce-icon').textContent = icon
+document.getElementById('commerce-name').textContent = commerceNom
+document.getElementById('commerce-type').textContent = commerceType.charAt(0).toUpperCase()+commerceType.slice(1)+' · '+ville
+document.getElementById('job-title').textContent = posteParam ? 'Postuler — '+posteParam : 'Déposer une candidature'
+document.getElementById('job-location').textContent = ville
+document.getElementById('job-type').textContent = 'Temps plein / partiel'
+document.getElementById('job-salary').textContent = 'Selon expérience'
+document.getElementById('job-desc').textContent = 'Rejoignez l\'équipe de '+commerceNom+'. Nous recherchons des personnes motivées, fiables et passionnées par le service à la clientèle.'
+
+// Remplir le select des postes
+const postes = postesParType[commerceType] || postesParType.default
+const posteSelect = document.getElementById('f-poste')
+postes.forEach(p => {
+  const opt = document.createElement('option')
+  opt.value = p
+  opt.textContent = p
+  if(p === posteParam) opt.selected = true
+  posteSelect.appendChild(opt)
+})
+
+// Remplir les compétences
+const comps = compsByType[commerceType] || compsByType.default
+const ratingGrid = document.getElementById('rating-grid')
+comps.forEach((comp, ci) => {
+  const div = document.createElement('div')
+  div.className = 'rating-item'
+  div.innerHTML = `<div class="rating-label">${comp}</div><div class="rating-stars" id="stars-${ci}">
+    ${[1,2,3,4,5].map(i=>`<div class="star" onclick="rateStar(${ci},${i})" title="${i}/5">⭐</div>`).join('')}
+  </div>`
+  ratingGrid.appendChild(div)
+})
+
+let ratings = {}
+function rateStar(ci, val) {
+  ratings[ci] = val
+  const stars = document.querySelectorAll(`#stars-${ci} .star`)
+  stars.forEach((s,i) => s.classList.toggle('on', i < val))
+}
+
+// Disponibilité
+let selectedDispoDebut = ''
+let selectedDispoHoraire = ''
+
+function selDispoDebut(el) {
+  document.querySelectorAll('#dispo-debut-grid .dispo-opt').forEach(x => x.classList.remove('sel'))
+  el.classList.add('sel')
+  selectedDispoDebut = el.textContent
+}
+
+function selDispoHoraire(el) {
+  document.querySelectorAll('#dispo-horaire-grid .dispo-opt').forEach(x => x.classList.remove('sel'))
+  el.classList.add('sel')
+  selectedDispoHoraire = el.textContent
+}
+
+// Upload CV
+function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover') }
+function dragLeave(e) { document.getElementById('upload-zone').classList.remove('dragover') }
+function dropFile(e) {
+  e.preventDefault()
+  const file = e.dataTransfer.files[0]
+  if(file) setFile(file)
+}
+function fileSelected(input) { if(input.files[0]) setFile(input.files[0]) }
+function setFile(file) {
+  const zone = document.getElementById('upload-zone')
+  zone.classList.remove('dragover')
+  zone.classList.add('has-file')
+  const fn = document.getElementById('upload-filename')
+  fn.textContent = '✓ '+file.name
+  fn.style.display = 'block'
+}
+
+// Étapes
+let currentStep = 0
+function goStep(n) {
+  if(n > currentStep && !validateStep(currentStep)) return
+  document.getElementById('step-'+currentStep).style.display = 'none'
+  currentStep = n
+  document.getElementById('step-'+n).style.display = 'block'
+  updateStepBar(n)
+  if(n === 3) buildReview()
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+
+function updateStepBar(n) {
+  for(let i=0; i<4; i++){
+    const c = document.getElementById('sc'+i)
+    const l = document.getElementById('sl'+i)
+    c.className = 'sd-circle '+(i<n?'done':i===n?'active':'todo')
+    c.textContent = i<n?'✓':i+1
+    if(l) l.className = 'step-line '+(i<n?'done':'')
+    c.closest('.step-dot').classList.toggle('active',i===n)
+  }
+}
+
+function validateStep(n) {
+  if(n===0){
+    if(!document.getElementById('f-prenom').value.trim()){alert('Veuillez entrer votre prénom.');return false}
+    if(!document.getElementById('f-nom').value.trim()){alert('Veuillez entrer votre nom.');return false}
+    if(!document.getElementById('f-email').value.trim()){alert('Veuillez entrer votre email.');return false}
+    if(!document.getElementById('f-tel').value.trim()){alert('Veuillez entrer votre téléphone.');return false}
+    if(!document.getElementById('f-poste').value){alert('Veuillez sélectionner un poste.');return false}
+  }
+  if(n===1){
+    if(!document.getElementById('f-exp').value){alert('Veuillez sélectionner votre expérience.');return false}
+    if(!document.getElementById('f-experience').value.trim()){alert('Veuillez décrire votre expérience.');return false}
+    if(!document.getElementById('f-motivation').value.trim()){alert('Veuillez indiquer votre motivation.');return false}
+  }
+  if(n===2){
+    if(!document.getElementById('cv-file').files[0]&&!document.getElementById('upload-zone').classList.contains('has-file')){
+      alert('Veuillez téléverser votre CV.');return false
+    }
+  }
+  return true
+}
+
+function buildReview() {
+  const prenom = document.getElementById('f-prenom').value
+  const nom = document.getElementById('f-nom').value
+  const email = document.getElementById('f-email').value
+  const tel = document.getElementById('f-tel').value
+  const poste = document.getElementById('f-poste').value
+  const exp = document.getElementById('f-exp').value
+  const dispo = selectedDispos.join(', ') || 'Non précisé'
+
+  document.getElementById('review-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${[
+        ['Nom complet',prenom+' '+nom],
+        ['Email',email],
+        ['Téléphone',tel],
+        ['Poste visé','<strong style="color:var(--gold)">'+poste+'</strong>'],
+        ['Expérience',exp],
+        ['Disponibilité',dispo],
+        ['CV',document.getElementById('upload-filename').textContent||'Non fourni'],
+      ].map(([l,v])=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px"><div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${l}</div><div style="font-size:13.5px;color:#fff">${v}</div></div>`).join('')}
+    </div>`
+}
+
+function submitCandidature() {
+  const prenom = document.getElementById('f-prenom').value
+  const nom = document.getElementById('f-nom').value
+  const email = document.getElementById('f-email').value
+  const tel = document.getElementById('f-tel').value
+  const ville = document.getElementById('f-ville').value
+  const poste = document.getElementById('f-poste').value
+  const exp = document.getElementById('f-exp').value
+  const experience = document.getElementById('f-experience').value
+  const motivation = document.getElementById('f-motivation').value
+  const linkedin = document.getElementById('f-linkedin').value
+  const extra = document.getElementById('f-extra').value
+  const btn = document.getElementById('submit-btn')
+  btn.textContent = '⏳ Envoi en cours...'
+  btn.disabled = true
+
+  // Construire l'objet candidature
+  const candidature = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    commerce: commerceNom,
+    type: commerceType,
+    poste: poste,
+    prenom: prenom,
+    nom: nom,
+    email: email,
+    tel: tel,
+    ville: ville,
+    exp: exp,
+    experience: experience,
+    motivation: motivation,
+    linkedin: linkedin,
+    extra: extra,
+    dispo: (selectedDispoDebut ? selectedDispoDebut : 'Non précisé') + (selectedDispoHoraire ? ' · ' + selectedDispoHoraire : ''),
+    status: 'nouveau' // nouveau / en-review / accepte / refuse
+  }
+
+  // Sauvegarder dans localStorage (partagé avec admin.html)
+  try {
+    const existantes = JSON.parse(localStorage.getItem('fivestar_candidatures') || '[]')
+    existantes.unshift(candidature) // Ajouter en premier
+    localStorage.setItem('fivestar_candidatures', JSON.stringify(existantes))
+  } catch(e) {
+    console.error('Erreur sauvegarde:', e)
+  }
+
+  setTimeout(() => {
+    document.getElementById('step-3').style.display = 'none'
+    document.getElementById('step-success').style.display = 'block'
+    document.getElementById('success-prenom').textContent = prenom
+    document.getElementById('success-poste').textContent = poste
+    document.getElementById('success-email').textContent = email
+    document.getElementById('steps-bar').style.display = 'none'
+    window.scrollTo({top:0,behavior:'smooth'})
+  }, 1200)
+}
+</script>
+</body>
+</html>
