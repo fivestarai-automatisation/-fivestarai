@@ -207,6 +207,7 @@
         <div class="sb-section">Opérations</div>
         <div class="sb-item" onclick="showPage('setup',this)"><span>⚙️</span> Setups à faire</div>
         <div class="sb-item" onclick="showPage('annulations',this)"><span>❌</span> Annulations</div>
+        <div class="sb-item" onclick="showPage('candidatures',this)"><span>📋</span> Candidatures <span id="cand-count" style="display:none;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
         <div class="sb-item" onclick="showPage('recrutement',this)"><span>👥</span> Recrutement IA</div>
       </div>
       <div class="sb-bottom">
@@ -361,6 +362,18 @@
             <div style="font-size:32px;margin-bottom:12px">✅</div>
             Aucune demande d'annulation en cours. Tous vos clients sont actifs.
           </div>
+        </div>
+
+        <!-- CANDIDATURES -->
+        <div id="page-candidatures" class="client-detail">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:4px">📋 Candidatures reçues</div>
+              <div style="font-size:14px;color:var(--muted)">Toutes les candidatures soumises via les formulaires FiveStar AI</div>
+            </div>
+            <button onclick="clearCandidatures()" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-family:inherit">🗑 Vider la liste</button>
+          </div>
+          <div id="cand-list"></div>
         </div>
 
         <!-- RECRUTEMENT IA -->
@@ -546,6 +559,9 @@ function initAdmin(email) {
   renderClientsTable(CLIENTS)
   renderAlerts()
   renderSetup()
+  checkNewCandidatures()
+  // Vérifier toutes les 30 secondes si nouvelles candidatures
+  setInterval(checkNewCandidatures, 30000)
 }
 
 function updateClock() {
@@ -559,8 +575,119 @@ function showPage(page, el) {
   document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'))
   document.getElementById('page-' + page).classList.add('show')
   if (el) el.classList.add('active')
-  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client', recrutement:'👥 Recrutement IA'}
+  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client', recrutement:'👥 Recrutement IA', candidatures:'📋 Candidatures'}
   document.querySelector('.tb-title').innerHTML = '<span>' + (titles[page] || '📊') + '</span>'
+  if (page === 'candidatures') renderCandidatures()
+}
+
+// ── CANDIDATURES ──
+function renderCandidatures() {
+  const list = document.getElementById('cand-list')
+  let cands = []
+  try { cands = JSON.parse(localStorage.getItem('fivestar_candidatures') || '[]') } catch(e) {}
+
+  // Badge count
+  const newCands = cands.filter(c => c.status === 'nouveau').length
+  const badge = document.getElementById('cand-count')
+  if (newCands > 0) { badge.style.display = 'inline'; badge.textContent = newCands }
+  else { badge.style.display = 'none' }
+
+  if (cands.length === 0) {
+    list.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">📭</div>
+      <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Aucune candidature pour l'instant</div>
+      <div style="font-size:13px;color:var(--muted)">Les candidatures soumises via les formulaires apparaîtront ici automatiquement.</div>
+    </div>`
+    return
+  }
+
+  list.innerHTML = cands.map((c, i) => {
+    const date = new Date(c.date).toLocaleDateString('fr-CA', {day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    const statusColors = {nouveau:'var(--blue)', 'en-review':'var(--gold)', accepte:'var(--green)', refuse:'var(--red)'}
+    const statusLabels = {nouveau:'Nouveau', 'en-review':'En révision', accepte:'Accepté ✓', refuse:'Refusé'}
+    return `
+    <div style="background:var(--surface);border:1px solid ${c.status==='nouveau'?'rgba(59,130,246,.3)':'var(--border)'};border-radius:14px;padding:24px;margin-bottom:14px;transition:all .2s">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div>
+          <div style="font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px">${c.prenom} ${c.nom}</div>
+          <div style="font-size:13px;color:var(--gold);font-weight:600;margin-top:2px">${c.poste} — ${c.commerce}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">${date}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select onchange="updateStatus(${i}, this.value)" style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 10px;color:${statusColors[c.status]};font-size:12px;font-weight:700;outline:none;cursor:pointer;font-family:inherit">
+            <option value="nouveau" ${c.status==='nouveau'?'selected':''}>🔵 Nouveau</option>
+            <option value="en-review" ${c.status==='en-review'?'selected':''}>🟡 En révision</option>
+            <option value="accepte" ${c.status==='accepte'?'selected':''}>🟢 Accepté</option>
+            <option value="refuse" ${c.status==='refuse'?'selected':''}>🔴 Refusé</option>
+          </select>
+          <button onclick="contactCandidat('${c.email}','${c.prenom}','${c.poste}','${c.commerce}')" style="background:#3b82f6;color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📧 Contacter</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Contact</div>
+          <div style="font-size:13px;color:#fff">${c.email}</div>
+          <div style="font-size:12px;color:var(--muted)">${c.tel}</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Expérience</div>
+          <div style="font-size:13px;color:#fff">${c.exp}</div>
+          <div style="font-size:12px;color:var(--muted)">${c.dispo}</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Ville</div>
+          <div style="font-size:13px;color:#fff">${c.ville || 'Non précisé'}</div>
+          ${c.linkedin ? `<a href="${c.linkedin}" target="_blank" style="font-size:12px;color:#3b82f6;text-decoration:none">LinkedIn →</a>` : ''}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Expérience décrite</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.65">${c.experience}</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Motivation</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.65">${c.motivation}</div>
+        </div>
+      </div>
+      ${c.extra ? `<div style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Infos supplémentaires</div><div style="font-size:13px;color:var(--muted)">${c.extra}</div></div>` : ''}
+    </div>`
+  }).join('')
+}
+
+function updateStatus(index, newStatus) {
+  let cands = []
+  try { cands = JSON.parse(localStorage.getItem('fivestar_candidatures') || '[]') } catch(e) {}
+  if (cands[index]) {
+    cands[index].status = newStatus
+    localStorage.setItem('fivestar_candidatures', JSON.stringify(cands))
+    renderCandidatures()
+  }
+}
+
+function contactCandidat(email, prenom, poste, commerce) {
+  const subj = encodeURIComponent('Votre candidature chez ' + commerce)
+  const body = encodeURIComponent('Bonjour ' + prenom + ',\n\nNous avons bien reçu votre candidature pour le poste de ' + poste + ' chez ' + commerce + '.\n\n')
+  window.open('mailto:' + email + '?subject=' + subj + '&body=' + body)
+}
+
+function clearCandidatures() {
+  if (confirm('Vider toutes les candidatures ?')) {
+    localStorage.removeItem('fivestar_candidatures')
+    renderCandidatures()
+  }
+}
+
+// Vérifier les nouvelles candidatures au chargement
+function checkNewCandidatures() {
+  let cands = []
+  try { cands = JSON.parse(localStorage.getItem('fivestar_candidatures') || '[]') } catch(e) {}
+  const newCands = cands.filter(c => c.status === 'nouveau').length
+  const badge = document.getElementById('cand-count')
+  if (badge) {
+    if (newCands > 0) { badge.style.display = 'inline'; badge.textContent = newCands }
+    else badge.style.display = 'none'
+  }
 }
 
 // ── GÉNÉRATEUR LIEN RECRUTEMENT ──
