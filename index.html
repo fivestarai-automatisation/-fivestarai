@@ -47,7 +47,6 @@
     .hamburger.open{border-color:var(--gold);color:var(--gold);transform:rotate(90deg)}
     .mob-menu{position:fixed;top:62px;inset-x:0;background:rgba(5,8,16,.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px 24px;flex-direction:column;gap:2px;z-index:999;transform:translateY(-10px);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;display:flex}
     .mob-menu.open{transform:translateY(0);opacity:1;pointer-events:all}
-    /* Sur desktop, panneau vertical à droite */
     @media(min-width:901px){
       .mob-menu{inset-x:auto;right:0;left:auto;top:62px;width:280px;border-bottom:none;border-left:1px solid var(--border);border-radius:0 0 0 16px;padding:12px;min-height:0;transform:translateX(20px);box-shadow:-8px 8px 32px rgba(0,0,0,.5)}
       .mob-menu.open{transform:translateX(0)}
