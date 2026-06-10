@@ -4,78 +4,127 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FiveStar AI — Estimez vos résultats</title>
-  <meta name="description" content="Calculez combien FiveStar AI peut rapporter à votre commerce. Estimez votre retour sur investissement en 30 secondes."/>
+  <meta name="description" content="Estimez ce que FiveStar AI peut apporter à votre commerce en avis Google, clients et revenus supplémentaires."/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444}
-    html{scroll-behavior:smooth}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa;--orange:#f97316}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}
-    .logo span{color:var(--gold)}
-    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s;display:flex;align-items:center;gap:6px}
-    .nav-back:hover{color:var(--gold)}
-    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none;transition:all .2s}
-    .nav-cta:hover{background:var(--gold2)}
-    .page{max-width:900px;margin:0 auto;padding:100px 24px 80px}
-    .hero-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-    .hero-h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:16px;line-height:1.08}
-    .hero-h1 em{font-style:normal;color:var(--gold)}
-    .hero-p{font-size:16px;color:var(--muted);max-width:520px;line-height:1.75;margin-bottom:48px}
-    .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px}
-    .calc-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px}
-    .calc-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-    .field{margin-bottom:20px}
-    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-    .slider-wrap{position:relative}
+    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}.logo span{color:var(--gold)}
+    .logo .star{color:var(--gold)}
+    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}.nav-back:hover{color:var(--gold)}
+    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none;transition:all .2s}.nav-cta:hover{background:var(--gold2)}
+    .page{max-width:960px;margin:0 auto;padding:96px 24px 80px}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .page-h1{font-size:clamp(26px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:14px;line-height:1.08}
+    .page-h1 em{font-style:normal;color:var(--gold)}
+    .page-p{font-size:16px;color:var(--muted);max-width:540px;line-height:1.75;margin-bottom:44px}
+
+    /* CALCULATOR */
+    .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+    .calc-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px}
+    .calc-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+    .slider-val{font-size:22px;font-weight:800;color:var(--gold);margin-bottom:8px;letter-spacing:-0.5px}
     input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:99px;background:var(--border);outline:none;cursor:pointer}
     input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 2px 8px rgba(245,200,66,.4)}
-    .slider-val{font-size:22px;font-weight:800;color:var(--gold);margin-bottom:8px;letter-spacing:-0.5px}
-    .result-card{background:linear-gradient(135deg,rgba(245,200,66,.07),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.2);border-radius:16px;padding:32px;grid-column:1/-1}
-    .result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
-    .result-item{text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 14px}
-    .result-num{font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:6px}
-    .result-label{font-size:12px;color:var(--muted);line-height:1.4}
-    .result-summary{font-size:15px;color:var(--muted);line-height:1.75;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:20px}
-    .result-summary strong{color:#fff}
-    .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:14px 34px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit}
-    .btn-g:hover{background:var(--gold2);transform:translateY(-2px)}
-    .btn-o{background:transparent;color:var(--text);font-weight:600;font-size:15px;padding:14px 34px;border-radius:9px;border:1px solid var(--border);text-decoration:none;cursor:pointer;transition:all .25s;font-family:inherit}
-    .btn-o:hover{border-color:rgba(245,200,66,.35);color:var(--gold)}
-    .assumption{font-size:12px;color:var(--muted);text-align:center;margin-top:20px;line-height:1.6}
     .select-type{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit;cursor:pointer}
     .note-compare{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:8px}
-    .nc-box{text-align:center}
     .nc-num{font-size:32px;font-weight:900;line-height:1}
-    .nc-label{font-size:11px;color:var(--muted);margin-top:3px}
+    .nc-label{font-size:11px;color:var(--muted);margin-top:3px;text-align:center}
+
+    /* FORFAIT SELECTOR */
+    .forfait-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+    .forfait-opt{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:18px 14px;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+    .forfait-opt:hover{border-color:rgba(245,200,66,.3)}
+    .forfait-opt.sel{border-color:var(--gold);background:rgba(245,200,66,.04)}
+    .forfait-opt.sel-pro{border-color:var(--gold);background:rgba(245,200,66,.06)}
+    .fo-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:9px;font-weight:800;padding:2px 10px;border-radius:99px;white-space:nowrap;letter-spacing:.3px}
+    .fo-name{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+    .forfait-opt.sel .fo-name,.forfait-opt.sel-pro .fo-name{color:var(--gold)}
+    .fo-price{font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.8px;line-height:1}
+    .fo-period{font-size:11px;color:var(--muted);margin-top:2px}
+    .fo-desc{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+    /* RESULTS */
+    .result-card{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.2);border-radius:18px;padding:28px;margin-bottom:20px}
+    .result-label{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+    .result-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;transition:all .3s}
+    .result-item.highlight{border-color:rgba(245,200,66,.3);background:rgba(245,200,66,.03)}
+    .ri-num{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:5px}
+    .ri-label{font-size:11.5px;color:var(--muted);line-height:1.4}
+    .ri-sub{font-size:10.5px;margin-top:4px;font-weight:600}
+
+    /* PRO HIGHLIGHT */
+    .pro-box{background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.2);border-radius:12px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    .pro-box-icon{font-size:22px;flex-shrink:0}
+    .pro-box-text{font-size:13.5px;color:var(--text);line-height:1.6}
+    .pro-box-text strong{color:var(--gold)}
+
+    /* SUMMARY */
+    .result-summary{font-size:14.5px;color:var(--muted);line-height:1.8;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:18px}
+    .result-summary strong{color:#fff}
+
+    .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:13px 32px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-g:hover{background:var(--gold2);transform:translateY(-2px)}
+    .btn-o{background:transparent;color:var(--text);font-weight:600;font-size:15px;padding:13px 28px;border-radius:9px;border:1px solid var(--border);text-decoration:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
+    .btn-o:hover{border-color:rgba(245,200,66,.35);color:var(--gold)}
+
+    /* À PROPOS */
+    .about-section{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px;margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    .about-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .about-h2{font-size:clamp(22px,3vw,34px);font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:16px;line-height:1.15}
+    .about-h2 em{font-style:normal;color:var(--gold)}
+    .about-p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:14px}
+    .founders{display:flex;flex-direction:column;gap:16px}
+    .founder{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;gap:14px;align-items:flex-start}
+    .founder-ava{width:48px;height:48px;border-radius:50%;background:rgba(245,200,66,.1);border:2px solid rgba(245,200,66,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .founder-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+    .founder-role{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:6px;letter-spacing:.3px}
+    .founder-bio{font-size:13px;color:var(--muted);line-height:1.6}
+    .story-stat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:center;margin-bottom:10px}
+    .story-stat-icon{font-size:20px;flex-shrink:0}
+    .story-stat-text{font-size:13px;color:var(--muted);line-height:1.5}
+    .story-stat-text strong{color:#fff}
+
+    .assumption{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+
     footer{padding:32px 24px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
     footer p{font-size:12.5px;color:var(--muted)}
     footer a{color:var(--gold);text-decoration:none}
-    @media(max-width:700px){
+
+    @media(max-width:760px){
       nav{padding:0 20px}
       .calc-grid{grid-template-columns:1fr}
-      .result-grid{grid-template-columns:repeat(2,1fr)}
+      .result-grid{grid-template-columns:1fr 1fr}
+      .forfait-grid{grid-template-columns:1fr}
+      .about-section{grid-template-columns:1fr;gap:28px;padding:28px 20px}
+      .recrut-grid{grid-template-columns:1fr!important}
+      .recrut-bottom{flex-direction:column!important;text-align:center!important}
     }
   </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
+  <a href="index.html" class="logo">⭐ FiveStar AI</a>
   <a href="index.html" class="nav-back">← Retour</a>
   <a href="dashboard.html?signup=true&plan=pro" class="nav-cta">Commencer →</a>
 </nav>
 
 <div class="page">
-  <div class="hero-label">Estimez vos résultats</div>
-  <h1 class="hero-h1">Vos résultats estimés<br><em>en 30 secondes.</em></h1>
-  <p class="hero-p">
+  <div class="eyebrow">Estimez vos résultats</div>
+  <h1 class="page-h1">Combien FiveStar AI peut<br><em>changer votre commerce ?</em></h1>
+  <p class="page-p">Entrez vos chiffres et voyez en temps réel l'impact sur vos avis Google, vos clients et vos revenus.</p>
 
+  <!-- CALCULATEUR -->
   <div class="calc-grid">
     <div class="calc-card">
-      <div class="calc-title">📊 Votre commerce</div>
+      <div class="calc-title">🏪 Votre commerce</div>
       <div class="field">
         <label>Type de commerce</label>
         <select class="select-type" id="type" onchange="calc()">
@@ -94,13 +143,13 @@
       </div>
       <div class="field">
         <label>Valeur moyenne par client ($)</label>
-        <div class="slider-val" id="v-valeur">45</div>
+        <div class="slider-val" id="v-valeur">$45</div>
         <input type="range" id="valeur" min="15" max="300" step="5" value="45" oninput="document.getElementById('v-valeur').textContent='$'+this.value;calc()"/>
       </div>
       <div class="field">
         <label>Note Google actuelle</label>
         <div class="slider-val" id="v-note">3.8 ⭐</div>
-        <input type="range" id="note" min="1" max="49" step="1" value="38" oninput="document.getElementById('v-note').textContent=(this.value/10).toFixed(1)+' ⭐';calc()"/>
+        <input type="range" id="note" min="10" max="49" step="1" value="38" oninput="document.getElementById('v-note').textContent=(this.value/10).toFixed(1)+' ⭐';calc()"/>
       </div>
     </div>
 
@@ -110,75 +159,174 @@
         <label>Taux de conversion SMS → Avis</label>
         <div class="slider-val" id="v-conv">20%</div>
         <input type="range" id="conv" min="5" max="40" step="1" value="20" oninput="document.getElementById('v-conv').textContent=this.value+'%';calc()"/>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px">Moyenne de nos clients : 18-22%</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Moyenne de nos clients : 18–22%</div>
       </div>
       <div class="field">
         <label>Progression de note Google estimée</label>
         <div class="note-compare">
-          <div class="nc-box"><div class="nc-num" id="note-avant" style="color:var(--red)">3.8</div><div class="nc-label">Avant</div></div>
-          <div style="font-size:18px;color:var(--gold)">→</div>
-          <div class="nc-box"><div class="nc-num" id="note-apres" style="color:var(--green)">4.5</div><div class="nc-label">Après 60 jours</div></div>
+          <div><div class="nc-num" id="note-avant" style="color:var(--red)">3.8</div><div class="nc-label">Avant</div></div>
+          <div style="font-size:20px;color:var(--gold);font-weight:700">→</div>
+          <div><div class="nc-num" id="note-apres" style="color:var(--green)">4.5</div><div class="nc-label">Après 60 jours</div></div>
         </div>
-      </div>
-      <div class="field">
-        <label>Forfait FiveStar AI</label>
-        <select class="select-type" id="forfait" onchange="calc()">
-          <option value="297">Starter — 297$/mois</option>
-          <option value="499" selected>Pro — 499$/mois</option>
-          <option value="599">Premium — 599$/mois</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="result-card">
-      <div style="font-size:13px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">📊 Votre estimation sur 12 mois</div>
-      <div class="result-grid">
-        <div class="result-item">
-          <div class="result-num" id="r-avis" style="color:var(--gold)">0</div>
-          <div class="result-label">Nouveaux avis<br>Google générés</div>
-        </div>
-        <div class="result-item">
-          <div class="result-num" id="r-clients" style="color:var(--blue)">0</div>
-          <div class="result-label">Clients<br>supplémentaires</div>
-        </div>
-        <div class="result-item">
-          <div class="result-num" id="r-revenu" style="color:var(--green)">0$</div>
-          <div class="result-label">Revenus<br>supplémentaires</div>
-        </div>
-        <div class="result-item">
-          <div class="result-num" id="r-roi" style="color:#a78bfa">0x</div>
-          <div class="result-label">Retour sur<br>investissement</div>
-        </div>
-      </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-        <div style="font-size:13px;color:var(--muted)">💳 Coût FiveStar AI sur 12 mois <span id="r-forfait-name" style="color:#fff;font-weight:600"></span></div>
-        <div style="font-size:16px;font-weight:800;color:var(--red)" id="r-cout-an">0$</div>
-      </div>
-      <div class="result-summary" id="r-summary">Entrez vos chiffres pour voir votre estimation personnalisée.</div>
-      <div class="cta-row">
-        <button class="btn-g" onclick="window.location.href='dashboard.html?signup=true&plan=pro'">Commencer maintenant →</button>
-        <a href="index.html#forfaits" class="btn-o">Voir les forfaits</a>
       </div>
     </div>
   </div>
 
-  <div class="assumption">* Les estimations sont basées sur les données moyennes de nos clients. Les résultats réels peuvent varier selon votre type de commerce, votre région et votre clientèle. Une note Google plus élevée attire en moyenne 12-18% de clients supplémentaires (source : BrightLocal 2024).</div>
+  <!-- FORFAIT SELECTOR -->
+  <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Choisir un forfait pour voir l'impact</div>
+  <div class="forfait-grid" id="forfait-grid">
+    <div class="forfait-opt" id="fo-297" onclick="selForfait(297,this)">
+      <div class="fo-name">Starter</div>
+      <div class="fo-price">297$</div>
+      <div class="fo-period">par mois</div>
+      <div class="fo-desc">QR Code + SMS automatique + Réponses IA</div>
+    </div>
+    <div class="forfait-opt sel sel-pro" id="fo-499" onclick="selForfait(499,this)">
+      <div class="fo-badge">⭐ RECOMMANDÉ</div>
+      <div class="fo-name">Pro</div>
+      <div class="fo-price">499$</div>
+      <div class="fo-period">par mois</div>
+      <div class="fo-desc">Starter + SMS promo mensuel + Dashboard</div>
+    </div>
+    <div class="forfait-opt" id="fo-599" onclick="selForfait(599,this)">
+      <div class="fo-name">Premium</div>
+      <div class="fo-price">599$</div>
+      <div class="fo-period">par mois</div>
+      <div class="fo-desc">Pro + Recrutement IA + Support prioritaire</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="result-card">
+    <div class="result-label">📊 Votre estimation sur 12 mois</div>
+
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="ri-num" id="r-avis" style="color:var(--gold)">0</div>
+        <div class="ri-label">Nouveaux avis<br>Google générés</div>
+        <div class="ri-sub" style="color:var(--gold)" id="r-avis-sub"></div>
+      </div>
+      <div class="result-item">
+        <div class="ri-num" id="r-clients" style="color:var(--blue)">0</div>
+        <div class="ri-label">Clients<br>supplémentaires</div>
+        <div class="ri-sub" style="color:var(--blue)" id="r-clients-sub"></div>
+      </div>
+      <div class="result-item highlight">
+        <div class="ri-num" id="r-revenu" style="color:var(--green)">0$</div>
+        <div class="ri-label">Revenus<br>supplémentaires</div>
+        <div class="ri-sub" style="color:var(--green)" id="r-revenu-sub"></div>
+      </div>
+    </div>
+
+    <div class="pro-box" id="pro-box">
+      <div class="pro-box-icon">💡</div>
+      <div class="pro-box-text" id="pro-box-text">—</div>
+    </div>
+
+    <div class="result-summary" id="r-summary">—</div>
+
+    <div class="cta-row">
+      <a href="dashboard.html?signup=true&plan=pro" class="btn-g" id="cta-btn">Commencer avec le Pro →</a>
+      <a href="index.html#forfaits" class="btn-o">Voir tous les forfaits</a>
+    </div>
+  </div>
+
+  <div class="assumption">* Estimations basées sur les données moyennes de nos clients. Les résultats réels varient selon votre commerce, région et clientèle.</div>
+
+  <!-- SECTION RECRUTEMENT -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;margin-top:32px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Recrutement IA — Forfait Premium</div>
+        <h2 style="font-size:clamp(20px,2.8vw,32px);font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:8px;line-height:1.15">Combien d'heures perdez-vous<br>à trier des CV ?</h2>
+        <p style="font-size:14px;color:var(--muted);max-width:480px;line-height:1.7">En moyenne, un gérant passe <strong style="color:#fff">1h30 par CV reçu</strong> — lecture, évaluation, réponse, suivi. Avec un roulement de personnel de 35% par année (CRHA Québec), ça s'accumule vite.</p>
+      </div>
+      <div style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:16px 20px;text-align:center;flex-shrink:0">
+        <div style="font-size:11px;color:var(--purple);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Données prouvées</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6">📊 18 CV reçus par poste<br>⏱️ 1h30 par CV traité<br>🔄 35% roulement annuel moyen<br><span style="font-size:11px;color:#3a4560">(Sources : Indeed Canada, CRHA Québec 2024)</span></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Nombre d'employés dans votre commerce</div>
+      <div style="font-size:28px;font-weight:900;color:var(--purple);margin-bottom:8px;letter-spacing:-0.5px"><span id="v-employes">8</span> employés</div>
+      <input type="range" id="employes-slider" min="2" max="50" step="1" value="8" oninput="document.getElementById('v-employes').textContent=this.value;calcRecrut()" style="width:100%;max-width:400px"/>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px" class="recrut-grid">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Embauches par an</div>
+        <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px" id="r-embauches">3</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">postes à combler</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">CV à traiter</div>
+        <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px" id="r-cv-total">54</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">candidatures reçues</div>
+      </div>
+      <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Valeur de votre temps</div>
+        <div style="font-size:28px;font-weight:900;color:var(--red);letter-spacing:-1px" id="r-valeur-temps">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">heures perdues en recrutement</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px">
+        <span style="color:var(--muted)">Sans FiveStar AI — <strong style="color:var(--red)" id="r-heures-sans">—</strong> à trier des CV</span>
+        <span style="color:var(--muted)">Avec FiveStar AI — <strong style="color:var(--green)" id="r-heures-avec">—</strong></span>
+      </div>
+      <div style="background:var(--border);border-radius:99px;height:10px;overflow:hidden;margin-bottom:10px">
+        <div id="recrut-bar" style="height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),#16a34a);width:0%;transition:width .8s ease"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:13.5px;color:var(--text)"><strong id="r-heures-sauvees" style="color:var(--green)">—</strong> <span style="color:var(--muted)">d'heures récupérées par année</span></div>
+        <div style="font-size:14px;font-weight:800;color:var(--green)" id="recrut-pct">—</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(167,139,250,.02));border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px" class="recrut-bottom">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Valeur récupérée avec le recrutement IA</div>
+        <div style="font-size:13px;color:var(--muted)">Notre IA trie automatiquement les CV et vous envoie seulement les meilleurs profils.</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:900;color:var(--purple);letter-spacing:-1px" id="r-valeur-sauvee">—</div>
+        <div style="font-size:11px;color:var(--muted)">économisé par année</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;text-align:center">
+      <a href="dashboard.html?signup=true&plan=premium" style="background:var(--purple);color:#fff;font-weight:700;font-size:15px;padding:13px 30px;border-radius:9px;text-decoration:none;display:inline-block;transition:all .2s">Découvrir le recrutement IA — Premium →</a>
+    </div>
+  </div>
+
+
 </div>
 
 <footer>
-  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · admin@fivestarai.ca</p>
+  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · <a href="conditions.html">CGU</a> · admin@fivestarai.ca</p>
 </footer>
 
 <script>
 const noteImpact={restaurant:0.8,salon:0.7,gym:0.9,cafe:0.6,garage:0.7,clinique:1.0}
 const clientImpact={restaurant:0.15,salon:0.12,gym:0.18,cafe:0.10,garage:0.14,clinique:0.20}
-const forfaitNames={297:'Starter',499:'Pro',599:'Premium'}
+// Starter = base, Pro = +45% grâce SMS promo + dashboard + fidélisation, Premium = même que Pro pour avis
+const forfaitAvisBoost={297:1.0, 499:1.45, 599:1.45}
+const forfaitRecrutValeur={297:0, 499:0, 599:4800}
+const typeNames={restaurant:'restaurant',salon:'salon',gym:'gym',cafe:'café',garage:'garage',clinique:'clinique'}
 
-// Starter = base avis/clients
-// Pro = +20% avis/clients grâce SMS promo mensuel qui ramène les clients
-// Premium = même que Pro pour les avis, mais ajoute valeur recrutement (heures économisées)
-const forfaitAvisBoost={297:1.0, 499:1.20, 599:1.20}
-const forfaitRecrutValeur={297:0, 499:0, 599:4800} // ~2h/semaine économisées x 46$/h x 52 semaines
+let currentForfait=499
+
+function selForfait(val,el){
+  currentForfait=val
+  document.querySelectorAll('.forfait-opt').forEach(x=>x.classList.remove('sel','sel-pro'))
+  el.classList.add(val===499?'sel-pro':'sel')
+  calc()
+}
+
+function fmt(n){return n.toLocaleString('fr-CA')}
+function fmtCAD(n){return n.toLocaleString('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0})}
 
 function calc(){
   const clients=+document.getElementById('clients').value
@@ -186,46 +334,95 @@ function calc(){
   const noteRaw=+document.getElementById('note').value
   const noteActuelle=noteRaw/10
   const conv=+document.getElementById('conv').value/100
-  const forfait=+document.getElementById('forfait').value
   const type=document.getElementById('type').value
+  const forfait=currentForfait
 
-  // Note après — identique peu importe le forfait
   const noteGain=noteImpact[type]||0.7
   const noteApres=Math.min(noteActuelle+noteGain,5.0)
   document.getElementById('note-avant').textContent=noteActuelle.toFixed(1)
   document.getElementById('note-apres').textContent=noteApres.toFixed(1)
 
-  // Boost avis/clients selon forfait
   const boost=forfaitAvisBoost[forfait]||1.0
   const clientsAn=clients*52
   const avisAn=Math.round(clientsAn*conv*boost)
   const clientsSupp=Math.round(clientsAn*(clientImpact[type]||0.14)*(noteGain/1.0)*boost)
   const revenuAvis=clientsSupp*valeur
-
-  // Valeur recrutement IA (Premium seulement)
   const revenuRecrut=forfaitRecrutValeur[forfait]||0
-  const revenuSupp=revenuAvis+revenuRecrut
+  const revenuTotal=revenuAvis+revenuRecrut
+  const nomType=typeNames[type]||'commerce'
 
-  // Coût et ROI
-  const coutAn=forfait*12
-  const roi=coutAn>0?Math.round(revenuSupp/coutAn*10)/10:0
+  // Calcul Starter pour comparaison
+  const avisStarter=Math.round(clientsAn*conv*1.0)
+  const clientsStarter=Math.round(clientsAn*(clientImpact[type]||0.14)*(noteGain/1.0)*1.0)
+  const revenuStarter=clientsStarter*valeur
 
-  // Afficher
-  document.getElementById('r-avis').textContent=avisAn.toLocaleString('fr-CA')
-  document.getElementById('r-clients').textContent=clientsSupp.toLocaleString('fr-CA')
-  document.getElementById('r-revenu').textContent=revenuSupp.toLocaleString('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0})
-  document.getElementById('r-roi').textContent=roi+'x'
-  document.getElementById('r-cout-an').textContent=coutAn.toLocaleString('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0})
-  document.getElementById('r-forfait-name').textContent='('+forfaitNames[forfait]+' · '+forfait+'$/mois)'
+  document.getElementById('r-avis').textContent=fmt(avisAn)
+  document.getElementById('r-clients').textContent=fmt(clientsSupp)
+  document.getElementById('r-revenu').textContent=fmtCAD(revenuTotal)
 
-  const types={restaurant:'restaurant',salon:'salon',gym:'gym',cafe:'café',garage:'garage',clinique:'clinique'}
-  const nomType=types[type]||'commerce'
+  // Sous-titres avec comparaison Starter si forfait Pro/Premium
+  if(forfait===499||forfait===599){
+    document.getElementById('r-avis-sub').textContent='+'+fmt(avisAn-avisStarter)+' vs Starter'
+    document.getElementById('r-clients-sub').textContent='+'+fmt(clientsSupp-clientsStarter)+' vs Starter'
+    document.getElementById('r-revenu-sub').textContent=revenuRecrut>0?'Dont '+fmtCAD(revenuRecrut)+' recrutement':'+'+fmtCAD(revenuTotal-revenuStarter)+' vs Starter'
+  } else {
+    document.getElementById('r-avis-sub').textContent=''
+    document.getElementById('r-clients-sub').textContent=''
+    document.getElementById('r-revenu-sub').textContent=''
+  }
 
-  let extra=''
-  if(forfait==499) extra=' Le forfait Pro inclut les SMS promotionnels mensuels qui ramènent vos clients existants et augmentent les conversions de 20%.'
-  if(forfait==599) extra=' Le forfait Premium inclut le recrutement IA — environ <strong>4 800$ de valeur annuelle</strong> en heures économisées à trier des CV — en plus des résultats sur les avis.'
+  // Box contextuelle
+  const proBox=document.getElementById('pro-box-text')
+  if(forfait===297){
+    const diff=fmtCAD(revenuAvis*0.45)
+    proBox.innerHTML=`💡 En passant au <strong>forfait Pro à 499$/mois</strong>, les SMS promotionnels mensuels ramèneraient vos clients existants et augmenteraient vos résultats de <strong>45%</strong> — soit environ <strong style="color:var(--gold)">${diff} de revenus supplémentaires</strong> par année pour seulement 202$/mois de plus.`
+    document.getElementById('cta-btn').textContent='Passer au Pro — +45% de résultats →'
+    document.getElementById('cta-btn').href='dashboard.html?signup=true&plan=pro'
+  } else if(forfait===499){
+    proBox.innerHTML=`✅ Le forfait Pro est le meilleur choix pour un ${nomType} avec <strong>${clients} clients/semaine</strong>. Les SMS promotionnels mensuels ramènent vos clients existants, le dashboard vous montre votre progression en temps réel. <strong style="color:var(--gold)">45% plus de résultats que le Starter pour 202$/mois de plus.</strong>`
+    document.getElementById('cta-btn').textContent='Commencer avec le Pro →'
+    document.getElementById('cta-btn').href='dashboard.html?signup=true&plan=pro'
+  } else {
+    proBox.innerHTML=`👥 Le forfait Premium ajoute le recrutement IA — environ <strong style="color:var(--gold)">${fmtCAD(4800)}/an d'économies</strong> en heures passées à trier des CV. Idéal si vous recrutez régulièrement du personnel.`
+    document.getElementById('cta-btn').textContent='Commencer avec le Premium →'
+    document.getElementById('cta-btn').href='dashboard.html?signup=true&plan=premium'
+  }
 
-  document.getElementById('r-summary').innerHTML=`Avec <strong>${clients} clients/semaine</strong> à votre ${nomType}, FiveStar AI devrait générer environ <strong style="color:var(--gold)">${avisAn.toLocaleString('fr-CA')} nouveaux avis Google</strong> en 12 mois. Votre note passerait de <strong style="color:var(--red)">${noteActuelle.toFixed(1)}</strong> à environ <strong style="color:var(--green)">${noteApres.toFixed(1)} ⭐</strong>, attirant <strong>${clientsSupp.toLocaleString('fr-CA')} clients supplémentaires</strong> et générant <strong style="color:var(--green)">${revenuAvis.toLocaleString('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0})}</strong> de revenus additionnels.${extra} Pour un investissement de <strong>${coutAn.toLocaleString('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0})}</strong> sur 12 mois, votre retour estimé est de <strong style="color:#a78bfa">${roi}x</strong>.`
+  // Résumé
+  document.getElementById('r-summary').innerHTML=`Avec <strong>${clients} clients/semaine</strong> à votre ${nomType}, FiveStar AI devrait générer environ <strong>${fmt(avisAn)} nouveaux avis Google</strong> en 12 mois. Votre note passerait de <strong style="color:var(--red)">${noteActuelle.toFixed(1)}</strong> à environ <strong style="color:var(--green)">${noteApres.toFixed(1)} ⭐</strong>, attirant <strong>${fmt(clientsSupp)} clients supplémentaires</strong> et générant <strong style="color:var(--green)">${fmtCAD(revenuTotal)}</strong> de revenus additionnels.`
+
+  // Mettre à jour la section recrutement si elle existe
+  if(document.getElementById('employes-slider')) calcRecrut()
+}
+
+// ── SECTION RECRUTEMENT ──
+function calcRecrut(){
+  const employes=+document.getElementById('employes-slider').value
+  document.getElementById('v-employes').textContent=employes
+
+  const cvParPoste=18
+  const heuresParCV=1.5
+  const tauxHoraire=35
+
+  // Garder la précision sans arrondir pour que 2 vs 3 donne des chiffres différents
+  const embauches=employes*0.35
+  const cvTotal=embauches*cvParPoste
+  const heuresTotal=cvTotal*heuresParCV
+  const valeurHeures=Math.round(heuresTotal*tauxHoraire)
+  const heuresAvecIA=heuresTotal*0.15
+  const heuresSauvees=heuresTotal-heuresAvecIA
+
+  document.getElementById('r-embauches').textContent=embauches.toFixed(1)
+  document.getElementById('r-cv-total').textContent=fmt(Math.round(cvTotal))
+  document.getElementById('r-heures-sans').textContent=Math.round(heuresTotal)+'h'
+  document.getElementById('r-heures-avec').textContent=Math.round(heuresAvecIA)+'h'
+  document.getElementById('r-heures-sauvees').textContent=Math.round(heuresSauvees)+'h'
+  document.getElementById('r-valeur-temps').textContent=fmtCAD(valeurHeures)
+  document.getElementById('r-valeur-sauvee').textContent=fmtCAD(Math.round(heuresSauvees*tauxHoraire))
+
+  const pct=Math.round((heuresSauvees/heuresTotal)*100)
+  document.getElementById('recrut-bar').style.width=pct+'%'
+  document.getElementById('recrut-pct').textContent=pct+'%'
 }
 
 calc()
