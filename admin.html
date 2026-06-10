@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI — Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa;--orange:#f97316}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+    /* LOGIN */
+    .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg);position:relative}
+    .login-glow{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(245,200,66,.05) 0%,transparent 65%);pointer-events:none}
+    .login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:420px;position:relative;z-index:1}
+    .login-logo{text-align:center;margin-bottom:8px;font-size:22px;font-weight:900;color:#fff}
+    .login-logo span{color:var(--gold)}
+    .login-badge{text-align:center;margin-bottom:32px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+    .field input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s}
+    .field input:focus{border-color:rgba(245,200,66,.3)}
+    .btn-login{width:100%;background:var(--gold);color:#000;border:none;border-radius:10px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;font-family:inherit;margin-top:8px}
+    .btn-login:hover{background:var(--gold2)}
+    .err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:12px}
+
+    /* ADMIN LAYOUT */
+    .admin{display:flex;min-height:100vh}
+    .sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:10}
+    .sb-logo{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+    .sb-logo-text{font-size:15px;font-weight:900;color:#fff}
+    .sb-logo-text span{color:var(--gold)}
+    .sb-badge{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.5px}
+    .sb-nav{padding:10px 0;flex:1}
+    .sb-section{font-size:10px;font-weight:700;color:#2a3558;letter-spacing:2px;text-transform:uppercase;padding:10px 22px 4px}
+    .sb-item{display:flex;align-items:center;gap:10px;padding:10px 22px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all .15s;border-left:3px solid transparent}
+    .sb-item:hover{color:#fff;background:rgba(255,255,255,.02)}
+    .sb-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(245,200,66,.05);font-weight:600}
+    .sb-bottom{padding:16px 22px;border-top:1px solid var(--border)}
+    .sb-founders{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .sb-avatar{width:28px;height:28px;border-radius:50%;background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold)}
+    .sb-founder-info{font-size:12px;color:var(--muted)}
+    .sb-founder-name{font-size:13px;font-weight:600;color:#fff}
+    .logout-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;transition:all .2s}
+    .logout-btn:hover{border-color:rgba(239,68,68,.3);color:var(--red)}
+    .main{flex:1;margin-left:240px;min-height:100vh}
+    .topbar{height:58px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(5,8,16,.8);backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+    .tb-title{font-size:16px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+    .tb-right{display:flex;align-items:center;gap:10px}
+    .tb-time{font-size:12px;color:var(--muted)}
+    .content{padding:28px}
+
+    /* KPI CARDS */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+    .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 16px;transition:border-color .2s}
+    .kpi:hover{border-color:rgba(245,200,66,.15)}
+    .kpi-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+    .kpi-val{font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1}
+    .kpi-sub{font-size:12px;margin-top:5px;display:flex;align-items:center;gap:4px}
+    .up{color:var(--green)}.down{color:var(--red)}.neutral{color:var(--muted)}
+
+    /* REVENUE CHART */
+    .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .card-title{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:7px}
+    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:8px}
+    .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+    .bar{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--gold),rgba(245,200,66,.4));transition:all .3s;cursor:pointer;position:relative}
+    .bar:hover{filter:brightness(1.15)}
+    .bar-val{font-size:10px;color:var(--muted);white-space:nowrap}
+    .bar-label{font-size:10px;color:var(--muted)}
+
+    /* CLIENTS TABLE */
+    .table-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+    .table-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .search-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:#fff;font-size:13px;outline:none;font-family:inherit;width:220px;transition:border-color .2s}
+    .search-input:focus{border-color:rgba(245,200,66,.3)}
+    .filter-btns{display:flex;gap:6px}
+    .filter-btn{background:transparent;border:1px solid var(--border);border-radius:99px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;font-family:inherit}
+    .filter-btn.active,.filter-btn:hover{background:rgba(245,200,66,.08);border-color:rgba(245,200,66,.25);color:var(--gold)}
+    table{width:100%;border-collapse:collapse}
+    th{padding:11px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface2)}
+    td{padding:13px 16px;font-size:13.5px;border-bottom:1px solid rgba(22,32,58,.5);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(255,255,255,.015)}
+    .client-name{font-weight:700;color:#fff;font-size:14px}
+    .client-type{font-size:12px;color:var(--muted);margin-top:2px}
+    .plan-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px}
+    .pill-starter{background:rgba(107,114,128,.12);color:#9ca3af}
+    .pill-pro{background:rgba(245,200,66,.1);color:var(--gold)}
+    .pill-premium{background:rgba(167,139,250,.1);color:var(--purple)}
+    .status-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
+    .status-active{background:rgba(34,197,94,.1);color:var(--green)}
+    .status-trial{background:rgba(59,130,246,.1);color:var(--blue)}
+    .status-at-risk{background:rgba(239,68,68,.1);color:var(--red)}
+    .note-badge{font-size:13px;font-weight:700}
+    .btn-view{background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;font-family:inherit}
+    .btn-view:hover{border-color:var(--gold);color:var(--gold)}
+
+    /* CLIENT DETAIL */
+    .client-detail{display:none}
+    .client-detail.show{display:block}
+    .detail-header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+    .detail-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:6px}
+    .detail-back:hover{border-color:var(--gold);color:var(--gold)}
+    .detail-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+    .detail-sub{font-size:13px;color:var(--muted)}
+    .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+    .dkpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .dkpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .dkpi-val{font-size:24px;font-weight:900;letter-spacing:-0.8px;line-height:1}
+    .detail-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .dc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+    .dc-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+    .avis-row{padding:10px 0;border-bottom:1px solid rgba(22,32,58,.5);font-size:13px}
+    .avis-row:last-child{border-bottom:none}
+    .avis-top{display:flex;justify-content:space-between;margin-bottom:3px}
+    .avis-stars{font-size:12px}
+    .avis-text{color:var(--muted);line-height:1.5;font-size:12.5px}
+    .ai-rep{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 12px;margin-top:6px;font-size:12px;color:var(--muted)}
+    .ai-rep-label{font-size:9.5px;color:var(--purple);font-weight:700;letter-spacing:1px;margin-bottom:3px}
+    .sms-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(22,32,58,.5);font-size:13px}
+    .sms-row:last-child{border-bottom:none}
+    .sms-num{color:var(--muted);font-size:12.5px}
+    .sms-date{font-size:11px;color:#3a4560}
+    .s-pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+    .s-ok{background:rgba(34,197,94,.08);color:var(--green)}
+    .s-sent{background:rgba(59,130,246,.08);color:var(--blue)}
+
+    /* ALERTS */
+    .alerts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+    .alert-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+    .alert-item.urgent{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.03)}
+    .alert-item.warning{border-color:rgba(249,115,22,.2);background:rgba(249,115,22,.03)}
+    .alert-item.info{border-color:rgba(59,130,246,.15)}
+    .alert-icon{font-size:20px;flex-shrink:0}
+    .alert-body{flex:1}
+    .alert-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px}
+    .alert-desc{font-size:12.5px;color:var(--muted)}
+    .alert-time{font-size:11px;color:#3a4560;flex-shrink:0}
+    .btn-action{background:var(--gold);color:#000;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit;flex-shrink:0}
+    .btn-action:hover{background:var(--gold2)}
+
+    /* REVENUS */
+    .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+    .rev-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+    .rev-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .rev-val{font-size:32px;font-weight:900;letter-spacing:-1.5px;color:#fff;line-height:1;margin-bottom:4px}
+    .rev-sub{font-size:12px;color:var(--muted)}
+    .rev-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px}
+    .rb-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px}
+    .rb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(22,32,58,.5)}
+    .rb-row:last-child{border-bottom:none}
+    .rb-plan{font-size:13.5px;color:var(--text)}
+    .rb-count{font-size:12px;color:var(--muted)}
+    .rb-amount{font-size:14px;font-weight:700;color:var(--gold)}
+
+    @media(max-width:900px){
+      .sidebar{display:none}
+      .main{margin-left:0}
+      .kpi-grid{grid-template-columns:repeat(2,1fr)}
+      .detail-grid{grid-template-columns:repeat(2,1fr)}
+      .detail-cards{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-page">
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-logo">⭐ Five<span>Star</span> AI</div>
+      <div class="login-badge">Accès fondateurs uniquement</div>
+      <div id="login-err"></div>
+      <div class="field"><label>Email admin</label><input id="a-email" type="email" placeholder="admin@fivestarai.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="field"><label>Mot de passe</label><input id="a-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn-login" onclick="doLogin()">Accéder au panel admin →</button>
+      <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--muted)">
+        Accès restreint aux fondateurs FiveStar AI
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none">
+  <div class="admin">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-logo">
+        <div>
+          <div class="sb-logo-text">⭐ Five<span>Star</span> AI</div>
+        </div>
+        <div class="sb-badge">ADMIN</div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-section">Vue d'ensemble</div>
+        <div class="sb-item active" onclick="showPage('overview',this)"><span>📊</span> Dashboard</div>
+        <div class="sb-item" onclick="showPage('alerts',this)"><span>🔔</span> Alertes <span id="alert-count" style="background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto">3</span></div>
+        <div class="sb-section">Clients</div>
+        <div class="sb-item" onclick="showPage('clients',this)"><span>🏪</span> Tous les commerces</div>
+        <div class="sb-item" onclick="showPage('revenus',this)"><span>💰</span> Revenus</div>
+        <div class="sb-section">Opérations</div>
+        <div class="sb-item" onclick="showPage('setup',this)"><span>⚙️</span> Setups à faire</div>
+        <div class="sb-item" onclick="showPage('annulations',this)"><span>❌</span> Annulations</div>
+      </div>
+      <div class="sb-bottom">
+        <div class="sb-founders">
+          <div class="sb-avatar">O</div>
+          <div><div class="sb-founder-name">Oli</div><div class="sb-founder-info">Co-fondateur</div></div>
+        </div>
+        <div class="sb-founders" style="margin-bottom:12px">
+          <div class="sb-avatar">T</div>
+          <div><div class="sb-founder-name" id="founder2-name">Toi</div><div class="sb-founder-info">Co-fondateur</div></div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar" id="topbar">
+        <div class="tb-title"><span>📊</span> Dashboard</div>
+        <div class="tb-right">
+          <div class="tb-time" id="current-time"></div>
+          <div style="font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)"></div>Système actif</div>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- OVERVIEW -->
+        <div id="page-overview" class="client-detail show">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Clients actifs</div><div class="kpi-val" style="color:var(--gold)">7</div><div class="kpi-sub up">↑ +2 ce mois</div></div>
+            <div class="kpi"><div class="kpi-label">Revenu mensuel</div><div class="kpi-val" style="color:var(--green)">3 491$</div><div class="kpi-sub up">↑ +998$ vs mois dernier</div></div>
+            <div class="kpi"><div class="kpi-label">SMS envoyés (mois)</div><div class="kpi-val" style="color:var(--blue)">1 847</div><div class="kpi-sub neutral">Tous commerces confondus</div></div>
+            <div class="kpi"><div class="kpi-label">Avis générés (mois)</div><div class="kpi-val" style="color:var(--purple)">312</div><div class="kpi-sub up">↑ Taux conv. moyen 16.9%</div></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">💰 Revenus mensuels (2026)</div>
+              <div style="font-size:12px;color:var(--muted)">Croissance mensuelle</div>
+            </div>
+            <div class="chart-bars" id="rev-chart"></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+            <div class="chart-card" style="margin-bottom:0">
+              <div class="card-title" style="margin-bottom:16px">🏆 Top clients (note Google)</div>
+              <div id="top-clients-list"></div>
+            </div>
+            <div class="chart-card" style="margin-bottom:0">
+              <div class="card-title" style="margin-bottom:16px">⚡ Activité récente</div>
+              <div id="activity-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTS -->
+        <div id="page-alerts" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">🔔 Alertes & actions requises</div>
+            <div style="font-size:13px;color:var(--muted)">Éléments qui nécessitent votre attention</div>
+          </div>
+          <div class="alerts-list" id="alerts-list"></div>
+        </div>
+
+        <!-- CLIENTS LIST -->
+        <div id="page-clients" class="client-detail">
+          <div class="table-card">
+            <div class="table-header">
+              <div class="card-title">🏪 Tous les commerces clients</div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <input class="search-input" placeholder="🔍 Rechercher..." oninput="filterClients(this.value)"/>
+                <div class="filter-btns">
+                  <button class="filter-btn active" onclick="filterPlan('all',this)">Tous</button>
+                  <button class="filter-btn" onclick="filterPlan('starter',this)">Starter</button>
+                  <button class="filter-btn" onclick="filterPlan('pro',this)">Pro</button>
+                  <button class="filter-btn" onclick="filterPlan('premium',this)">Premium</button>
+                </div>
+              </div>
+            </div>
+            <table id="clients-table">
+              <thead>
+                <tr>
+                  <th>Commerce</th>
+                  <th>Forfait</th>
+                  <th>Note Google</th>
+                  <th>SMS ce mois</th>
+                  <th>Avis ce mois</th>
+                  <th>Statut</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="clients-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CLIENT DETAIL -->
+        <div id="page-client-detail" class="client-detail">
+          <div class="detail-header">
+            <button class="detail-back" onclick="showPage('clients',document.querySelector('.sb-item:nth-child(4)'))">← Retour aux clients</button>
+            <div><div class="detail-title" id="detail-name">—</div><div class="detail-sub" id="detail-sub">—</div></div>
+          </div>
+          <div class="detail-grid" id="detail-kpis"></div>
+          <div class="detail-cards" id="detail-cards"></div>
+        </div>
+
+        <!-- REVENUS -->
+        <div id="page-revenus" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">💰 Revenus FiveStar AI</div>
+            <div style="font-size:13px;color:var(--muted)">Juin 2026</div>
+          </div>
+          <div class="rev-grid">
+            <div class="rev-card"><div class="rev-label">Revenu mensuel brut</div><div class="rev-val" style="color:var(--gold)">3 491$</div><div class="rev-sub">7 clients actifs</div></div>
+            <div class="rev-card"><div class="rev-label">Coûts mensuels</div><div class="rev-val" style="color:var(--red)">~220$</div><div class="rev-sub">Make, notre système SMS, Claude, notre base de données...</div></div>
+            <div class="rev-card"><div class="rev-label">Profit net estimé</div><div class="rev-val" style="color:var(--green)">3 271$</div><div class="rev-sub">Marge ~93.7%</div></div>
+          </div>
+          <div class="rev-breakdown">
+            <div class="rb-title">Répartition par forfait</div>
+            <div class="rb-row"><div><div class="rb-plan">Starter — 297$/mois</div><div class="rb-count">2 clients</div></div><div class="rb-amount">594$</div></div>
+            <div class="rb-row"><div><div class="rb-plan">Pro — 499$/mois</div><div class="rb-count">4 clients</div></div><div class="rb-amount">1 996$</div></div>
+            <div class="rb-row"><div><div class="rb-plan">Premium — 599$/mois</div><div class="rb-count">1 client</div></div><div class="rb-amount">599$</div></div>
+            <div class="rb-row" style="border-top:1px solid rgba(245,200,66,.1);padding-top:12px;margin-top:4px"><div><div class="rb-plan" style="color:var(--gold);font-weight:700">Total</div><div class="rb-count">7 clients</div></div><div class="rb-amount" style="font-size:18px">3 491$</div></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="margin-bottom:16px">📈 Projection si on signe 3 clients de plus</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">10 CLIENTS</div><div style="font-size:24px;font-weight:900;color:var(--gold)">4 490$</div><div style="font-size:12px;color:var(--green)">+999$/mois</div></div>
+              <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">15 CLIENTS</div><div style="font-size:24px;font-weight:900;color:var(--gold)">7 485$</div><div style="font-size:12px;color:var(--green)">+3 994$/mois</div></div>
+              <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">20 CLIENTS</div><div style="font-size:24px;font-weight:900;color:var(--gold)">9 980$</div><div style="font-size:12px;color:var(--green)">+6 489$/mois</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETUP -->
+        <div id="page-setup" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">⚙️ Setups à compléter</div>
+            <div style="font-size:13px;color:var(--muted)">Nouveaux clients en attente de configuration</div>
+          </div>
+          <div id="setup-list"></div>
+        </div>
+
+        <!-- ANNULATIONS -->
+        <div id="page-annulations" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">❌ Demandes d'annulation</div>
+            <div style="font-size:13px;color:var(--muted)">Clients ayant soumis une demande d'annulation</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center;color:var(--muted);font-size:14px">
+            <div style="font-size:32px;margin-bottom:12px">✅</div>
+            Aucune demande d'annulation en cours. Tous vos clients sont actifs.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DONNÉES DEMO ──
+const CLIENTS = [
+  {id:1, name:'Restaurant Le Bon Goût', type:'Restaurant', city:'Montréal', plan:'pro', status:'active', noteAvant:3.9, noteActuelle:4.6, sms:234, avis:47, conv:20, dateDebut:'2026-03-15', tel:'+1 514 555-0101', email:'lebongout@gmail.com',
+    avisRecents:[
+      {nom:'Marie T.',note:5,texte:'Service impeccable, je reviendrai!',date:'Il y a 2h',rep:null},
+      {nom:'Jean P.',note:2,texte:'Attente trop longue, déçu.',date:'Il y a 5h',rep:'Bonjour Jean, nous sommes désolés de votre expérience...'},
+      {nom:'Sophie L.',note:5,texte:'Excellent repas, ambiance parfaite!',date:'Hier',rep:null},
+    ],
+    smsRecents:[
+      {num:'+1 514 ***-**67',statut:'ok',date:'Aujourd\'hui 14:32'},
+      {num:'+1 438 ***-**12',statut:'sent',date:'Aujourd\'hui 12:18'},
+      {num:'+1 514 ***-**89',statut:'ok',date:'Hier 19:45'},
+    ]},
+  {id:2, name:'Salon Bella Vita', type:'Salon de coiffure', city:'Laval', plan:'starter', status:'active', noteAvant:3.7, noteActuelle:4.3, sms:89, avis:18, conv:20, dateDebut:'2026-04-02', tel:'+1 450 555-0202', email:'bellavita@gmail.com',
+    avisRecents:[
+      {nom:'Lucie M.',note:5,texte:'Coupe parfaite!',date:'Il y a 3h',rep:null},
+      {nom:'Anna K.',note:1,texte:'Pas satisfaite.',date:'Il y a 8h',rep:'Bonjour Anna, nous sommes désolés...'},
+    ],
+    smsRecents:[{num:'+1 514 ***-**34',statut:'ok',date:'Aujourd\'hui 11:20'}]},
+  {id:3, name:'Gym Force', type:'Gym / Studio', city:'Brossard', plan:'premium', status:'active', noteAvant:4.1, noteActuelle:4.8, sms:412, avis:87, conv:21, dateDebut:'2026-02-10', tel:'+1 450 555-0303', email:'gymforce@gmail.com',
+    avisRecents:[
+      {nom:'Alex B.',note:5,texte:'Meilleur gym de la Rive-Sud!',date:'Il y a 1h',rep:null},
+      {nom:'Lisa M.',note:4,texte:'Très bien dans l\'ensemble.',date:'Hier',rep:null},
+    ],
+    smsRecents:[
+      {num:'+1 514 ***-**91',statut:'ok',date:'Aujourd\'hui 10:15'},
+      {num:'+1 450 ***-**22',statut:'sent',date:'Aujourd\'hui 09:30'},
+    ]},
+  {id:4, name:'Café Lumière', type:'Café', city:'Québec', plan:'starter', status:'active', noteAvant:4.0, noteActuelle:4.5, sms:156, avis:28, conv:18, dateDebut:'2026-04-20', tel:'+1 418 555-0404', email:'cafelumiere@gmail.com',
+    avisRecents:[
+      {nom:'Pierre D.',note:5,texte:'Meilleur café de la rue!',date:'Il y a 4h',rep:null},
+    ],
+    smsRecents:[{num:'+1 418 ***-**55',statut:'ok',date:'Hier 16:20'}]},
+  {id:5, name:'Garage Pro Auto', type:'Garage', city:'Longueuil', plan:'pro', status:'active', noteAvant:3.5, noteActuelle:4.2, sms:178, avis:32, conv:18, dateDebut:'2026-03-28', tel:'+1 450 555-0505', email:'garagepro@gmail.com',
+    avisRecents:[
+      {nom:'Marc R.',note:5,texte:'Honnête et rapide. Je recommande.',date:'Hier',rep:null},
+      {nom:'Tom L.',note:2,texte:'Prix trop élevé.',date:'Il y a 2 jours',rep:'Bonjour Tom, merci pour votre retour...'},
+    ],
+    smsRecents:[
+      {num:'+1 450 ***-**78',statut:'ok',date:'Il y a 2 jours'},
+    ]},
+  {id:6, name:'Clinique Santé Plus', type:'Clinique', city:'Montréal', plan:'pro', status:'trial', noteAvant:3.8, noteActuelle:4.0, sms:67, avis:11, conv:16, dateDebut:'2026-06-01', tel:'+1 514 555-0606', email:'santeplus@gmail.com',
+    avisRecents:[
+      {nom:'Julie B.',note:4,texte:'Personnel attentionné.',date:'Il y a 2 jours',rep:null},
+    ],
+    smsRecents:[{num:'+1 514 ***-**23',statut:'sent',date:'Il y a 3 jours'}]},
+  {id:7, name:'Spa Zen', type:'Spa', city:'Montréal', plan:'pro', status:'at-risk', noteAvant:4.2, noteActuelle:4.1, sms:45, avis:7, conv:15, dateDebut:'2026-05-05', tel:'+1 514 555-0707', email:'spazen@gmail.com',
+    avisRecents:[
+      {nom:'Nadia C.',note:3,texte:'Service correct mais pas exceptionnel.',date:'Il y a 3 jours',rep:'Bonjour Nadia, merci pour votre retour honnête...'},
+    ],
+    smsRecents:[{num:'+1 514 ***-**45',statut:'sent',date:'Il y a 4 jours'}]},
+]
+
+const ALERTS = [
+  {type:'urgent', icon:'⚠️', title:'Spa Zen — Note en baisse', desc:'La note est passée de 4.2 à 4.1. Client potentiellement à risque d\'annulation.', time:'Il y a 2h', action:'Voir le client'},
+  {type:'warning', icon:'📱', title:'Clinique Santé Plus — Faible taux de conversion', desc:'Taux de conversion SMS à 16% vs moyenne de 18%. Vérifier le message SMS.', time:'Il y a 5h', action:'Vérifier'},
+  {type:'info', icon:'🆕', title:'Nouveau client — Clinique Santé Plus', desc:'Setup complété le 1er juin. Premiers résultats à surveiller cette semaine.', time:'Il y a 9 jours', action:'Voir'},
+]
+
+const SETUP_PENDING = [
+  {name:'Clinique Santé Plus', plan:'Pro', date:'2026-06-01', done:['QR Code', 'Typeform', 'notre base de données'], pending:['Test SMS complet', 'Connexion Google Business']},
+]
+
+// ── AUTH ──
+const ADMINS = {
+  'admin@fivestarai.com': 'fivestar2026',
+  'oli@fivestarai.com': 'fivestar2026',
+}
+
+function doLogin() {
+  const email = document.getElementById('a-email').value.trim()
+  const pass = document.getElementById('a-pass').value
+  if (ADMINS[email] && ADMINS[email] === pass) {
+    document.getElementById('login-page').style.display = 'none'
+    document.getElementById('admin-panel').style.display = 'block'
+    initAdmin(email)
+  } else {
+    document.getElementById('login-err').innerHTML = '<div class="err">Email ou mot de passe incorrect.</div>'
+  }
+}
+
+function logout() {
+  document.getElementById('admin-panel').style.display = 'none'
+  document.getElementById('login-page').style.display = 'flex'
+  document.getElementById('a-email').value = ''
+  document.getElementById('a-pass').value = ''
+}
+
+// ── INIT ──
+function initAdmin(email) {
+  updateClock()
+  setInterval(updateClock, 60000)
+  renderChart()
+  renderTopClients()
+  renderActivity()
+  renderClientsTable(CLIENTS)
+  renderAlerts()
+  renderSetup()
+}
+
+function updateClock() {
+  const now = new Date()
+  document.getElementById('current-time').textContent = now.toLocaleDateString('fr-CA', {weekday:'long', day:'numeric', month:'long'}) + ' · ' + now.toLocaleTimeString('fr-CA', {hour:'2-digit', minute:'2-digit'})
+}
+
+// ── NAVIGATION ──
+function showPage(page, el) {
+  document.querySelectorAll('.client-detail').forEach(p => p.classList.remove('show'))
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'))
+  document.getElementById('page-' + page).classList.add('show')
+  if (el) el.classList.add('active')
+  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client'}
+  document.querySelector('.tb-title').innerHTML = '<span>' + (titles[page] || '📊') + '</span>'
+}
+
+// ── CHART ──
+function renderChart() {
+  const data = [{m:'Jan',v:0},{m:'Fév',v:297},{m:'Mar',v:894},{m:'Avr',v:1392},{m:'Mai',v:2493},{m:'Juin',v:3491}]
+  const max = Math.max(...data.map(d => d.v))
+  const container = document.getElementById('rev-chart')
+  container.innerHTML = data.map(d => `
+    <div class="bar-wrap">
+      <div class="bar-val">${d.v > 0 ? d.v + '$' : ''}</div>
+      <div class="bar" style="height:${d.v > 0 ? Math.max((d.v / max) * 100, 8) : 4}px;${d.v === 0 ? 'background:var(--surface2)' : ''}" title="${d.v}$/mois"></div>
+      <div class="bar-label">${d.m}</div>
+    </div>`).join('')
+}
+
+// ── TOP CLIENTS ──
+function renderTopClients() {
+  const sorted = [...CLIENTS].sort((a,b) => b.noteActuelle - a.noteActuelle).slice(0,5)
+  document.getElementById('top-clients-list').innerHTML = sorted.map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(22,32,58,.5)">
+      <div><div style="font-size:13.5px;font-weight:600;color:#fff">${c.name}</div><div style="font-size:12px;color:var(--muted)">${c.type}</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;color:var(--gold)">${c.noteActuelle} ⭐</div><div style="font-size:11px;color:var(--green)">+${(c.noteActuelle-c.noteAvant).toFixed(1)}</div></div>
+    </div>`).join('')
+}
+
+// ── ACTIVITY ──
+function renderActivity() {
+  const acts = [
+    {icon:'💬',text:'Réponse IA — Garage Pro Auto',time:'Il y a 12 min',color:'var(--purple)'},
+    {icon:'⭐',text:'Nouvel avis 5⭐ — Gym Force',time:'Il y a 28 min',color:'var(--gold)'},
+    {icon:'📱',text:'SMS envoyé — Restaurant Le Bon Goût',time:'Il y a 1h',color:'var(--blue)'},
+    {icon:'⭐',text:'Nouvel avis 4⭐ — Salon Bella Vita',time:'Il y a 2h',color:'var(--gold)'},
+    {icon:'📱',text:'SMS envoyé — Café Lumière',time:'Il y a 3h',color:'var(--blue)'},
+  ]
+  document.getElementById('activity-list').innerHTML = acts.map(a => `
+    <div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(22,32,58,.5)">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">${a.icon}</div>
+      <div style="flex:1"><div style="font-size:13px;color:var(--text)">${a.text}</div><div style="font-size:11px;color:var(--muted)">${a.time}</div></div>
+    </div>`).join('')
+}
+
+// ── CLIENTS TABLE ──
+let currentFilter = 'all'
+function renderClientsTable(list) {
+  const statusLabels = {active:'Actif',trial:'Essai',['at-risk']:'À risque'}
+  const statusClasses = {active:'status-active',trial:'status-sent',['at-risk']:'status-at-risk'}
+  const planClasses = {starter:'pill-starter',pro:'pill-pro',premium:'pill-premium'}
+  document.getElementById('clients-tbody').innerHTML = list.map(c => `
+    <tr>
+      <td><div class="client-name">${c.name}</div><div class="client-type">${c.type} · ${c.city}</div></td>
+      <td><span class="plan-pill ${planClasses[c.plan]}">${c.plan.charAt(0).toUpperCase()+c.plan.slice(1)}</span></td>
+      <td><span class="note-badge" style="color:${c.noteActuelle >= 4.5 ? 'var(--green)' : c.noteActuelle >= 4.0 ? 'var(--gold)' : 'var(--orange)'}">${c.noteActuelle} ⭐</span><div style="font-size:11px;color:var(--green)">+${(c.noteActuelle-c.noteAvant).toFixed(1)} depuis début</div></td>
+      <td style="color:var(--text)">${c.sms}</td>
+      <td style="color:var(--text)">${c.avis} <span style="font-size:11px;color:var(--muted)">(${c.conv}%)</span></td>
+      <td><span class="status-pill ${statusClasses[c.status]}">${statusLabels[c.status]}</span></td>
+      <td><button class="btn-view" onclick="viewClient(${c.id})">Voir →</button></td>
+    </tr>`).join('')
+}
+
+function filterClients(q) {
+  const filtered = CLIENTS.filter(c =>
+    (currentFilter === 'all' || c.plan === currentFilter) &&
+    (c.name.toLowerCase().includes(q.toLowerCase()) || c.type.toLowerCase().includes(q.toLowerCase()) || c.city.toLowerCase().includes(q.toLowerCase()))
+  )
+  renderClientsTable(filtered)
+}
+
+function filterPlan(plan, btn) {
+  currentFilter = plan
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  filterClients(document.querySelector('.search-input').value)
+}
+
+// ── CLIENT DETAIL ──
+function viewClient(id) {
+  const c = CLIENTS.find(x => x.id === id)
+  if (!c) return
+
+  document.getElementById('detail-name').textContent = c.name
+  document.getElementById('detail-sub').textContent = `${c.type} · ${c.city} · Forfait ${c.plan.charAt(0).toUpperCase()+c.plan.slice(1)} · Client depuis ${new Date(c.dateDebut).toLocaleDateString('fr-CA',{month:'long',year:'numeric'})}`
+
+  document.getElementById('detail-kpis').innerHTML = [
+    {l:'Note Google actuelle', v:c.noteActuelle+' ⭐', c:'var(--gold)', s:`+${(c.noteActuelle-c.noteAvant).toFixed(1)} depuis le début`},
+    {l:'SMS envoyés (total)', v:c.sms, c:'var(--blue)', s:`${c.conv}% taux de conversion`},
+    {l:'Avis générés (total)', v:c.avis, c:'var(--green)', s:`${c.avisRecents.filter(a=>a.rep).length} avis négatifs répondus par IA`},
+    {l:'Forfait', v:c.plan.charAt(0).toUpperCase()+c.plan.slice(1), c:'var(--purple)', s:`${c.plan==='starter'?'297':c.plan==='pro'?'499':'599'}$/mois`},
+    {l:'Email', v:c.email, c:'var(--text)', s:c.tel},
+    {l:'Note avant FiveStar', v:c.noteAvant+' ⭐', c:'var(--orange)', s:'À l\'inscription'},
+  ].map(k => `<div class="dkpi"><div class="dkpi-label">${k.l}</div><div class="dkpi-val" style="color:${k.c};font-size:${k.v.length>8?'16px':'24px'}">${k.v}</div><div style="font-size:12px;color:var(--muted);margin-top:4px">${k.s}</div></div>`).join('')
+
+  document.getElementById('detail-cards').innerHTML = `
+    <div class="dc">
+      <div class="dc-title">⭐ Derniers avis Google</div>
+      ${c.avisRecents.map(a => `
+        <div class="avis-row">
+          <div class="avis-top"><span style="font-weight:600;color:#fff;font-size:13.5px">${a.nom}</span><span style="font-size:11px;color:var(--muted)">${a.date}</span></div>
+          <div class="avis-stars" style="color:${a.note>=4?'var(--gold)':a.note>=3?'var(--orange)':'var(--red)'}">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div>
+          <div class="avis-text">${a.texte}</div>
+          ${a.rep ? `<div class="ai-rep"><div class="ai-rep-label">IA CLAUDE — RÉPONSE AUTO</div>${a.rep}</div>` : ''}
+        </div>`).join('')}
+    </div>
+    <div class="dc">
+      <div class="dc-title">📱 Derniers SMS envoyés</div>
+      ${c.smsRecents.map(s => `
+        <div class="sms-row">
+          <div><div class="sms-num">${s.num}</div><div class="sms-date">${s.date}</div></div>
+          <span class="s-pill ${s.statut==='ok'?'s-ok':'s-sent'}">${s.statut==='ok'?'Avis laissé':'Envoyé'}</span>
+        </div>`).join('')}
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="mailto:${c.email}?subject=FiveStar AI — Votre commerce ${c.name}" style="color:var(--gold);font-size:13px;font-weight:600;text-decoration:none">✉️ Écrire à ce client →</a>
+      </div>
+    </div>`
+
+  showPage('client-detail', null)
+}
+
+// ── ALERTS ──
+function renderAlerts() {
+  document.getElementById('alerts-list').innerHTML = ALERTS.map(a => `
+    <div class="alert-item ${a.type}">
+      <div class="alert-icon">${a.icon}</div>
+      <div class="alert-body"><div class="alert-title">${a.title}</div><div class="alert-desc">${a.desc}</div></div>
+      <div class="alert-time">${a.time}</div>
+      <button class="btn-action">${a.action}</button>
+    </div>`).join('')
+}
+
+// ── SETUP ──
+function renderSetup() {
+  document.getElementById('setup-list').innerHTML = SETUP_PENDING.length === 0
+    ? '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center;color:var(--muted);font-size:14px"><div style="font-size:32px;margin-bottom:12px">✅</div>Tous les setups sont complétés.</div>'
+    : SETUP_PENDING.map(s => `
+      <div style="background:var(--surface);border:1px solid rgba(249,115,22,.2);border-radius:14px;padding:24px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div><div style="font-size:16px;font-weight:700;color:#fff">${s.name}</div><div style="font-size:13px;color:var(--muted)">Forfait ${s.plan} · Inscrit le ${new Date(s.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long'})}</div></div>
+          <span style="background:rgba(249,115,22,.1);color:var(--orange);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px">Setup en cours</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><div style="font-size:11px;color:var(--green);font-weight:700;letter-spacing:1px;margin-bottom:8px">✓ COMPLÉTÉ</div>${s.done.map(d=>`<div style="font-size:13px;color:var(--muted);padding:4px 0;display:flex;gap:6px"><span style="color:var(--green)">✓</span>${d}</div>`).join('')}</div>
+          <div><div style="font-size:11px;color:var(--orange);font-weight:700;letter-spacing:1px;margin-bottom:8px">⏳ À FAIRE</div>${s.pending.map(p=>`<div style="font-size:13px;color:var(--muted);padding:4px 0;display:flex;gap:6px"><span style="color:var(--orange)">○</span>${p}</div>`).join('')}</div>
+        </div>
+      </div>`).join('')
+}
+</script>
+</body>
+</html>
