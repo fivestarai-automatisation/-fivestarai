@@ -81,9 +81,22 @@
   </style>
 </head>
 <body>
+<script>
+// Protection — accessible seulement après achat
+(function() {
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('fivestar_user')); } catch(e) {}
+  var validPlans = ['starter','pro','premium'];
+  if (!user || !user.plan || !validPlans.includes(user.plan.toLowerCase())) {
+    // Pas de plan actif — rediriger vers dashboard avec message
+    window.location.href = 'dashboard.html?access=restricted&redirect=onboarding';
+  }
+})();
+</script>
+
 <div class="page">
   <div class="progress-header">
-    <div class="progress-logo">⭐ Five<span>Star</span> AI</div>
+    <div class="progress-logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div>
     <div class="steps-progress" id="steps-progress">
       <div class="sp-step active"><div class="sp-num active" id="sn0">1</div><div class="sp-label">Commerce</div></div>
       <div class="sp-line" id="sl0"></div>
@@ -239,7 +252,7 @@
       <div class="ns-item"><div class="ns-num">1</div><span>Un client scanne votre QR Code → son numéro est capturé automatiquement</span></div>
       <div class="ns-item"><div class="ns-num">2</div><span>2 heures après sa visite → il reçoit votre SMS personnalisé avec le lien Google</span></div>
       <div class="ns-item"><div class="ns-num">3</div><span>Il laisse un avis positif → votre note Google monte</span></div>
-      <div class="ns-item"><div class="ns-num">4</div><span>Avis négatif → Claude IA répond automatiquement en moins de 2 minutes</span></div>
+      <div class="ns-item"><div class="ns-num">4</div><span>Avis négatif → notre IA répond automatiquement en moins de 2 minutes</span></div>
       <div class="ns-item"><div class="ns-num">5</div><span>Vous recevez vos stats dans votre dashboard chaque semaine</span></div>
     </div>
     <a href="dashboard.html" class="btn-dashboard">Accéder à mon dashboard →</a>
