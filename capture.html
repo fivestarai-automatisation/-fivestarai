@@ -10,13 +10,13 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#050810;--surface:#090d1a;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e}
     html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-    body{display:flex;align-items:center;justify-content:center;padding:20px;min-height:100vh;position:relative;overflow:hidden}
+    body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px 40px;min-height:100vh;position:relative;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
     /* Glow background */
     .bg-glow{position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(245,200,66,.08) 0%,transparent 65%);pointer-events:none}
     .bg-glow2{position:fixed;bottom:-10%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(34,197,94,.04) 0%,transparent 65%);pointer-events:none}
 
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 28px;max-width:420px;width:100%;position:relative;z-index:1;text-align:center}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px 20px;max-width:420px;width:100%;position:relative;z-index:1;text-align:center;margin-top:16px}
 
     /* Commerce info */
     .commerce-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.15);color:var(--gold);font-size:12px;font-weight:700;padding:6px 14px;border-radius:99px;margin-bottom:20px;letter-spacing:.3px}
@@ -38,7 +38,7 @@
     .form-title{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
     .field{margin-bottom:14px;text-align:left}
     .field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px}
-    .field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:#fff;font-size:16px;outline:none;font-family:inherit;transition:border-color .2s;-webkit-appearance:none}
+    .field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:#fff;font-size:16px;outline:none;font-family:inherit;transition:border-color .2s;-webkit-appearance:none;-webkit-text-size-adjust:100%}
     .field input:focus{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.02)}
     .field input::placeholder{color:#3a4560}
 
@@ -59,7 +59,7 @@
     .success-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--green);font-size:13px;font-weight:600;padding:7px 16px;border-radius:99px;margin-top:20px}
 
     /* Powered by */
-    .powered{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-size:11px;color:#1a2035;white-space:nowrap}
+    .powered{position:relative;margin-top:20px;font-size:11px;color:#1a2035;white-space:nowrap;text-align:center;z-index:1}
     .powered a{color:#1a2035;text-decoration:none}
   </style>
 
