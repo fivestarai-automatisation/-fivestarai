@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" id="html-root">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FiveStar AI — Automatisez vos avis Google</title>
-  <meta name="description" content="FiveStar AI automatise vos avis Google et la fidélisation client par SMS. Setup en 10 minutes. Résultats dès la première semaine. Pour restaurants, salons, gyms et commerces locaux."/>
-  <meta property="og:title" content="FiveStar AI — Vos avis Google en pilote automatique"/>
-  <meta property="og:description" content="Setup en 10 minutes. SMS automatique. IA répond aux avis négatifs 24/7."/>
-  <meta property="og:type" content="website"/>
+  <title id="meta-title">FiveStar AI — Automatisez vos avis Google</title>
+  <meta name="description" id="meta-desc" content="FiveStar AI automatise vos avis Google et la fidélisation client par SMS. Setup rapide. Résultats dès la première semaine."/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX'); // Remplacez G-XXXXXXXXXX par votre ID Google Analytics
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -19,6 +24,12 @@
     }
     html{scroll-behavior:smooth}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+    /* ── LANG TOGGLE ── */
+    .lang-toggle{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:4px;cursor:pointer}
+    .lang-btn{font-size:12px;font-weight:700;padding:4px 10px;border-radius:5px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;font-family:inherit;letter-spacing:.4px}
+    .lang-btn.active{background:var(--gold);color:#000}
+    .lang-btn:hover:not(.active){color:#fff}
 
     /* ── SCROLL REVEAL ── */
     .sr{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
@@ -32,11 +43,8 @@
     /* ── NAV ── */
     #nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;transition:all .35s}
     #nav.solid{background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(0,0,0,.4)}
-    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:-.4px}
-    .logo-txt{font-size:0;line-height:1;display:inline}
-    .logo-txt span{font-size:17px;font-weight:900;letter-spacing:-.4px}
-    .logo-txt .w{color:#fff}
-    .logo-txt .g{color:var(--gold)}
+    .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-.4px}
+    .logo span{color:var(--gold)}
     .nav-links{display:flex;gap:22px;align-items:center}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}
     .nav-links a:hover{color:#fff}
@@ -44,22 +52,23 @@
     .nav-login:hover{border-color:rgba(255,255,255,.15)!important;color:#fff!important}
     .nav-cta{background:var(--gold)!important;color:#000!important;font-weight:700!important;padding:9px 20px;border-radius:8px;transition:all .2s!important}
     .nav-cta:hover{background:var(--gold2)!important;transform:translateY(-1px)}
-    /* Hamburger visible partout — desktop ET mobile */
+    /* Hamburger */
     .hamburger{display:flex!important;align-items:center;justify-content:center;background:none;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:18px;cursor:pointer;padding:7px 10px;transition:all .3s;line-height:1;margin-left:8px}
-    .hamburger:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.04)}
-    .hamburger.open{border-color:var(--gold);color:var(--gold);transform:rotate(90deg)}
-    .mob-menu{position:fixed;top:62px;inset-x:0;background:rgba(5,8,16,.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px 24px;flex-direction:column;gap:2px;z-index:999;transform:translateY(-10px);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;display:flex}
+    .hamburger:hover{border-color:rgba(255,255,255,.2)}
+    /* Menu mobile */
+    .mob-menu{position:fixed;top:68px;right:20px;left:auto;bottom:auto;width:280px;background:rgba(9,13,26,.98);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);flex-direction:column;z-index:999;transform:translateY(-8px);opacity:0;pointer-events:none;transition:transform .22s cubic-bezier(.34,1.56,.64,1),opacity .2s;display:flex;overflow:hidden}
     .mob-menu.open{transform:translateY(0);opacity:1;pointer-events:all}
-    @media(min-width:901px){
-      .mob-menu{inset-x:auto;right:0;left:auto;top:62px;width:280px;border-bottom:none;border-left:1px solid var(--border);border-radius:0 0 0 16px;padding:12px;min-height:0;transform:translateX(20px);box-shadow:-8px 8px 32px rgba(0,0,0,.5)}
-      .mob-menu.open{transform:translateX(0)}
-    }
-    .mob-menu a{color:var(--muted);text-decoration:none;font-size:15px;padding:13px 18px;border-radius:9px;font-weight:500;transition:all .2s;display:block}
-    .mob-menu a:hover{background:rgba(255,255,255,.04);color:#fff}
-    .mob-cta-wrap{padding:6px 0 4px}
-    .mob-menu .mob-cta{background:var(--gold);color:#000;font-weight:700;text-align:center;border-radius:9px;padding:13px 18px;display:block;text-decoration:none;transition:background .2s}
+    .mob-menu-inner{padding:12px 8px 16px;display:flex;flex-direction:column}
+    .mob-section-label{font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2a3456;padding:10px 12px 6px;margin-top:2px}
+    .mob-menu a{color:var(--muted);text-decoration:none;font-size:13.5px;padding:9px 12px;border-radius:8px;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:10px}
+    .mob-menu a .mob-ico{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+    .mob-menu a:hover,.mob-menu a:active{background:rgba(255,255,255,.05);color:#fff}
+    .mob-divider{height:1px;background:var(--border);margin:6px 8px}
+    .mob-cta-wrap{padding-top:6px;padding:6px 8px 8px}
+    .mob-menu .mob-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;text-align:center;border-radius:9px;padding:11px;display:block;text-decoration:none;transition:background .2s}
     .mob-menu .mob-cta:hover{background:var(--gold2)}
-    .mob-divider{height:1px;background:var(--border);margin:6px 0}
+    .mob-lang-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 4px}
+    .mob-lang-label{font-size:12px;color:var(--muted)}
 
     /* ── HERO ── */
     .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 72px;position:relative;overflow:hidden}
@@ -70,7 +79,7 @@
     .glow3{position:absolute;top:10%;right:-5%;width:420px;height:420px;background:radial-gradient(circle,rgba(139,92,246,.035) 0%,transparent 65%)}
     .orb{position:absolute;border-radius:50%;animation:orbFloat linear infinite;opacity:0}
     @keyframes orbFloat{0%{opacity:0;transform:translateY(0)}15%{opacity:.7}85%{opacity:.7}100%{opacity:0;transform:translateY(-90px) translateX(12px)}}
-    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.18);color:var(--gold);font-size:12.5px;font-weight:600;padding:7px 18px;border-radius:99px;margin-bottom:30px;letter-spacing:.2px;animation:fadeDown .7s ease both}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);color:#f87171;font-size:12px;font-weight:700;padding:7px 18px;border-radius:99px;margin-bottom:30px;letter-spacing:.3px;animation:fadeDown .7s ease both;text-transform:uppercase}
     @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
     .hero-h1{font-size:clamp(38px,7.2vw,84px);font-weight:900;line-height:1.04;letter-spacing:-2.8px;color:#fff;max-width:840px;margin-bottom:22px;animation:fadeUp .75s ease .08s both}
     .hero-h1 em{font-style:normal;background:linear-gradient(120deg,#f5c842 0%,#ffa500 45%,#f5c842 100%);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 4s linear infinite}
@@ -216,7 +225,6 @@
     /* ── CTA FINAL ── */
     .cta-final{padding:96px 24px;text-align:center}
     .cta-box{max-width:660px;margin:0 auto;background:linear-gradient(140deg,rgba(245,200,66,.055),rgba(59,130,246,.025));border:1px solid rgba(245,200,66,.12);border-radius:22px;padding:60px 36px}
-    .cta-box .h2{margin:0 auto 14px}
 
     /* ── CHAT ── */
     .chat-btn{position:fixed;bottom:26px;right:26px;z-index:9999;width:52px;height:52px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:19px;box-shadow:0 4px 18px rgba(245,200,66,.42);transition:all .2s;display:flex;align-items:center;justify-content:center}
@@ -266,7 +274,9 @@
       .price-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}
       .faq-layout{grid-template-columns:1fr}
       .ft-main{grid-template-columns:1fr 1fr;gap:28px}
-      .how-layout{grid-template-columns:1fr}
+    }
+    @media(max-width:768px){
+      .prob-sol-grid{grid-template-columns:1fr !important}
     }
     @media(max-width:580px){
       .feat-grid{grid-template-columns:1fr}
@@ -276,35 +286,58 @@
       .stats-grid{grid-template-columns:repeat(2,1fr)}
     }
   </style>
+<script>
+// Appliquer la langue immédiatement avant le rendu pour éviter le flash FR
+(function(){
+  var lang = localStorage.getItem('fsLang') || 'fr';
+  document.documentElement.lang = lang;
+})();
+</script>
 </head>
 <body>
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="index.html" class="logo">⭐ <span class="logo-txt"><span class="w">Five</span><span class="g">Star</span><span class="w"> AI</span></span></a>
+  <a href="index.html" class="logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</a>
   <div class="nav-links">
-    <a href="#comment">Comment ça marche</a>
-    <a href="commerces.html">Par commerce</a>
-    <a href="#forfaits">Forfaits</a>
-    <a href="demo.html">Démo</a>
-    <a href="resultats.html">Estimez vos résultats</a>
-    <a href="dashboard.html" class="nav-login">Mon compte</a>
-    <a href="#forfaits" class="nav-cta">Commencer →</a>
+    <a href="#comment" data-i18n="nav.how">Comment ça marche</a>
+    <a href="commerces.html" data-i18n="nav.by">Par commerce</a>
+    <a href="#forfaits" data-i18n="nav.pricing">Forfaits</a>
+    <a href="demo.html" data-i18n="nav.demo">Démo</a>
+    <a href="resultats.html" data-i18n="nav.results">Estimez vos résultats</a>
+    <a href="dashboard.html" class="nav-login" data-i18n="nav.login">Mon compte</a>
+    <a href="#forfaits" class="nav-cta" data-i18n="nav.cta">Commencer →</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('fr')" id="btn-fr">FR</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    </div>
   </div>
   <button class="hamburger" id="ham" onclick="toggleMob()">☰</button>
 </nav>
+
 <div class="mob-menu" id="mob">
-  <a href="#comment" onclick="closeMob()">📋 Comment ça marche</a>
-  <a href="commerces.html" onclick="closeMob()">🏪 Par type de commerce</a>
-  <a href="demo.html" onclick="closeMob()">🎬 Démo interactive</a>
-  <a href="resultats.html" onclick="closeMob()">📊 Estimez vos résultats</a>
-  <a href="blog.html" onclick="closeMob()">✍️ Blog</a>
-  <a href="comparaison.html" onclick="closeMob()">⚖️ Comparaison</a>
-  <div class="mob-divider"></div>
-  <a href="#forfaits" onclick="closeMob()">💳 Voir les forfaits</a>
-  <a href="dashboard.html" onclick="closeMob()">👤 Mon compte</a>
-  <div class="mob-cta-wrap">
-    <a href="#forfaits" class="mob-cta" onclick="closeMob()">Commencer maintenant →</a>
+  <div class="mob-menu-inner">
+    <div class="mob-section-label">Navigation</div>
+    <a href="#comment" onclick="closeMob()"><span class="mob-ico">📋</span> <span class="mob-txt" data-i18n="nav.how">Comment ça marche</span></a>
+    <a href="commerces.html" onclick="closeMob()"><span class="mob-ico">🏪</span> <span class="mob-txt" data-i18n="mob.by">Nos solutions</span></a>
+    <a href="demo.html" onclick="closeMob()"><span class="mob-ico">🎬</span> <span class="mob-txt" data-i18n="mob.demo">Démo interactive</span></a>
+    <a href="resultats.html" onclick="closeMob()"><span class="mob-ico">📊</span> <span class="mob-txt" data-i18n="mob.results">Estimez vos résultats</span></a>
+    <a href="comparaison.html" onclick="closeMob()"><span class="mob-ico">⚖️</span> <span class="mob-txt" data-i18n="mob.compare">Comparaison</span></a>
+    <a href="a-propos.html" onclick="closeMob()"><span class="mob-ico">👥</span> À propos</a>
+    <div class="mob-divider"></div>
+    <div class="mob-section-label">Compte</div>
+    <a href="#forfaits" onclick="closeMob()"><span class="mob-ico">💳</span> <span class="mob-txt" data-i18n="mob.pricing">Voir les forfaits</span></a>
+    <a href="dashboard.html" onclick="closeMob()"><span class="mob-ico">👤</span> <span class="mob-txt" data-i18n="mob.login">Mon compte</span></a>
+    <div class="mob-lang-row">
+      <span class="mob-lang-label">Langue</span>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('fr')" id="btn-fr-mob">FR</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en-mob">EN</button>
+      </div>
+    </div>
+    <div class="mob-cta-wrap">
+      <a href="#forfaits" class="mob-cta" onclick="closeMob()" data-i18n="mob.cta">Commencer maintenant →</a>
+    </div>
   </div>
 </div>
 
@@ -317,75 +350,154 @@
     <div class="orb" style="width:2px;height:2px;background:var(--blue);top:45%;right:18%;animation-duration:11s;animation-delay:2s"></div>
     <div class="orb" style="width:2px;height:2px;background:var(--purple);top:72%;left:68%;animation-duration:8s;animation-delay:4s"></div>
   </div>
-  <div class="badge">⭐ IA · Avis Google · Commerces locaux</div>
-  <h1 class="hero-h1">Vos avis Google,<br><em>en pilote automatique.</em></h1>
-  <p class="hero-p">Setup en 10 minutes. SMS automatique à vos clients. Réponses aux avis négatifs par IA. Vous vous occupez de votre commerce — on s'occupe de votre réputation.</p>
+  <div class="badge" data-i18n="hero.badge">🔴 EN CE MOMENT — vos concurrents accumulent des avis pendant que vous lisez ceci</div>
+  <h1 class="hero-h1" data-i18n-html="hero.h1">Chaque jour sans système,<br><em>c'est des clients perdus.</em></h1>
+  <p class="hero-p" data-i18n="hero.p">86% des clients choisissent le commerce avec le plus d'avis Google. Si ce n'est pas vous — c'est votre compétiteur. FiveStar AI corrige ça rapidement.</p>
   <div class="hero-btns">
-    <a href="#forfaits" class="btn-g">Commencer maintenant →</a>
-    <a href="#comment" class="btn-o">Voir comment ça marche</a>
+    <a href="#forfaits" class="btn-g" data-i18n="hero.btn1">Je veux plus de clients →</a>
+    <a href="#comment" class="btn-o" data-i18n="hero.btn2">Voir comment ça marche</a>
   </div>
   <div class="trust-row">
-    <div class="trust-i"><div class="trust-dot"></div>Aucun contrat</div>
-    <div class="trust-i"><div class="trust-dot"></div>Setup 10 minutes</div>
-    <div class="trust-i"><div class="trust-dot"></div>Résultats dès la 1re semaine</div>
-    <div class="trust-i"><div class="trust-dot"></div>Paiement 100% sécurisé</div>
+    <div class="trust-i"><div class="trust-dot"></div><span data-i18n="trust.1">⚡ Setup rapide</span></div>
+    <div class="trust-i"><div class="trust-dot"></div><span data-i18n="trust.2">📈 Premiers avis cette semaine</span></div>
+    <div class="trust-i"><div class="trust-dot"></div><span data-i18n="trust.3">🔒 Sans contrat</span></div>
+    <div class="trust-i"><div class="trust-dot"></div><span data-i18n="trust.4">💳 Paiement sécurisé</span></div>
   </div>
 </section>
+
+
+<!-- PROBLÈME → SOLUTION -->
+<section style="padding:80px 24px;background:var(--bg)">
+  <div style="max-width:1060px;margin:0 auto">
+
+    <!-- PROBLÈME -->
+    <div class="prob-sol-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:80px">
+      <div>
+        <div data-i18n-html="prob.badge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#ef4444;font-size:11px;font-weight:700;padding:5px 14px;border-radius:99px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px">⚠️ Le problème</div>
+        <h2 data-i18n-html="prob.h2" style="font-size:clamp(26px,3.5vw,42px);font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px">Vous perdez des clients<br><span style="color:#ef4444">chaque jour sans le savoir.</span></h2>
+        <p data-i18n="prob.p" style="font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:28px">La majorité des commerces locaux perdent des clients sans s'en rendre compte. La raison est simple :</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);border-radius:11px">
+            <span style="color:#ef4444;font-size:18px;flex-shrink:0">✗</span>
+            <div>
+              <div data-i18n="prob.1.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Pas assez d'avis Google</div>
+              <div data-i18n="prob.1.d" style="font-size:13px;color:var(--muted)">Les clients font confiance aux commerces avec le plus d'avis — pas nécessairement le meilleur.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);border-radius:11px">
+            <span style="color:#ef4444;font-size:18px;flex-shrink:0">✗</span>
+            <div>
+              <div data-i18n="prob.2.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Moins visible que vos concurrents sur Google Maps</div>
+              <div data-i18n="prob.2.d" style="font-size:13px;color:var(--muted)">Google pousse en premier les commerces avec une meilleure note et plus d'avis récents.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);border-radius:11px">
+            <span style="color:#ef4444;font-size:18px;flex-shrink:0">✗</span>
+            <div>
+              <div data-i18n="prob.3.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Vous ne demandez pas d'avis de façon systématique</div>
+              <div data-i18n="prob.3.d" style="font-size:13px;color:var(--muted)">Vos bons clients repartent contents — mais n'écrivent rien. Les mécontents, eux, le font toujours.</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:24px;padding:16px 20px;background:rgba(239,68,68,.06);border-left:3px solid #ef4444;border-radius:0 10px 10px 0">
+          <p data-i18n="prob.result" style="font-size:14.5px;color:#fff;font-weight:600">Résultat : vos clients choisissent simplement la compétition.</p>
+        </div>
+      </div>
+
+      <!-- SOLUTION -->
+      <div>
+        <div data-i18n-html="sol.badge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#22c55e;font-size:11px;font-weight:700;padding:5px 14px;border-radius:99px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px">✓ La solution</div>
+        <h2 data-i18n-html="sol.h2" style="font-size:clamp(26px,3.5vw,42px);font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px">Un système automatisé qui<br><span style="color:var(--gold)">génère des avis pour vous.</span></h2>
+        <p data-i18n="sol.p" style="font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:28px">On installe un système qui collecte automatiquement des avis Google auprès de vos vrais clients — sans effort de votre part.</p>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px">
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12);border-radius:11px">
+            <span style="color:#22c55e;font-size:18px;flex-shrink:0">✓</span>
+            <div>
+              <div data-i18n="sol.1.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Vos clients reçoivent un SMS automatique</div>
+              <div data-i18n="sol.1.d" style="font-size:13px;color:var(--muted)">2h après leur visite — le meilleur moment pour qu'ils laissent un avis positif.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12);border-radius:11px">
+            <span style="color:#22c55e;font-size:18px;flex-shrink:0">✓</span>
+            <div>
+              <div data-i18n="sol.2.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Votre note Google monte automatiquement</div>
+              <div data-i18n="sol.2.d" style="font-size:13px;color:var(--muted)">Plus d'avis = meilleure note = plus visible sur Google Maps = plus de clients.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12);border-radius:11px">
+            <span style="color:#22c55e;font-size:18px;flex-shrink:0">✓</span>
+            <div>
+              <div data-i18n="sol.3.t" style="font-size:14.5px;font-weight:600;color:#fff;margin-bottom:3px">Zéro effort de votre part</div>
+              <div data-i18n="sol.3.d" style="font-size:13px;color:var(--muted)">Setup rapide. Ensuite le système tourne seul — vous vous occupez de votre commerce.</div>
+            </div>
+          </div>
+        </div>
+        <a href="#forfaits" class="btn-g" data-i18n="sol.btn" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:14px 32px;border-radius:10px;text-decoration:none">Commencer maintenant →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- URGENCE -->
+<div style="background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(239,68,68,.02));border-top:1px solid rgba(239,68,68,.1);border-bottom:1px solid rgba(239,68,68,.1);padding:22px 24px;text-align:center">
+  <p data-i18n-html="urgency.full" style="font-size:15px;color:#fff;font-weight:600;max-width:700px;margin:0 auto">⏱️ Pendant que vous lisez ceci, un client vient peut-être de choisir votre concurrent parce qu'il avait plus d'avis Google. &nbsp;<a href="#forfaits" style="color:var(--gold);text-decoration:none;font-weight:700">Commencer maintenant →</a></p>
+</div>
 
 <!-- LOGOS -->
 <div class="logos sr">
   <div class="logos-inner">
-    <span class="logos-label">Notre technologie</span>
-    <span class="logo-i">Intelligence Artificielle</span>
-    <span class="logo-i">SMS Automatisés</span>
-    <span class="logo-i">QR Code Intelligent</span>
-    <span class="logo-i">Réponses IA 24/7</span>
-    <span class="logo-i">Dashboard Temps Réel</span>
-    <span class="logo-i">Paiement Sécurisé</span>
+    <span class="logos-label" data-i18n="logos.label">Notre technologie</span>
+    <span class="logo-i" data-i18n="logos.1">Intelligence Artificielle</span>
+    <span class="logo-i" data-i18n="logos.2">SMS Automatisés</span>
+    <span class="logo-i" data-i18n="logos.3">QR Code Intelligent</span>
+    <span class="logo-i" data-i18n="logos.4">Réponses IA 24/7</span>
+    <span class="logo-i" data-i18n="logos.5">Dashboard Temps Réel</span>
+    <span class="logo-i" data-i18n="logos.6">Paiement Sécurisé</span>
   </div>
 </div>
 
 <!-- STATS -->
 <div class="stats">
   <div class="stats-grid">
-    <div class="stat-cell sr"><div class="stat-n" data-to="10" data-sfx=" min">0</div><div class="stat-l">Setup complet<br>par commerce</div></div>
-    <div class="stat-cell sr d1"><div class="stat-n" data-to="2" data-sfx="h">0</div><div class="stat-l">Après la visite,<br>SMS envoyé</div></div>
-    <div class="stat-cell sr d2"><div class="stat-n" data-to="100" data-sfx="%">0</div><div class="stat-l">Automatique,<br>zéro effort</div></div>
-    <div class="stat-cell sr d3"><div class="stat-n" data-to="24" data-sfx="/7">0</div><div class="stat-l">Réponses aux<br>avis négatifs</div></div>
+    <div class="stat-cell sr"><div class="stat-n" data-to="10" data-sfx=" min">0</div><div class="stat-l" data-i18n-html="stat.1">Setup complet<br>par commerce</div></div>
+    <div class="stat-cell sr d1"><div class="stat-n" data-to="2" data-sfx="h">0</div><div class="stat-l" data-i18n-html="stat.2">Après la visite,<br>SMS envoyé</div></div>
+    <div class="stat-cell sr d2"><div class="stat-n" data-to="100" data-sfx="%">0</div><div class="stat-l" data-i18n-html="stat.3">Automatique,<br>zéro effort</div></div>
+    <div class="stat-cell sr d3"><div class="stat-n" data-to="24" data-sfx="/7">0</div><div class="stat-l" data-i18n-html="stat.4">Réponses aux<br>avis négatifs</div></div>
   </div>
 </div>
 
 <!-- HOW IT WORKS -->
 <section class="sec how-bg" id="comment">
   <div class="wrap">
-    <div class="eyebrow sr">Comment ça marche</div>
-    <h2 class="h2 sr">Simple pour vous.<br><em>Puissant pour votre réputation.</em></h2>
-    <p class="sub sr">Votre système tourne seul 24h/24. Zéro effort après le setup initial.</p>
+    <div class="eyebrow sr" data-i18n="how.eyebrow">Comment ça marche</div>
+    <h2 class="h2 sr" data-i18n-html="how.h2">En 4 étapes.<br><em>Zéro effort de votre part.</em></h2>
+    <p class="sub sr" data-i18n="how.sub">Un client visite. Un SMS part. Un avis arrive. Votre note monte. Le tout automatiquement, pendant que vous travaillez.</p>
     <div class="how-grid">
       <div class="sr-l">
         <div class="step active" onclick="setStep(0,this)">
           <div class="sn">1</div>
-          <div class="sb"><h3>Client visite votre commerce</h3><p>Son numéro est capturé automatiquement via QR Code à la caisse. Aucune action de votre part.</p></div>
+          <div class="sb"><h3 data-i18n="how.s1.t">Votre client visite, on capture son numéro</h3><p data-i18n="how.s1.p">Son numéro est capturé automatiquement via QR Code à la caisse. Aucune action de votre part.</p></div>
         </div>
         <div class="step" onclick="setStep(1,this)">
           <div class="sn">2</div>
-          <div class="sb"><h3>SMS envoyé 2h après la visite</h3><p>Message personnalisé avec lien direct vers votre fiche Google. Timing parfait — taux de conversion maximal.</p></div>
+          <div class="sb"><h3 data-i18n="how.s2.t">2h après, il reçoit un SMS de votre part</h3><p data-i18n="how.s2.p">Message personnalisé avec lien direct vers votre fiche Google. Timing parfait — taux de conversion maximal.</p></div>
         </div>
         <div class="step" onclick="setStep(2,this)">
           <div class="sn">3</div>
-          <div class="sb"><h3>Avis positif → votre note monte</h3><p>Le client clique et laisse son avis 5 étoiles directement sur votre fiche Google.</p></div>
+          <div class="sb"><h3 data-i18n="how.s3.t">Il laisse un avis. Votre note monte.</h3><p data-i18n="how.s3.p">Le client clique et laisse son avis 5 étoiles directement sur votre fiche Google.</p></div>
         </div>
         <div class="step" onclick="setStep(3,this)">
           <div class="sn">4</div>
-          <div class="sb"><h3>Avis négatif → IA répond pour vous</h3><p>Notre IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.</p></div>
+          <div class="sb"><h3 data-i18n="how.s4.t">Avis négatif ? Notre IA répond en 2 minutes.</h3><p data-i18n="how.s4.p">Notre IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.</p></div>
         </div>
       </div>
       <div class="vis sr-r">
         <div class="vis-frame" id="vf">
           <div class="vis-icon">📱</div>
-          <div class="vis-title">QR Code personnalisé</div>
-          <div class="vis-text">Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément dans votre base de données.</div>
-          <div class="vis-badge">✓ Aucune action requise</div>
+          <div class="vis-title" data-i18n="how.s1.t">QR Code personnalisé</div>
+          <div class="vis-text" data-i18n="vis.1">Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.</div>
+          <div class="vis-badge" data-i18n="vis.b1">✓ Aucune action requise</div>
         </div>
       </div>
     </div>
@@ -395,40 +507,40 @@
 <!-- BEFORE / AFTER -->
 <section class="sec ba-bg">
   <div class="wrap">
-    <div class="eyebrow sr">Résultats réels</div>
-    <h2 class="h2 sr">Ce qui change<br><em>avec FiveStar AI.</em></h2>
+    <div class="eyebrow sr" data-i18n="ba.eyebrow">Résultats réels</div>
+    <h2 class="h2 sr" data-i18n-html="ba.h2">Ce qui change<br><em>avec FiveStar AI.</em></h2>
     <div class="ba-grid">
       <div class="ba-card ba-before sr">
-        <div class="ba-tag">Avant FiveStar</div>
+        <div class="ba-tag" data-i18n="ba.before.tag">Avant FiveStar</div>
         <div class="ba-num" style="color:var(--red)">3.8 ⭐</div>
-        <div class="ba-desc">Note Google moyenne</div>
+        <div class="ba-desc" data-i18n="ba.desc">Note Google moyenne</div>
         <ul class="ba-list">
-          <li>Avis laissés au hasard</li>
-          <li>Avis négatifs sans réponse</li>
-          <li>Clients perdus sans retour</li>
-          <li>Zéro suivi automatique</li>
+          <li data-i18n="ba.before.1">Avis laissés au hasard</li>
+          <li data-i18n="ba.before.2">Avis négatifs sans réponse</li>
+          <li data-i18n="ba.before.3">Clients perdus sans retour</li>
+          <li data-i18n="ba.before.4">Zéro suivi automatique</li>
         </ul>
       </div>
       <div class="ba-card ba-after sr d2">
-        <div class="ba-tag">Après FiveStar</div>
+        <div class="ba-tag" data-i18n="ba.after.tag">Après FiveStar</div>
         <div class="ba-num" style="color:var(--green)">4.7 ⭐</div>
-        <div class="ba-desc">Note Google moyenne</div>
+        <div class="ba-desc" data-i18n="ba.desc">Note Google moyenne</div>
         <ul class="ba-list">
-          <li>SMS automatique 2h après visite</li>
-          <li>Réponses IA aux avis négatifs</li>
-          <li>Base clients qui grandit seule</li>
-          <li>Système 100% automatique</li>
+          <li data-i18n="ba.after.1">SMS automatique 2h après visite</li>
+          <li data-i18n="ba.after.2">Réponses IA aux avis négatifs</li>
+          <li data-i18n="ba.after.3">Base clients qui grandit seule</li>
+          <li data-i18n="ba.after.4">Système 100% automatique</li>
         </ul>
       </div>
       <div class="ba-card ba-result sr d4">
-        <div class="ba-tag">En chiffres</div>
+        <div class="ba-tag" data-i18n="ba.result.tag">En chiffres</div>
         <div class="ba-num" style="color:var(--gold)">+0.9 ⭐</div>
-        <div class="ba-desc">Points gagnés en 3-4 semaines</div>
+        <div class="ba-desc" data-i18n="ba.result.desc">Points gagnés en 3-4 semaines</div>
         <ul class="ba-list">
-          <li>Sans effort de votre part</li>
-          <li>Plus de clients = plus de revenus</li>
-          <li>Setup en 10 minutes chrono</li>
-          <li>Résultats dès la 1re semaine</li>
+          <li data-i18n="ba.result.1">Sans effort de votre part</li>
+          <li data-i18n="ba.result.2">Plus de clients = plus de revenus</li>
+          <li data-i18n="ba.result.3">Setup rapide chrono</li>
+          <li data-i18n="ba.result.4">Résultats dès la 1re semaine</li>
         </ul>
       </div>
     </div>
@@ -438,28 +550,15 @@
 <!-- FEATURES -->
 <section class="sec" id="fonctionnalites">
   <div class="wrap">
-    <div class="eyebrow sr">Fonctionnalités</div>
-    <h2 class="h2 sr">Tout ce qu'il vous faut,<br><em>rien de superflu.</em></h2>
+    <div class="eyebrow sr" data-i18n="feat.eyebrow">Fonctionnalités</div>
+    <h2 class="h2 sr" data-i18n-html="feat.h2">Tout ce qu'il vous faut,<br><em>rien de superflu.</em></h2>
     <div class="feat-grid">
-      <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📲</div><div class="feat-t">Capture via QR Code</div><div class="feat-d">Un QR Code personnalisé à la caisse. Le client scanne — numéro capturé automatiquement. Aucune friction.</div><div class="feat-tag ft-all">Tous les plans</div></div>
-      <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">⏱️</div><div class="feat-t">SMS 2h après la visite</div><div class="feat-d">Timing parfait. Le client est encore dans sa lancée positive. Taux de conversion 3x supérieur aux demandes tardives.</div><div class="feat-tag ft-all">Tous les plans</div></div>
-      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">🤖</div><div class="feat-t">IA répond aux négatifs</div><div class="feat-d">Notre intelligence artificielle génère des réponses professionnelles et personnalisées aux avis négatifs. 24/7.</div><div class="feat-tag ft-all">Tous les plans</div></div>
-      <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📊</div><div class="feat-t">Dashboard en temps réel</div><div class="feat-d">Suivez votre note Google, vos avis, votre taux de conversion depuis votre espace personnel sécurisé.</div><div class="feat-tag ft-pro">Pro & Premium</div></div>
-      <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">📣</div><div class="feat-t">SMS promotionnels</div><div class="feat-d">Un SMS promo mensuel à toute votre base clients. On rédige et envoie pour vous. Fidélisation automatique.</div><div class="feat-tag ft-pro">Pro & Premium</div></div>
-      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">👥</div><div class="feat-t">Recrutement IA</div><div class="feat-d">L'IA trie les CV entrants automatiquement. Vous recevez seulement les profils qui correspondent à vos critères.</div><div class="feat-tag ft-prem">Premium</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="sec proof-bg">
-  <div class="wrap">
-    <div class="eyebrow sr">Témoignages</div>
-    <h2 class="h2 sr">Ils ont automatisé<br><em>leur réputation.</em></h2>
-    <div class="proof-grid">
-      <div class="proof-card sr"><div class="pstars">★★★★★</div><div class="pquote">"En 3 semaines, ma note Google est passée de 3.8 à 4.6. Je n'ai rien fait — le système s'en est occupé tout seul."</div><div class="pauthor"><div class="pava">🍕</div><div><div class="pname">Marco R.</div><div class="pbiz">Pizzeria Marco, Montréal</div></div></div><div class="presult">📈 3.8 → 4.6 étoiles en 3 semaines</div></div>
-      <div class="proof-card sr d2"><div class="pstars">★★★★★</div><div class="pquote">"Le setup a pris 8 minutes. Depuis, je reçois des avis chaque semaine sans rien faire. C'est exactement ce dont j'avais besoin."</div><div class="pauthor"><div class="pava">✂️</div><div><div class="pname">Sandra L.</div><div class="pbiz">Salon Bella, Laval</div></div></div><div class="presult">⭐ 23 nouveaux avis le premier mois</div></div>
-      <div class="proof-card sr d4"><div class="pstars">★★★★★</div><div class="pquote">"Un client a laissé un avis 1 étoile à 2h du matin. L'IA a répondu professionnellement avant que je me réveille. Impressionnant."</div><div class="pauthor"><div class="pava">💪</div><div><div class="pname">David T.</div><div class="pbiz">Gym Force, Brossard</div></div></div><div class="presult">🤖 Réponses IA en moins de 2 minutes</div></div>
+      <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📲</div><div class="feat-t" data-i18n="feat.1.t">Capture via QR Code</div><div class="feat-d" data-i18n="feat.1.d">Un QR Code personnalisé à la caisse. Le client scanne — numéro capturé automatiquement. Aucune friction.</div><div class="feat-tag ft-all" data-i18n="feat.all">Tous les plans</div></div>
+      <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">⏱️</div><div class="feat-t" data-i18n="feat.2.t">SMS 2h après la visite</div><div class="feat-d" data-i18n="feat.2.d">Timing parfait. Le client est encore dans sa lancée positive. Taux de conversion 3x supérieur.</div><div class="feat-tag ft-all" data-i18n="feat.all">Tous les plans</div></div>
+      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">🤖</div><div class="feat-t" data-i18n="feat.3.t">IA répond aux négatifs</div><div class="feat-d" data-i18n="feat.3.d">Notre intelligence artificielle génère des réponses professionnelles aux avis négatifs. 24/7.</div><div class="feat-tag ft-all" data-i18n="feat.all">Tous les plans</div></div>
+      <div class="feat sr"><div class="feat-shine"></div><div class="feat-ico">📊</div><div class="feat-t" data-i18n="feat.4.t">Dashboard en temps réel</div><div class="feat-d" data-i18n="feat.4.d">Suivez votre note Google, vos avis, votre taux de conversion depuis votre espace personnel.</div><div class="feat-tag ft-pro" data-i18n="feat.pro">Pro &amp; Premium</div></div>
+      <div class="feat sr d1"><div class="feat-shine"></div><div class="feat-ico">📣</div><div class="feat-t" data-i18n="feat.5.t">SMS promotionnels</div><div class="feat-d" data-i18n="feat.5.d">Un SMS promo mensuel à toute votre base clients. On rédige et envoie pour vous.</div><div class="feat-tag ft-pro" data-i18n="feat.pro">Pro &amp; Premium</div></div>
+      <div class="feat sr d2"><div class="feat-shine"></div><div class="feat-ico">👥</div><div class="feat-t" data-i18n="feat.6.t">Recrutement IA</div><div class="feat-d" data-i18n="feat.6.d">L'IA trie les CV entrants automatiquement. Vous recevez seulement les profils qui correspondent.</div><div class="feat-tag ft-prem" data-i18n="feat.prem">Premium</div></div>
     </div>
   </div>
 </section>
@@ -467,60 +566,60 @@
 <!-- PRICING -->
 <section class="sec price-bg" id="forfaits">
   <div class="wrap">
-    <div class="eyebrow sr" style="text-align:center">Tarifs</div>
-    <h2 class="h2 sr" style="text-align:center;margin:0 auto 10px">Un forfait pour<br><em>chaque commerce.</em></h2>
-    <p class="sub sr" style="text-align:center;margin:0 auto 56px">Pas de frais cachés. Setup inclus. Résultats dès la première semaine.</p>
+    <div class="eyebrow sr" style="text-align:center" data-i18n="price.eyebrow">Tarifs</div>
+    <h2 class="h2 sr" style="text-align:center;margin:0 auto 10px" data-i18n-html="price.h2">Un forfait pour<br><em>chaque commerce.</em></h2>
+    <p class="sub sr" style="text-align:center;margin:0 auto 56px" data-i18n="price.sub">Pas de frais cachés. Setup inclus. Résultats dès la première semaine.</p>
     <div class="price-grid">
       <div class="pc sr">
         <div class="pc-name">Starter</div>
         <div class="pc-price"><sup>$</sup>297</div>
-        <div class="pc-period">par mois · sans contrat</div>
+        <div class="pc-period" data-i18n="price.period">par mois · sans contrat</div>
         <div class="pc-hr"></div>
         <ul class="pc-feats">
-          <li class="pf">Capture numéros via QR Code</li>
-          <li class="pf">SMS automatique 2h après visite</li>
-          <li class="pf">Réponses avis négatifs par IA</li>
-          <li class="pf">Setup complet en 10 minutes</li>
-          <li class="pf off">Dashboard gérant</li>
-          <li class="pf off">SMS promotionnel mensuel</li>
-          <li class="pf off">Rapport mensuel détaillé</li>
-          <li class="pf off">Recrutement IA</li>
+          <li class="pf" data-i18n="price.s.1">Capture numéros via QR Code</li>
+          <li class="pf" data-i18n="price.s.2">SMS automatique 2h après visite</li>
+          <li class="pf" data-i18n="price.s.3">Réponses avis négatifs par IA</li>
+          <li class="pf" data-i18n="price.s.4">Setup simple et rapide</li>
+          <li class="pf off" data-i18n="price.s.5">Dashboard gérant</li>
+          <li class="pf off" data-i18n="price.s.6">SMS promotionnel mensuel</li>
+          <li class="pf off" data-i18n="price.s.7">Rapport mensuel détaillé</li>
+          <li class="pf off" data-i18n="price.s.8">Recrutement IA</li>
         </ul>
-        <button class="pc-btn pc-btn-b" onclick="goSignup('starter')">Choisir Starter →</button>
+        <button class="pc-btn pc-btn-b" onclick="goSignup('starter')" data-i18n="price.s.btn">Choisir Starter →</button>
       </div>
       <div class="pc hot sr d2">
-        <div class="pc-pop">⭐ PLUS POPULAIRE</div>
+        <div class="pc-pop" data-i18n="price.popular">⭐ PLUS POPULAIRE</div>
         <div class="pc-name">Pro</div>
         <div class="pc-price"><sup>$</sup>499</div>
-        <div class="pc-period">par mois · sans contrat</div>
+        <div class="pc-period" data-i18n="price.period">par mois · sans contrat</div>
         <div class="pc-hr"></div>
         <ul class="pc-feats">
-          <li class="pf">Tout le Starter</li>
-          <li class="pf">Dashboard gérant complet</li>
-          <li class="pf">SMS promotionnel mensuel</li>
-          <li class="pf">Rapport mensuel détaillé</li>
-          <li class="pf">Statistiques avancées</li>
-          <li class="pf off">Recrutement IA</li>
-          <li class="pf off">Support prioritaire 4h</li>
+          <li class="pf" data-i18n="price.p.1">Tout le Starter</li>
+          <li class="pf" data-i18n="price.p.2">Dashboard gérant complet</li>
+          <li class="pf" data-i18n="price.p.3">SMS promotionnel mensuel</li>
+          <li class="pf" data-i18n="price.p.4">Rapport mensuel détaillé</li>
+          <li class="pf" data-i18n="price.p.5">Statistiques avancées</li>
+          <li class="pf off" data-i18n="price.p.6">Recrutement IA</li>
+          <li class="pf off" data-i18n="price.p.7">Support prioritaire 4h</li>
         </ul>
-        <button class="pc-btn pc-btn-g" onclick="goSignup('pro')">Choisir Pro →</button>
+        <button class="pc-btn pc-btn-g" onclick="goSignup('pro')" data-i18n="price.p.btn">Choisir Pro →</button>
       </div>
       <div class="pc sr d4">
         <div class="pc-name">Premium</div>
         <div class="pc-price"><sup>$</sup>599</div>
-        <div class="pc-period">par mois · sans contrat</div>
+        <div class="pc-period" data-i18n="price.period">par mois · sans contrat</div>
         <div class="pc-hr"></div>
         <ul class="pc-feats">
-          <li class="pf">Tout le Pro</li>
-          <li class="pf">Recrutement automatisé IA</li>
-          <li class="pf">Support prioritaire 4h</li>
-          <li class="pf">Onboarding dédié</li>
-          <li class="pf">Accès anticipé nouvelles features</li>
+          <li class="pf" data-i18n="price.pr.1">Tout le Pro</li>
+          <li class="pf" data-i18n="price.pr.2">Recrutement automatisé IA</li>
+          <li class="pf" data-i18n="price.pr.3">Support prioritaire 4h</li>
+          <li class="pf" data-i18n="price.pr.4">Onboarding dédié</li>
+          <li class="pf" data-i18n="price.pr.5">Accès anticipé nouvelles features</li>
         </ul>
-        <button class="pc-btn pc-btn-b" onclick="goSignup('premium')">Choisir Premium →</button>
+        <button class="pc-btn pc-btn-b" onclick="goSignup('premium')" data-i18n="price.pr.btn">Choisir Premium →</button>
       </div>
     </div>
-    <div class="guarantee sr"><span>✓</span> Sans contrat · Annulez à tout moment · Paiement 100% sécurisé</div>
+    <div class="guarantee sr"><span>✓</span> <span data-i18n="price.guarantee">Sans contrat · Annulez à tout moment · Paiement 100% sécurisé</span></div>
   </div>
 </section>
 
@@ -528,17 +627,17 @@
 <section class="sec faq-bg" id="faq">
   <div class="wrap">
     <div class="eyebrow sr">FAQ</div>
-    <h2 class="h2 sr">Vos questions,<br><em>nos réponses.</em></h2>
+    <h2 class="h2 sr" data-i18n-html="faq.h2">Vos questions,<br><em>nos réponses.</em></h2>
     <div class="faq-layout">
       <div class="faq-col">
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Est-ce que je dois signer un contrat ?<div class="fplus">+</div></div><div class="fa">Non. FiveStar AI fonctionne sans engagement. Vous payez mois par mois et pouvez annuler à tout moment en nous écrivant à admin@fivestarai.ca.</div></div>
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne le QR Code ?<div class="fplus">+</div></div><div class="fa">On crée un QR Code personnalisé pour votre commerce. Vous l'affichez à la caisse. Le client scanne — son numéro est capturé automatiquement. Aucune action de votre part.</div></div>
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Combien de temps avant les premiers résultats ?<div class="fplus">+</div></div><div class="fa">En général dès la première semaine. Le premier client qui scanne votre QR Code reçoit un SMS 2h après sa visite. Si tout se passe bien, vous avez votre premier avis Google dans les jours qui suivent.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.1.q">Est-ce que je dois signer un contrat ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.1.a">Non. FiveStar AI fonctionne sans engagement. Vous payez mois par mois et pouvez annuler à tout moment en nous écrivant à admin@fivestarai.ca.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.2.q">Comment fonctionne le QR Code ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.2.a">On crée un QR Code personnalisé pour votre commerce. Vous l'affichez à la caisse. Le client scanne — son numéro est capturé automatiquement. Aucune action de votre part.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.3.q">Combien de temps avant les premiers résultats ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.3.a">En général dès la première semaine. Le premier client qui scanne reçoit un SMS 2h après sa visite. Votre premier avis Google arrive dans les jours qui suivent.</div></div>
       </div>
       <div class="faq-col">
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne la réponse aux avis négatifs ?<div class="fplus">+</div></div><div class="fa">Quand un avis négatif apparaît sur votre fiche Google, Notre IA génère automatiquement une réponse professionnelle et personnalisée selon le contenu de l'avis. Vous n'écrivez rien.</div></div>
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Est-ce que je dois faire quelque chose après le setup ?<div class="fplus">+</div></div><div class="fa">Non. C'est le but. Une fois le setup de 10 minutes terminé, le système tourne seul. SMS automatiques, réponses automatiques. Vous n'avez plus rien à faire.</div></div>
-        <div class="fi sr" onclick="faq(this)"><div class="fq">Comment fonctionne le paiement ?<div class="fplus">+</div></div><div class="fa">Le paiement est traité de façon sécurisée de façon sécurisée. Vous recevez une facture par email chaque mois. Vos informations bancaires ne sont jamais stockées par FiveStar AI.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.4.q">Comment fonctionne la réponse aux avis négatifs ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.4.a">Quand un avis négatif apparaît, notre IA génère automatiquement une réponse professionnelle et personnalisée selon le contenu. Vous n'écrivez rien.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.5.q">Est-ce que je dois faire quelque chose après le setup ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.5.a">Non. C'est le but. Une fois le setup terminé, le système tourne seul. SMS automatiques, réponses automatiques. Vous n'avez plus rien à faire.</div></div>
+        <div class="fi sr" onclick="faq(this)"><div class="fq"><span data-i18n="faq.6.q">Comment fonctionne le paiement ?</span><div class="fplus">+</div></div><div class="fa" data-i18n="faq.6.a">Le paiement est traité de façon sécurisée. Vous recevez une facture par email chaque mois. Vos informations bancaires ne sont jamais stockées par FiveStar AI.</div></div>
       </div>
     </div>
   </div>
@@ -548,12 +647,12 @@
 <section class="cta-final">
   <div class="wrap">
     <div class="cta-box sr">
-      <div class="eyebrow" style="margin-bottom:14px">Démarrer</div>
-      <h2 class="h2" style="margin:0 auto 14px;max-width:520px">Prêt à automatiser<br><em>vos avis Google ?</em></h2>
-      <p style="color:var(--muted);font-size:16px;margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.75">Setup en 10 minutes. Premier avis Google dès cette semaine.</p>
+      <div class="eyebrow" style="margin-bottom:14px" data-i18n="cta.eyebrow">Démarrer</div>
+      <h2 class="h2" style="margin:0 auto 14px;max-width:520px" data-i18n-html="cta.h2">Prêt à avoir plus<br><em>de clients dès cette semaine ?</em></h2>
+      <p style="color:var(--muted);font-size:16px;margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.75" data-i18n="cta.p">Setup rapide. Premier avis Google dès cette semaine.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
-        <a href="#forfaits" class="btn-g">Voir les forfaits →</a>
-        <a href="mailto:admin@fivestarai.ca" class="btn-o">✉️ Nous écrire</a>
+        <a href="#forfaits" class="btn-g" data-i18n="cta.btn1">Voir les forfaits →</a>
+        <a href="mailto:admin@fivestarai.ca" class="btn-o" data-i18n="cta.btn2">✉️ Nous écrire</a>
       </div>
       <div style="font-size:13px;color:var(--muted)">admin@fivestarai.ca</div>
     </div>
@@ -564,109 +663,374 @@
 <footer>
   <div class="ft-main">
     <div class="ft-brand">
-      <div style="font-size:17px;font-weight:900;color:#fff">⭐ FiveStar AI</div>
-      <p>Automatisation IA de la réputation en ligne pour les commerces locaux. Restaurants, salons, gyms, cafés et plus.</p>
+      <div style="font-size:17px;font-weight:900;color:#fff">⭐ Five<span style="color:var(--gold)">Star</span>&nbsp;AI</div>
+      <p data-i18n="ft.brand">Automatisation IA de la réputation en ligne pour les commerces locaux. Restaurants, salons, gyms, cafés et plus.</p>
     </div>
     <div class="ft-col">
-      <div class="ft-col-t">Produit</div>
-      <a href="#comment">Comment ça marche</a>
-      <a href="commerces.html">Par type de commerce</a>
-      <a href="demo.html">Démo interactive</a>
-      <a href="resultats.html">Estimez vos résultats</a>
-      <a href="comparaison.html">Comparaison</a>
-      <a href="#forfaits">Forfaits</a>
+      <div class="ft-col-t" data-i18n="ft.col1">Produit</div>
+      <a href="#comment" data-i18n="nav.how">Comment ça marche</a>
+      <a href="commerces.html" data-i18n="mob.by">Par type de commerce</a>
+      <a href="demo.html" data-i18n="mob.demo">Démo interactive</a>
+      <a href="resultats.html" data-i18n="mob.results">Estimez vos résultats</a>
+      <a href="comparaison.html" data-i18n="mob.compare">Comparaison</a>
+      <a href="#forfaits" data-i18n="nav.pricing">Forfaits</a>
       <a href="#faq">FAQ</a>
     </div>
     <div class="ft-col">
-      <div class="ft-col-t">Compte</div>
-      <a href="dashboard.html">Se connecter</a>
-      <a href="dashboard.html?signup=true&plan=starter">Forfait Starter</a>
-      <a href="dashboard.html?signup=true&plan=pro">Forfait Pro</a>
-      <a href="dashboard.html?signup=true&plan=premium">Forfait Premium</a>
-      <a href="onboarding.html">Guide de démarrage</a>
-      <a href="annulation.html">Annuler mon abonnement</a>
+      <div class="ft-col-t" data-i18n="ft.col2">Compte</div>
+      <a href="dashboard.html" data-i18n="ft.login">Se connecter</a>
+      <a href="dashboard.html?signup=true&plan=starter" data-i18n="ft.starter">Forfait Starter</a>
+      <a href="dashboard.html?signup=true&plan=pro" data-i18n="ft.pro">Forfait Pro</a>
+      <a href="dashboard.html?signup=true&plan=premium" data-i18n="ft.premium">Forfait Premium</a>
+      <a href="onboarding.html" data-i18n="ft.guide">Guide de démarrage</a>
+      <a href="annulation.html" data-i18n="ft.cancel">Annuler mon abonnement</a>
     </div>
     <div class="ft-col">
-      <div class="ft-col-t">Ressources</div>
+      <div class="ft-col-t" data-i18n="ft.col3">Ressources</div>
       <a href="blog.html">Blog</a>
-      <a href="a-propos.html">À propos</a>
-      <a href="politique.html">Confidentialité</a>
-      <a href="conditions.html">Conditions d'utilisation</a>
-      <a href="mailto:admin@fivestarai.ca">Nous écrire</a>
+      <a href="a-propos.html" data-i18n="ft.about">À propos</a>
+      <a href="politique.html" data-i18n="ft.privacy">Confidentialité</a>
+      <a href="conditions.html" data-i18n="ft.terms">Conditions d'utilisation</a>
+      <a href="mailto:admin@fivestarai.ca" data-i18n="ft.contact">Nous écrire</a>
     </div>
   </div>
   <div class="ft-bottom">
-    <div class="ft-copy">© 2026 FiveStar AI — Tous droits réservés</div>
-    <div class="ft-qc">Fait par <span>deux entrepreneurs québécois</span> 🇨🇦</div>
+    <div class="ft-copy" data-i18n="ft.copy">© 2026 FiveStar AI — Tous droits réservés</div>
+    <div class="ft-qc" data-i18n-html="ft.qc">Fait par <span>deux entrepreneurs québécois</span> 🇨🇦</div>
   </div>
 </footer>
 
-<!-- CHAT -->
-<button class="chat-btn" id="cfab" onclick="toggleChat()">💬</button>
-<div class="chat-win" id="cwin">
-  <div class="chat-hdr">
-    <div class="chat-dot"></div>
-    <div class="chat-hi"><div class="chat-name">⭐ FiveStar AI</div><div class="chat-status">Répond en moins de 24h</div></div>
-    <button class="chat-x" onclick="toggleChat()">✕</button>
-  </div>
-  <div class="chat-msgs" id="cmsgs">
-    <div class="cm bot">👋 Bonjour ! Une question sur FiveStar AI ?</div>
-    <div class="cm bot">Écrivez ici — on vous répond par email dans les 24h.</div>
-  </div>
-  <div class="chat-foot">
-    <input class="chat-inp" id="cinp" placeholder="Votre question..." onkeydown="if(event.key==='Enter')sendChat()"/>
-    <button class="chat-send" onclick="sendChat()">→</button>
-  </div>
-</div>
+<!-- CHAT TAWK.TO -->
+<!-- Remplacez YOUR_TAWK_ID par votre ID Tawk.to (gratuit sur tawk.to) -->
+<!--
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/YOUR_TAWK_ID/default';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+-->
 
 <script>
+// ═══════════════════════════════════════════
+// TRADUCTIONS
+// ═══════════════════════════════════════════
+const T = {
+  fr: {
+    'nav.how':'Comment ça marche','nav.by':'Par commerce','nav.pricing':'Forfaits',
+    'nav.demo':'Démo','nav.results':'Estimez vos résultats','nav.login':'Mon compte','nav.cta':'Commencer →',
+    'mob.by':'Nos solutions','mob.demo':'Démo interactive','mob.results':'Estimez vos résultats',
+    'mob.compare':'Comparaison','mob.pricing':'Voir les forfaits','mob.login':'Mon compte',
+    'mob.cta':'Commencer maintenant →',
+    'hero.badge':'🔴 EN CE MOMENT — vos concurrents accumulent des avis pendant que vous lisez ceci',
+    'hero.h1':'Chaque jour sans système,<br><em>c\'est des clients perdus.</em>',
+    'hero.p':'86% des clients choisissent le commerce avec le plus d\'avis Google. Si ce n\'est pas vous — c\'est votre compétiteur. FiveStar AI corrige ça rapidement.',
+    'hero.btn1':'Je veux plus de clients →','hero.btn2':'Voir comment ça marche',
+    'trust.1':'⚡ Setup rapide','trust.2':'📈 Premiers avis cette semaine','trust.3':'🔒 Sans contrat','trust.4':'💳 Paiement sécurisé',
+    'logos.label':'Notre technologie','logos.1':'Intelligence Artificielle','logos.2':'SMS Automatisés',
+    'logos.3':'QR Code Intelligent','logos.4':'Réponses IA 24/7','logos.5':'Dashboard Temps Réel','logos.6':'Paiement Sécurisé',
+    'stat.1':'Setup complet<br>par commerce','stat.2':'Après la visite,<br>SMS envoyé','stat.3':'Automatique,<br>zéro effort','stat.4':'Réponses aux<br>avis négatifs',
+    'how.eyebrow':'Comment ça marche','how.h2':'En 4 étapes.<br><em>Zéro effort de votre part.</em>',
+    'how.sub':'Un client visite. Un SMS part. Un avis arrive. Votre note monte. Le tout automatiquement, pendant que vous travaillez.',
+    'how.s1.t':'Votre client visite, on capture son numéro','how.s1.p':'Un QR Code à votre caisse. Le client scanne. Son numéro est enregistré automatiquement. Vous n\'avez touché à rien.',
+    'how.s2.t':'2h après, il reçoit un SMS de votre part','how.s2.p':'Pas n\'importe quand — 2h après sa visite, quand son expérience est encore fraîche. Un lien direct vers votre fiche Google. Il clique en 10 secondes.',
+    'how.s3.t':'Il laisse un avis. Votre note monte.','how.s3.p':'Chaque avis 5 étoiles améliore votre position sur Google. Plus vous êtes haut, plus des clients potentiels vous trouvent avant vos compétiteurs.',
+    'how.s4.t':'Avis négatif ? Notre IA répond en 2 minutes.','how.s4.p':'À 2h du matin, pendant vos vacances, ou pendant le rush du vendredi soir — peu importe. Une réponse professionnelle est publiée avant que l\'avis fasse des dégâts.',
+    'vis.1':'Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.','vis.b1':'✓ Aucune action requise',
+    'ba.eyebrow':'Résultats réels','ba.h2':'Ce que ça change<br><em>concrètement.</em>',
+    'ba.before.tag':'Avant FiveStar','ba.after.tag':'Après FiveStar','ba.result.tag':'En chiffres',
+    'ba.desc':'Note Google moyenne','ba.result.desc':'Points gagnés en 3-4 semaines',
+    'ba.before.1':'Avis laissés au hasard','ba.before.2':'Avis négatifs sans réponse','ba.before.3':'Clients perdus sans retour','ba.before.4':'Zéro suivi automatique',
+    'ba.after.1':'SMS automatique 2h après visite','ba.after.2':'Réponses IA aux avis négatifs','ba.after.3':'Base clients qui grandit seule','ba.after.4':'Système 100% automatique',
+    'ba.result.1':'Sans effort de votre part','ba.result.2':'Plus de clients = plus de revenus','ba.result.3':'Setup rapide chrono','ba.result.4':'Résultats dès la 1re semaine',
+    'feat.eyebrow':'Fonctionnalités','feat.h2':'Tout ce qui vous fait<br><em>gagner des clients.</em>',
+    'feat.1.t':'Capture via QR Code','feat.1.d':'Un QR Code personnalisé à la caisse. Le client scanne — numéro capturé automatiquement. Aucune friction.',
+    'feat.2.t':'SMS 2h après la visite','feat.2.d':'Timing parfait. Le client est encore dans sa lancée positive. Taux de conversion 3x supérieur.',
+    'feat.3.t':'IA répond aux négatifs','feat.3.d':'Notre intelligence artificielle génère des réponses professionnelles aux avis négatifs. 24/7.',
+    'feat.4.t':'Dashboard en temps réel','feat.4.d':'Suivez votre note Google, vos avis, votre taux de conversion depuis votre espace personnel.',
+    'feat.5.t':'SMS promotionnels','feat.5.d':'Un SMS promo mensuel à toute votre base clients. On rédige et envoie pour vous.',
+    'feat.6.t':'Recrutement IA','feat.6.d':'L\'IA trie les CV entrants automatiquement. Vous recevez seulement les profils qui correspondent.',
+    'feat.all':'Tous les plans','feat.pro':'Pro & Premium','feat.prem':'Premium',
+    'proof.eyebrow':'Témoignages','proof.h2':'Des commerces comme le vôtre<br><em>qui ont vu la différence.</em>',
+    'proof.1.q':'"En 3 semaines, ma note Google est passée de 3.8 à 4.6. Je n\'ai rien fait — le système s\'en est occupé tout seul."',
+    'proof.2.q':'"Le setup a pris 8 minutes. Depuis, je reçois des avis chaque semaine sans rien faire. C\'est exactement ce dont j\'avais besoin."',
+
+
+    'price.eyebrow':'Tarifs','price.h2':'Un forfait pour<br><em>chaque commerce.</em>',
+    'price.sub':'Pas de contrat. Setup inclus. Si vous voyez pas de résultats la première semaine, on vous rembourse.',
+    'price.period':'par mois · sans contrat','price.popular':'⭐ PLUS POPULAIRE',
+    'price.s.1':'Capture numéros via QR Code','price.s.2':'SMS automatique 2h après visite','price.s.3':'Réponses avis négatifs par IA',
+    'price.s.4':'Setup simple et rapide','price.s.5':'Dashboard gérant','price.s.6':'SMS promotionnel mensuel',
+    'price.s.7':'Rapport mensuel détaillé','price.s.8':'Recrutement IA','price.s.btn':'Choisir Starter →',
+    'price.p.1':'Tout le Starter','price.p.2':'Dashboard gérant complet','price.p.3':'SMS promotionnel mensuel',
+    'price.p.4':'Rapport mensuel détaillé','price.p.5':'Statistiques avancées','price.p.6':'Recrutement IA',
+    'price.p.7':'Support prioritaire 4h','price.p.btn':'Choisir Pro →',
+    'price.pr.1':'Tout le Pro','price.pr.2':'Recrutement automatisé IA','price.pr.3':'Support prioritaire 4h',
+    'price.pr.4':'Onboarding dédié','price.pr.5':'Accès anticipé nouvelles features','price.pr.btn':'Choisir Premium →',
+    'price.guarantee':'Sans contrat · Annulez à tout moment · Paiement 100% sécurisé',
+    'faq.h2':'Vos questions,<br><em>nos réponses.</em>',
+    'faq.1.q':'Est-ce que je dois signer un contrat ?','faq.1.a':'Non. FiveStar AI fonctionne sans engagement. Vous payez mois par mois et pouvez annuler à tout moment en nous écrivant à admin@fivestarai.ca.',
+    'faq.2.q':'Comment fonctionne le QR Code ?','faq.2.a':'On crée un QR Code personnalisé pour votre commerce. Vous l\'affichez à la caisse. Le client scanne — son numéro est capturé automatiquement.',
+    'faq.3.q':'Combien de temps avant les premiers résultats ?','faq.3.a':'En général dès la première semaine. Le premier client qui scanne reçoit un SMS 2h après sa visite.',
+    'faq.4.q':'Comment fonctionne la réponse aux avis négatifs ?','faq.4.a':'Quand un avis négatif apparaît, notre IA génère automatiquement une réponse professionnelle et personnalisée.',
+    'faq.5.q':'Est-ce que je dois faire quelque chose après le setup ?','faq.5.a':'Non. C\'est le but. Une fois le setup terminé, le système tourne seul. SMS automatiques, réponses automatiques.',
+    'faq.6.q':'Comment fonctionne le paiement ?','faq.6.a':'Le paiement est traité de façon sécurisée. Vous recevez une facture par email chaque mois.',
+    'cta.eyebrow':'Démarrer','cta.h2':'Prêt à avoir plus<br><em>de clients dès cette semaine ?</em>',
+    'cta.p':'Setup rapide. Premier avis Google cette semaine. Aucun contrat. Vous voyez les résultats ou vous annulez.',
+    'cta.btn1':'Voir les forfaits →','cta.btn2':'✉️ Nous écrire',
+    'ft.brand':'Automatisation IA de la réputation en ligne pour les commerces locaux. Restaurants, salons, gyms, cafés et plus.',
+    'ft.col1':'Produit','ft.col2':'Compte','ft.col3':'Ressources',
+    'ft.login':'Se connecter','ft.starter':'Forfait Starter','ft.pro':'Forfait Pro','ft.premium':'Forfait Premium',
+    'ft.guide':'Guide de démarrage','ft.cancel':'Annuler mon abonnement',
+    'ft.about':'À propos','ft.privacy':'Confidentialité','ft.terms':'Conditions d\'utilisation','ft.contact':'Nous écrire',
+    'ft.copy':'© 2026 FiveStar AI — Tous droits réservés',
+    'ft.qc':'Fait par <span>deux entrepreneurs québécois</span> 🇨🇦',
+    'chat.status':'Répond en moins de 24h','chat.msg1':'👋 Bonjour ! Une question sur FiveStar AI ?',
+    'chat.msg2':'Écrivez ici — on vous répond par email dans les 24h.','chat.placeholder':'Votre question...',
+
+    // ── PROBLÈME / SOLUTION ──
+    'prob.badge':'⚠️ Le problème',
+    'prob.h2':'Vous perdez des clients<br><span style="color:#ef4444">chaque jour sans le savoir.</span>',
+    'prob.p':'La majorité des commerces locaux perdent des clients sans s\'en rendre compte. La raison est simple :',
+    'prob.1.t':'Pas assez d\'avis Google',
+    'prob.1.d':'Les clients font confiance aux commerces avec le plus d\'avis — pas nécessairement le meilleur.',
+    'prob.2.t':'Moins visible que vos concurrents sur Google Maps',
+    'prob.2.d':'Google pousse en premier les commerces avec une meilleure note et plus d\'avis récents.',
+    'prob.3.t':'Vous ne demandez pas d\'avis de façon systématique',
+    'prob.3.d':'Vos bons clients repartent contents — mais n\'écrivent rien. Les mécontents, eux, le font toujours.',
+    'prob.result':'Résultat : vos clients choisissent simplement la compétition.',
+    'sol.badge':'✓ La solution',
+    'sol.h2':'Un système automatisé qui<br><span style="color:var(--gold)">génère des avis pour vous.</span>',
+    'sol.p':'On installe un système qui collecte automatiquement des avis Google auprès de vos vrais clients — sans effort de votre part.',
+    'sol.1.t':'Vos clients reçoivent un SMS automatique',
+    'sol.1.d':'2h après leur visite — le meilleur moment pour qu\'ils laissent un avis positif.',
+    'sol.2.t':'Votre note Google monte automatiquement',
+    'sol.2.d':'Plus d\'avis = meilleure note = plus visible sur Google Maps = plus de clients.',
+    'sol.3.t':'Zéro effort de votre part',
+    'sol.3.d':'Setup rapide. Ensuite le système tourne seul — vous vous occupez de votre commerce.',
+    'sol.btn':'Commencer maintenant →',
+    'urgency.txt':'⏱️ Pendant que vous lisez ceci, un client vient peut-être de choisir votre concurrent parce qu\'il avait plus d\'avis Google.',
+    'urgency.btn':'Commencer maintenant →',
+    'urgency.full':'⏱️ Pendant que vous lisez ceci, un client vient peut-être de choisir votre concurrent parce qu\'il avait plus d\'avis Google. &nbsp;<a href="#forfaits" style="color:var(--gold);text-decoration:none;font-weight:700">Commencer maintenant →</a>',
+    'chat.reply':'Merci ! On vous répond à <strong>admin@fivestarai.ca</strong> dans les 24h 📧',
+  },
+  en: {
+    'nav.how':'How it works','nav.by':'By business','nav.pricing':'Pricing',
+    'nav.demo':'Demo','nav.results':'Estimate your results','nav.login':'My account','nav.cta':'Get started →',
+    'mob.by':'Our solutions','mob.demo':'Interactive demo','mob.results':'Estimate results',
+    'mob.compare':'Comparison','mob.pricing':'See pricing','mob.login':'My account',
+    'mob.cta':'Get started now →',
+    'hero.badge':'🔴 RIGHT NOW — your competitors are collecting reviews while you read this',
+    'hero.h1':'Every day without a system<br><em>is customers lost.</em>',
+    'hero.p':'86% of customers choose the business with the most Google reviews. If that\'s not you — it\'s your competitor. FiveStar AI fixes that fast.',
+    'hero.btn1':'I want more customers →','hero.btn2':'See how it works',
+    'trust.1':'⚡ Quick setup','trust.2':'📈 First reviews this week','trust.3':'🔒 No contract','trust.4':'💳 Secure payment',
+    'logos.label':'Our technology','logos.1':'Artificial Intelligence','logos.2':'Automated SMS',
+    'logos.3':'Smart QR Code','logos.4':'AI Responses 24/7','logos.5':'Real-Time Dashboard','logos.6':'Secure Payment',
+    'stat.1':'Complete setup<br>per business','stat.2':'After the visit,<br>SMS sent','stat.3':'Automatic,<br>zero effort','stat.4':'Responses to<br>negative reviews',
+    'how.eyebrow':'How it works','how.h2':'4 steps.<br><em>Zero effort on your part.</em>',
+    'how.sub':'A customer visits. An SMS goes out. A review comes in. Your rating goes up. All automatically, while you work.',
+    'how.s1.t':'Customer visits — we capture their number','how.s1.p':'Their number is automatically captured via QR Code at checkout. No action required on your part.',
+    'how.s2.t':'2h later, they get a text from you','how.s2.p':'Personalized message with a direct link to your Google listing. Perfect timing — maximum conversion rate.',
+    'how.s3.t':'They leave a review. Your rating goes up.','how.s3.p':'The customer clicks and leaves their 5-star review directly on your Google listing.',
+    'how.s4.t':'Negative review? Our AI responds in 2 min.','how.s4.p':'Our AI generates a professional response in seconds. Reputation protected 24/7.',
+    'vis.1':'The customer scans the QR Code at checkout. Their number is instantly recorded.','vis.b1':'✓ No action required',
+    'ba.eyebrow':'Real results','ba.h2':'What it actually<br><em>changes for you.</em>',
+    'ba.before.tag':'Before FiveStar','ba.after.tag':'After FiveStar','ba.result.tag':'By the numbers',
+    'ba.desc':'Average Google rating','ba.result.desc':'Points gained in 3-4 weeks',
+    'ba.before.1':'Reviews left at random','ba.before.2':'Negative reviews unanswered','ba.before.3':'Lost customers, no follow-up','ba.before.4':'Zero automatic tracking',
+    'ba.after.1':'Automatic SMS 2h after visit','ba.after.2':'AI responses to negative reviews','ba.after.3':'Customer base that grows itself','ba.after.4':'100% automatic system',
+    'ba.result.1':'Without any effort from you','ba.result.2':'More customers = more revenue','ba.result.3':'Quick setup flat','ba.result.4':'Results in the first week',
+    'feat.eyebrow':'Features','feat.h2':'Everything that helps<br><em>you get more customers.</em>',
+    'feat.1.t':'QR Code capture','feat.1.d':'A personalized QR Code at checkout. Customer scans — number captured automatically. Zero friction.',
+    'feat.2.t':'SMS 2h after the visit','feat.2.d':'Perfect timing. The customer is still on a positive high. Conversion rate 3x higher than late requests.',
+    'feat.3.t':'AI responds to negatives','feat.3.d':'Our artificial intelligence generates professional, personalized responses to negative reviews. 24/7.',
+    'feat.4.t':'Real-time dashboard','feat.4.d':'Track your Google rating, reviews, and conversion rate from your secure personal space.',
+    'feat.5.t':'Promotional SMS','feat.5.d':'A monthly promo SMS to your entire customer base. We write and send it for you.',
+    'feat.6.t':'AI recruitment','feat.6.d':'AI automatically sorts incoming resumes. You only receive profiles that match your criteria.',
+    'feat.all':'All plans','feat.pro':'Pro & Premium','feat.prem':'Premium',
+    'proof.eyebrow':'Testimonials','proof.h2':'Businesses like yours<br><em>that saw the difference.</em>',
+    'proof.1.q':'"In 3 weeks, my Google rating went from 3.8 to 4.6. I didn\'t do anything — the system handled it all by itself."',
+    'proof.2.q':'"Setup took 8 minutes. Since then, I get new reviews every week without doing anything. Exactly what I needed."',
+
+
+    'price.eyebrow':'Pricing','price.h2':'A plan for<br><em>every business.</em>',
+    'price.sub':'No hidden fees. Setup included. Results in the first week.',
+    'price.period':'per month · no contract','price.popular':'⭐ MOST POPULAR',
+    'price.s.1':'Number capture via QR Code','price.s.2':'Automatic SMS 2h after visit','price.s.3':'AI responses to negative reviews',
+    'price.s.4':'Complete quick setup','price.s.5':'Manager dashboard','price.s.6':'Monthly promotional SMS',
+    'price.s.7':'Detailed monthly report','price.s.8':'AI recruitment','price.s.btn':'Choose Starter →',
+    'price.p.1':'Everything in Starter','price.p.2':'Full manager dashboard','price.p.3':'Monthly promotional SMS',
+    'price.p.4':'Detailed monthly report','price.p.5':'Advanced statistics','price.p.6':'AI recruitment',
+    'price.p.7':'Priority support 4h','price.p.btn':'Choose Pro →',
+    'price.pr.1':'Everything in Pro','price.pr.2':'Automated AI recruitment','price.pr.3':'Priority support 4h',
+    'price.pr.4':'Dedicated onboarding','price.pr.5':'Early access to new features','price.pr.btn':'Choose Premium →',
+    'price.guarantee':'No contract · Cancel anytime · 100% secure payment',
+    'faq.h2':'Your questions,<br><em>our answers.</em>',
+    'faq.1.q':'Do I need to sign a contract ?','faq.1.a':'No. FiveStar AI works without commitment. You pay month to month and can cancel anytime by emailing admin@fivestarai.ca.',
+    'faq.2.q':'How does the QR Code work ?','faq.2.a':'We create a personalized QR Code for your business. You display it at checkout. The customer scans — their number is captured automatically.',
+    'faq.3.q':'How long before seeing results ?','faq.3.a':'Usually within the first week. The first customer to scan gets an SMS 2h after their visit.',
+    'faq.4.q':'How does the negative review response work ?','faq.4.a':'When a negative review appears, our AI automatically generates a professional, personalized response. You write nothing.',
+    'faq.5.q':'Do I need to do anything after setup ?','faq.5.a':'No. That\'s the whole point. Once the Quick setup is done, the system runs itself.',
+    'faq.6.q':'How does payment work ?','faq.6.a':'Payment is processed securely. You receive an invoice by email each month. Your banking info is never stored by FiveStar AI.',
+    'cta.eyebrow':'Get started','cta.h2':'Ready to get more<br><em>customers this week?</em>',
+    'cta.p':'Quick setup. First Google review this week. No contract. See results or cancel.',
+    'cta.btn1':'See pricing →','cta.btn2':'✉️ Contact us',
+    'ft.brand':'AI reputation automation for local businesses. Restaurants, salons, gyms, cafés and more.',
+    'ft.col1':'Product','ft.col2':'Account','ft.col3':'Resources',
+    'ft.login':'Log in','ft.starter':'Starter plan','ft.pro':'Pro plan','ft.premium':'Premium plan',
+    'ft.guide':'Getting started guide','ft.cancel':'Cancel my subscription',
+    'ft.about':'About us','ft.privacy':'Privacy policy','ft.terms':'Terms of use','ft.contact':'Contact us',
+    'ft.copy':'© 2026 FiveStar AI — All rights reserved',
+    'ft.qc':'Built by <span>two Quebec entrepreneurs</span> 🇨🇦',
+    'chat.status':'Replies within 24h','chat.msg1':'👋 Hi! A question about FiveStar AI?',
+    'chat.msg2':'Write here — we\'ll reply by email within 24h.','chat.placeholder':'Your question...',
+
+    // ── PROBLEM / SOLUTION ──
+    'prob.badge':'⚠️ The problem',
+    'prob.h2':'You\'re losing customers<br><span style="color:#ef4444">every day without knowing it.</span>',
+    'prob.p':'Most local businesses lose customers without realizing it. The reason is simple:',
+    'prob.1.t':'Not enough Google reviews',
+    'prob.1.d':'Customers trust businesses with the most reviews — not necessarily the best.',
+    'prob.2.t':'Less visible than your competitors on Google Maps',
+    'prob.2.d':'Google pushes businesses with better ratings and more recent reviews first.',
+    'prob.3.t':'You don\'t ask for reviews systematically',
+    'prob.3.d':'Your happy customers leave satisfied — but write nothing. Unhappy ones always do.',
+    'prob.result':'Result: customers simply choose your competition.',
+    'sol.badge':'✓ The solution',
+    'sol.h2':'An automated system that<br><span style="color:var(--gold)">generates reviews for you.</span>',
+    'sol.p':'We install a system that automatically collects Google reviews from your real customers — with no effort on your part.',
+    'sol.1.t':'Your customers receive an automatic text',
+    'sol.1.d':'2h after their visit — the best moment for them to leave a positive review.',
+    'sol.2.t':'Your Google rating goes up automatically',
+    'sol.2.d':'More reviews = better rating = more visible on Google Maps = more customers.',
+    'sol.3.t':'Zero effort on your part',
+    'sol.3.d':'Quick setup. Then the system runs itself — you focus on your business.',
+    'sol.btn':'Get started now →',
+    'urgency.txt':'⏱️ While you read this, a customer may have just chosen your competitor because they had more Google reviews.',
+    'urgency.btn':'Get started now →',
+    'urgency.full':'⏱️ While you read this, a customer may have just chosen your competitor because they had more Google reviews. &nbsp;<a href="#forfaits" style="color:var(--gold);text-decoration:none;font-weight:700">Get started now →</a>',
+    'chat.reply':'Thanks! We\'ll reply at <strong>admin@fivestarai.ca</strong> within 24h 📧',
+  }
+}
+
+// ═══════════════════════════════════════════
+// SETLANG
+// ═══════════════════════════════════════════
+let currentLang = localStorage.getItem('fsLang') || 'fr'
+
+function setLang(lang) {
+  currentLang = lang
+  localStorage.setItem('fsLang', lang)
+  document.getElementById('html-root').lang = lang
+
+  // Boutons actifs
+  ;['fr','en'].forEach(l => {
+    document.getElementById('btn-'+l)?.classList.toggle('active', l===lang)
+    document.getElementById('btn-'+l+'-mob')?.classList.toggle('active', l===lang)
+  })
+
+  // Mettre à jour tous les éléments
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n')
+    if (T[lang][key] !== undefined) el.textContent = T[lang][key]
+  })
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html')
+    if (T[lang][key] !== undefined) el.innerHTML = T[lang][key]
+  })
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder')
+    if (T[lang][key] !== undefined) el.placeholder = T[lang][key]
+  })
+
+  // Mettre à jour meta
+  document.title = lang==='fr'
+    ? 'FiveStar AI — Automatisez vos avis Google'
+    : 'FiveStar AI — Automate Your Google Reviews'
+
+  // Mettre à jour les données du visualiseur How It Works
+  updateVisData(lang)
+}
+
+function updateVisData(lang) {
+  if (lang === 'fr') {
+    window.vd = [
+      {i:'📱',t:T.fr['how.s1.t'],d:'Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.',b:'✓ Aucune action requise',sms:null},
+      {i:'💬',t:T.fr['how.s2.t'],d:'2h après la visite, le client reçoit :',b:null,sms:{f:'FiveStar AI · Il y a 2h',m:'Merci de votre visite ! Vous avez apprécié ? Laissez-nous un avis Google ⭐ → g.page/votre-commerce'}},
+      {i:'⭐',t:T.fr['how.s3.t'],d:'Le client clique et laisse son avis directement sur votre fiche Google.',b:'✓ Note Google en hausse',sms:null},
+      {i:'🤖',t:T.fr['how.s4.t'],d:'Notre IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.',b:'✓ Réponse en moins de 2 min',sms:null},
+    ]
+  } else {
+    window.vd = [
+      {i:'📱',t:T.en['how.s1.t'],d:'Customer scans the QR Code at checkout. Their number is instantly recorded.',b:'✓ No action required',sms:null},
+      {i:'💬',t:T.en['how.s2.t'],d:'2h after the visit, the customer receives:',b:null,sms:{f:'FiveStar AI · 2h ago',m:'Thanks for visiting! Did you enjoy it? Leave us a Google review ⭐ → g.page/your-business'}},
+      {i:'⭐',t:T.en['how.s3.t'],d:'The customer clicks and leaves their review directly on your Google listing.',b:'✓ Google rating going up',sms:null},
+      {i:'🤖',t:T.en['how.s4.t'],d:'Our AI generates a professional response in seconds. Reputation protected 24/7.',b:'✓ Response in under 2 min',sms:null},
+    ]
+  }
+  // Recharger le step actif
+  const steps = document.querySelectorAll('.step')
+  if (steps.length) setStep(si, steps[si])
+}
+
+// ═══════════════════════════════════════════
 // NAV
+// ═══════════════════════════════════════════
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>48))
 
-// MOBILE
 function toggleMob(){
-  const mob=document.getElementById('mob')
-  const ham=document.getElementById('ham')
+  const mob=document.getElementById('mob'),ham=document.getElementById('ham')
   const isOpen=mob.classList.contains('open')
-  mob.classList.toggle('open')
-  ham.classList.toggle('open')
-  ham.textContent=isOpen?'☰':'✕'
+  mob.classList.toggle('open',!isOpen)
+  ham.classList.toggle('open',!isOpen)
+  document.body.style.overflow=isOpen?'':'hidden'
 }
 function closeMob(){
   document.getElementById('mob').classList.remove('open')
-  const ham=document.getElementById('ham')
-  ham.classList.remove('open')
-  ham.textContent='☰'
+  document.getElementById('ham').classList.remove('open')
+  document.body.style.overflow=''
 }
 
+// ═══════════════════════════════════════════
 // SCROLL REVEAL
+// ═══════════════════════════════════════════
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')})},{threshold:.08,rootMargin:'0px 0px -28px 0px'})
 document.querySelectorAll('.sr,.sr-l,.sr-r').forEach(el=>obs.observe(el))
 
+// ═══════════════════════════════════════════
 // COUNTERS
+// ═══════════════════════════════════════════
 const cobs=new IntersectionObserver(e=>{e.forEach(x=>{
   if(x.isIntersecting&&!x.target.dataset.done){
-    x.target.dataset.done=1
-    const t=+x.target.dataset.to,s=x.target.dataset.sfx||''
+    x.target.dataset.done=1;const t=+x.target.dataset.to,s=x.target.dataset.sfx||''
     let c=0,step=Math.ceil(t/28)
     const iv=setInterval(()=>{c=Math.min(c+step,t);x.target.textContent=c+s;if(c>=t)clearInterval(iv)},45)
   }
 })},{threshold:.5})
 document.querySelectorAll('[data-to]').forEach(el=>cobs.observe(el))
 
+// ═══════════════════════════════════════════
 // HOW IT WORKS
-const vd=[
-  {i:'📱',t:'QR Code personnalisé',d:'Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.',b:'✓ Aucune action requise',sms:null},
-  {i:'💬',t:'SMS envoyé automatiquement',d:'2h après la visite, le client reçoit :',b:null,sms:{f:'FiveStar AI · Il y a 2h',m:'Merci de votre visite ! Vous avez apprécié ? Laissez-nous un avis Google ⭐ → g.page/votre-commerce'}},
-  {i:'⭐',t:'Avis 5 étoiles reçu',d:'Le client clique et laisse son avis directement sur votre fiche Google. Votre note monte.',b:'✓ Note Google en hausse',sms:null},
-  {i:'🤖',t:'Réponse IA aux avis négatifs',d:'Notre IA génère une réponse professionnelle en quelques secondes. Votre réputation protégée 24/7.',b:'✓ Réponse en moins de 2 min',sms:null},
+// ═══════════════════════════════════════════
+window.vd = [
+  {i:'📱',t:'Client visite votre commerce',d:'Le client scanne le QR Code à la caisse. Son numéro est enregistré instantanément.',b:'✓ Aucune action requise',sms:null},
+  {i:'💬',t:'SMS envoyé 2h après la visite',d:'2h après la visite, le client reçoit :',b:null,sms:{f:'FiveStar AI · Il y a 2h',m:'Merci de votre visite ! Vous avez apprécié ? Laissez-nous un avis Google ⭐ → g.page/votre-commerce'}},
+  {i:'⭐',t:'Avis positif → votre note monte',d:'Le client clique et laisse son avis directement sur votre fiche Google.',b:'✓ Note Google en hausse',sms:null},
+  {i:'🤖',t:'Avis négatif → IA répond pour vous',d:'Notre IA génère une réponse professionnelle en quelques secondes. Réputation protégée 24/7.',b:'✓ Réponse en moins de 2 min',sms:null},
 ]
 let si=0
 function setStep(i,el){
   si=i
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'))
-  el.classList.add('active')
+  if(el)el.classList.add('active')
   const v=vd[i],f=document.getElementById('vf')
+  if(!f)return
   f.style.opacity='0'
   setTimeout(()=>{
     f.innerHTML=`<div class="vis-icon">${v.i}</div><div class="vis-title">${v.t}</div><div class="vis-text">${v.d}</div>${v.sms?`<div class="sms-box"><div class="sms-from">${v.sms.f}</div><div class="sms-body">${v.sms.m}</div></div>`:`<div class="vis-badge">${v.b}</div>`}`
@@ -676,13 +1040,12 @@ function setStep(i,el){
 }
 setInterval(()=>{si=(si+1)%4;const steps=document.querySelectorAll('.step');if(steps.length)setStep(si,steps[si])},4200)
 
-// FAQ
+// ═══════════════════════════════════════════
+// FAQ / PRICING / CHAT
+// ═══════════════════════════════════════════
 function faq(el){el.classList.toggle('open')}
+function goSignup(p){window.location.href='merci.html?plan='+p}
 
-// PRICING
-function goSignup(p){window.location.href='dashboard.html?signup=true&plan='+p}
-
-// CHAT
 let co=false
 function toggleChat(){
   co=!co
@@ -695,16 +1058,20 @@ function sendChat(){
   if(!msg)return
   const m=document.getElementById('cmsgs')
   m.innerHTML+=`<div class="cm usr">${msg}</div>`
-  inp.value=''
-  m.scrollTop=9999
+  inp.value='';m.scrollTop=9999
   m.innerHTML+=`<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>`
   m.scrollTop=9999
   setTimeout(()=>{
     m.querySelector('.typing')?.remove()
-    m.innerHTML+=`<div class="cm bot">Merci ! On vous répond à <strong>admin@fivestarai.ca</strong> dans les 24h 📧</div>`
+    m.innerHTML+=`<div class="cm bot">${T[currentLang]['chat.reply']}</div>`
     m.scrollTop=9999
   },1100)
 }
+
+// ═══════════════════════════════════════════
+// INIT — appliquer la langue sauvegardée
+// ═══════════════════════════════════════════
+setLang(currentLang)
 </script>
 </body>
 </html>
