@@ -533,9 +533,10 @@ async function doSignup(){
       <div class="ec-email-box">${email}</div>
       <div class="ec-steps">
         <div class="ec-step"><span style="color:var(--green)">✅</span> Compte créé — ${commerce} · Forfait ${p.name}</div>
-        <div class="ec-step"><span style="color:var(--gold)">📧</span> Email de confirmation envoyé</div>
-        <div class="ec-step"><span style="color:var(--muted)">📞</span> Un fondateur vous contacte dans les 24h</div>
-        <div class="ec-step"><span style="color:var(--muted)">🚀</span> Setup en 10 minutes · Résultats cette semaine</div>
+        <div class="ec-step"><span style="color:var(--gold)">📧</span> Email de confirmation envoyé à ${email}</div>
+        <div class="ec-step"><span style="color:var(--gold)">📞</span> Un fondateur vous contacte dans les <strong>24h</strong> pour finaliser le paiement et le setup</div>
+        <div class="ec-step"><span style="color:var(--muted)">💳</span> Paiement sécurisé traité lors du setup</div>
+        <div class="ec-step"><span style="color:var(--muted)">🚀</span> Système actif dès le setup complété</div>
       </div>
       <button class="btn-resend" onclick="resendEmail('${email}','${commerce}','${p.name}')">Renvoyer l'email</button>
       <div style="margin-top:16px;font-size:13px;color:var(--muted)">Déjà confirmé ? <span style="color:var(--gold);cursor:pointer" onclick="location.reload()">Se connecter →</span></div>
@@ -575,11 +576,6 @@ async function doSignup(){
           plan: p.name.toLowerCase(),
           since: new Date().toISOString()
         }))
-      // Rediriger vers la page de confirmation
-        setTimeout(() => {
-          const planName = p.name.toLowerCase()
-          window.location.href = 'merci.html?plan=' + planName
-        }, 1800)
       },1500)
     }
   }catch(e){console.log('EmailJS non configuré — fallback mailto utilisé')}
