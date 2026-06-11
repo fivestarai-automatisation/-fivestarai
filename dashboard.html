@@ -575,6 +575,11 @@ async function doSignup(){
           plan: p.name.toLowerCase(),
           since: new Date().toISOString()
         }))
+      // Rediriger vers la page de confirmation
+        setTimeout(() => {
+          const planName = p.name.toLowerCase()
+          window.location.href = 'merci.html?plan=' + planName
+        }, 1800)
       },1500)
     }
   }catch(e){console.log('EmailJS non configuré — fallback mailto utilisé')}
