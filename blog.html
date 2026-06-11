@@ -3,339 +3,1025 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FiveStar AI — Blog · Conseils réputation en ligne</title>
-  <meta name="description" content="Conseils pour améliorer votre note Google, gérer vos avis et attirer plus de clients. Blog FiveStar AI pour commerces locaux."/>
+  <title>FiveStar AI — Blog · Conseils pour commerces locaux</title>
+  <meta name="description" content="Conseils pratiques pour améliorer votre réputation en ligne, obtenir plus d'avis Google et attirer plus de clients dans votre commerce local."/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
     .logo{font-size:17px;font-weight:900;color:#fff;text-decoration:none}.logo span{color:var(--gold)}
-    .nav-links{display:flex;gap:20px;align-items:center}
-    .nav-links a{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}.nav-links a:hover{color:#fff}
-    .nav-cta{background:var(--gold)!important;color:#000!important;font-weight:700!important;padding:9px 20px;border-radius:8px}
-    .page{max-width:1060px;margin:0 auto;padding:100px 24px 80px}
-    .page-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;text-align:center}
-    .page-h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-1.8px;color:#fff;margin-bottom:16px;line-height:1.08;text-align:center}
-    .page-h1 em{font-style:normal;color:var(--gold)}
-    .page-p{font-size:16px;color:var(--muted);max-width:500px;line-height:1.75;margin:0 auto 56px;text-align:center}
-    /* FEATURED */
-    .featured-post{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;transition:border-color .2s;text-decoration:none;color:inherit;display:grid}
-    .featured-post:hover{border-color:rgba(245,200,66,.25)}
-    .post-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-    .post-h2{font-size:clamp(20px,2.5vw,30px);font-weight:800;letter-spacing:-0.8px;color:#fff;margin-bottom:12px;line-height:1.15}
-    .post-excerpt{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:20px}
-    .post-meta{display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--muted)}
-    .post-meta span{display:flex;align-items:center;gap:5px}
-    .read-more{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--gold);transition:gap .2s}
-    .read-more:hover{gap:10px}
-    .featured-visual{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:12px}
-    .mini-stat{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px}
-    .mini-stat-label{font-size:12.5px;color:var(--muted)}
-    .mini-stat-val{font-size:14px;font-weight:700}
-    /* GRID */
-    .posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
-    .post-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .25s;cursor:pointer;text-decoration:none;color:inherit;display:block}
-    .post-card:hover{border-color:rgba(245,200,66,.2);transform:translateY(-2px)}
-    .post-card-icon{font-size:28px;margin-bottom:14px}
-    .post-card-tag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-    .post-card-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.3;letter-spacing:-0.3px}
-    .post-card-excerpt{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px}
-    .post-card-meta{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
-    .post-card-read{font-size:12.5px;font-weight:600;color:var(--gold)}
-    /* ARTICLE */
-    .article-view{display:none}
-    .article-view.show{display:block}
-    .list-view{display:block}
-    .list-view.hide{display:none}
-    .article-back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:32px;transition:color .2s;background:none;border:none;font-family:inherit}
-    .article-back:hover{color:var(--gold)}
-    .article-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .article-h1{font-size:clamp(26px,4vw,48px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:16px;line-height:1.1}
-    .article-meta{font-size:13px;color:var(--muted);margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border);display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-    .article-body{max-width:720px}
-    .article-body h2{font-size:22px;font-weight:700;color:#fff;margin:36px 0 14px;letter-spacing:-0.5px}
-    .article-body h3{font-size:17px;font-weight:700;color:#fff;margin:24px 0 10px}
-    .article-body p{font-size:15.5px;color:var(--muted);line-height:1.8;margin-bottom:16px}
-    .article-body strong{color:var(--text)}
-    .article-body ul,.article-body ol{margin:0 0 16px 20px}
-    .article-body li{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:6px}
-    .article-body .highlight{background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.15);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:16px 20px;margin:24px 0;font-size:15px;color:var(--text);line-height:1.7}
-    .article-body .stat-callout{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:24px 0;display:flex;align-items:center;gap:16px}
-    .stat-callout-num{font-size:36px;font-weight:900;color:var(--gold);letter-spacing:-1px;flex-shrink:0}
-    .stat-callout-text{font-size:14px;color:var(--muted);line-height:1.6}
-    .article-cta{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:28px;text-align:center;margin-top:48px}
-    .article-cta h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
-    .article-cta p{font-size:14px;color:var(--muted);margin-bottom:16px}
-    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:13px 30px;border-radius:9px;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit;display:inline-block}
-    .btn-g:hover{background:var(--gold2);transform:translateY(-1px)}
-    /* NEWSLETTER */
-    .newsletter{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;margin-top:40px}
-    .newsletter h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
-    .newsletter p{font-size:14px;color:var(--muted);margin-bottom:20px}
-    .newsletter-form{display:flex;gap:10px;max-width:400px;margin:0 auto;justify-content:center;flex-wrap:wrap}
-    .newsletter-input{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 16px;color:#fff;font-size:14px;outline:none;font-family:inherit}
-    .newsletter-input:focus{border-color:rgba(245,200,66,.3)}
+    .nav-back{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}.nav-back:hover{color:var(--gold)}
+    .nav-cta{background:var(--gold);color:#000;font-weight:700;font-size:13.5px;padding:9px 20px;border-radius:8px;text-decoration:none}
+    .page{max-width:1060px;margin:0 auto;padding:96px 24px 80px}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .page-h1{font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.1}
+    .page-p{font-size:16px;color:var(--muted);max-width:520px;line-height:1.75;margin-bottom:52px}
+    .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .post-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .25s;cursor:pointer;text-decoration:none;display:block}
+    .post-card:hover{border-color:rgba(245,200,66,.25);transform:translateY(-3px)}
+    .post-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+    .post-cat{position:absolute;top:12px;left:12px;background:rgba(5,8,16,.85);border:1px solid var(--border);color:var(--gold);font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.5px;text-transform:uppercase}
+    .post-body{padding:20px}
+    .post-date{font-size:11.5px;color:var(--muted);margin-bottom:10px}
+    .post-title{font-size:16px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:10px;letter-spacing:-.3px}
+    .post-excerpt{font-size:13px;color:var(--muted);line-height:1.65}
+    .post-read{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--gold);font-weight:600;margin-top:14px}
+
+    /* ARTICLE MODAL */
+    .modal{position:fixed;inset:0;background:rgba(5,8,16,.97);z-index:1000;overflow-y:auto;display:none;padding:80px 24px 60px}
+    .modal.open{display:block}
+    .modal-inner{max-width:720px;margin:0 auto}
+    .modal-back{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;margin-bottom:32px;background:none;border:none;font-family:inherit;transition:color .2s}
+    .modal-back:hover{color:var(--gold)}
+    .modal-cat{display:inline-block;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);color:var(--gold);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}
+    .modal-h1{font-size:clamp(24px,4vw,40px);font-weight:900;color:#fff;letter-spacing:-1.2px;line-height:1.1;margin-bottom:14px}
+    .modal-meta{font-size:13px;color:var(--muted);margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+    .modal-body h2{font-size:22px;font-weight:800;color:#fff;margin:36px 0 14px;letter-spacing:-.5px}
+    .modal-body h3{font-size:17px;font-weight:700;color:#fff;margin:24px 0 10px}
+    .modal-body p{font-size:15.5px;color:var(--muted);line-height:1.8;margin-bottom:16px}
+    .modal-body ul,.modal-body ol{margin:0 0 16px 22px}
+    .modal-body li{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px}
+    .modal-body strong{color:var(--text)}
+    .modal-body .highlight{background:rgba(245,200,66,.06);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:16px 20px;margin:20px 0}
+    .modal-cta{background:linear-gradient(135deg,rgba(245,200,66,.07),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:32px;text-align:center;margin-top:48px}
+    .modal-cta h3{font-size:20px;font-weight:800;color:#fff;margin-bottom:10px}
+    .modal-cta p{font-size:14px;color:var(--muted);margin-bottom:20px}
+    .btn-g{background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:13px 30px;border-radius:9px;text-decoration:none;display:inline-block;transition:all .2s}
+    .btn-g:hover{background:var(--gold2)}
     footer{padding:32px 24px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
     footer p{font-size:12.5px;color:var(--muted)}
     footer a{color:var(--gold);text-decoration:none}
-    @media(max-width:800px){
-      nav{padding:0 20px}.nav-links{display:none}
-      .featured-post{grid-template-columns:1fr}
-      .posts-grid{grid-template-columns:1fr}
-    }
+    @media(max-width:900px){nav{padding:0 20px}.blog-grid{grid-template-columns:1fr}}
+    @media(max-width:600px){.blog-grid{grid-template-columns:1fr}}
   </style>
+
+  <style>.lang-toggle{display:none}</style>
+  <script>
+const LANG = {
+  fr: {
+    // NAV commun
+    'nav.back': '← Retour',
+    'nav.account': '← Mon compte',
+    'nav.start': 'Commencer →',
+    'nav.how': 'Comment ça marche',
+    'nav.pricing': 'Forfaits',
+    'nav.about': 'À propos',
+    'nav.login': 'Mon compte',
+
+    // FOOTER commun
+    'footer.rights': '© 2026 FiveStar AI — Tous droits réservés',
+
+    // LOGO (toutes les pages)
+    'logo': '⭐',
+
+    // ── COMPARAISON ──
+    'comp.eyebrow': 'Comparaison',
+    'comp.h1': 'FiveStar AI vs<br><em>les alternatives.</em>',
+    'comp.p': 'Gérer votre réputation vous-même, passer par une agence, ou automatiser avec FiveStar AI. Voici la comparaison honnête.',
+    'comp.col.manual': 'Vous-même',
+    'comp.col.manual.price': 'Votre temps',
+    'comp.col.agency': 'Agence',
+    'comp.col.agency.price': '1 500–3 500$/mois',
+    'comp.col.fivestar.badge': '⭐ RECOMMANDÉ',
+    'comp.col.fivestar.price': '297–599$/mois',
+    'comp.row1': 'Coût mensuel',
+    'comp.row1.sub': 'Ce que vous payez chaque mois',
+    'comp.row1.manual': '0$',
+    'comp.row1.manual.note': 'Mais votre temps vaut quelque chose',
+    'comp.row1.agency': '1 500–3 500$',
+    'comp.row2': 'Temps de votre part',
+    'comp.row2.sub': 'Par semaine',
+    'comp.row2.manual': '3–5h',
+    'comp.row2.manual.note': 'Surveiller, répondre, relancer',
+    'comp.row2.agency': '30–60 min',
+    'comp.row2.agency.note': 'Réunions, approbations',
+    'comp.row2.fivestar': '0 min',
+    'comp.row2.fivestar.note': '100% automatique',
+    'comp.row3': 'Mise en place',
+    'comp.row3.sub': 'Avant d\'être opérationnel',
+    'comp.row3.manual': 'Plusieurs mois',
+    'comp.row3.manual.note': 'Apprendre, organiser, tester',
+    'comp.row3.agency': 'Plusieurs semaines',
+    'comp.row3.agency.note': 'Onboarding, contrat, briefings',
+    'comp.row3.fivestar': 'Moins d\'une journée',
+    'comp.row4': 'Premiers résultats',
+    'comp.row4.sub': 'Délai avant de voir des avis',
+    'comp.row4.manual': '4–8 semaines',
+    'comp.row4.agency': '2–4 semaines',
+    'comp.row4.fivestar': 'Dès la 1re semaine',
+    'comp.row5': 'Collecte d\'avis automatique',
+    'comp.row5.sub': 'SMS envoyés après chaque visite',
+    'comp.row5.agency': 'Parfois',
+    'comp.row6': 'Réponses aux avis négatifs',
+    'comp.row6.sub': 'Automatique, 24/7',
+    'comp.row6.manual.note': 'Vous devez le faire manuellement',
+    'comp.row6.agency': '24–48h de délai',
+    'comp.row6.fivestar': 'En moins de 2 min',
+    'comp.row7': 'Sans engagement',
+    'comp.row7.sub': 'Liberté d\'annuler',
+    'comp.row7.agency.note': 'Contrat 6–12 mois souvent requis',
+    'comp.row7.fivestar.note': 'Mois par mois',
+    'comp.row8': 'Dashboard & statistiques',
+    'comp.row8.sub': 'Suivi en temps réel',
+    'comp.row8.agency': 'Rapports mensuels',
+    'comp.row8.fivestar': 'Temps réel',
+    'comp.row9': 'SMS promotionnels clients',
+    'comp.row9.sub': 'Fidélisation de votre base',
+    'comp.row9.agency': 'En option — coût extra',
+    'comp.row9.fivestar.note': 'Inclus en Pro',
+    'comp.row10': 'Retour sur investissement',
+    'comp.row10.sub': 'Estimé sur 12 mois',
+    'comp.row10.manual': 'Difficile à mesurer',
+    'comp.row10.agency': '2–4x si l\'agence performe',
+    'comp.detail1.title': '⚒️ Gérer vous-même',
+    'comp.detail1.p1': 'Aucun coût direct',
+    'comp.detail1.p2': 'Contrôle total sur chaque réponse',
+    'comp.detail1.c1': '3–5 heures par semaine minimum',
+    'comp.detail1.c2': 'Avis négatifs la nuit sans réponse rapide',
+    'comp.detail1.c3': 'Aucune collecte systématique d\'avis',
+    'comp.detail1.c4': 'Résultats variables selon votre disponibilité',
+    'comp.detail1.c5': 'Vous perdez du temps sur votre cœur de métier',
+    'comp.detail2.title': '🏢 Passer par une agence',
+    'comp.detail2.p1': 'Expertise humaine dédiée',
+    'comp.detail2.p2': 'Stratégie marketing complète possible',
+    'comp.detail2.c1': '1 500–3 500$/mois minimum',
+    'comp.detail2.c2': 'Engagement de 6 à 12 mois souvent requis',
+    'comp.detail2.c3': 'Délai de réponse aux avis de 24–48h',
+    'comp.detail2.c4': 'Réunions et approbations = votre temps quand même',
+    'comp.detail2.c5': 'Résultats variables selon l\'agence',
+    'comp.detail3.badge': '⭐ MEILLEURE OPTION',
+    'comp.detail3.title': '🤖 FiveStar AI',
+    'comp.detail3.p1': '297–599$/mois, sans engagement',
+    'comp.detail3.p2': 'Opérationnel en moins d\'une journée',
+    'comp.detail3.p3': 'Réponses automatiques en moins de 2 minutes, 24/7',
+    'comp.detail3.p4': 'Zéro heure de votre temps après démarrage',
+    'comp.detail3.p5': 'Dashboard temps réel, rapports mensuels',
+    'comp.detail3.p6': 'SMS promotionnels inclus (Pro et Premium)',
+    'comp.detail3.p7': 'Annulez à tout moment si pas satisfait',
+    'comp.verdict.h2': 'La conclusion honnête',
+    'comp.verdict.p1': 'Si vous avez 3–5 heures par semaine à y consacrer et une grande discipline, la gestion manuelle peut fonctionner. Si vous avez un budget de 2 000$/mois et voulez une stratégie marketing complète, une agence peut valoir le coup.',
+    'comp.verdict.p2': 'Mais si vous voulez des résultats rapides, automatiques, sans effort de votre part, pour un prix accessible — FiveStar AI est la meilleure option pour un commerce local.',
+    'comp.verdict.btn1': 'Essayer FiveStar AI →',
+    'comp.verdict.btn2': 'Estimez vos résultats',
+
+    // ── FORFAITS ──
+    'plans.eyebrow': 'Forfaits',
+    'plans.h1': 'Choisissez votre<br><em>niveau d\'automatisation</em>',
+    'plans.p': 'Pas de contrat. Setup en 10 minutes. Premier avis Google dès cette semaine.',
+    'plans.process.eyebrow': 'Le processus',
+    'plans.process.h2': 'Ce qui se passe après votre inscription',
+    'plans.step1.num': 'ÉTAPE 01',
+    'plans.step1.h3': 'Vous choisissez votre forfait',
+    'plans.step1.p': 'Sélectionnez le plan qui correspond à votre commerce. Paiement sécurisé. Vous recevez une confirmation par email dans les minutes qui suivent.',
+    'plans.step2.num': 'ÉTAPE 02',
+    'plans.step2.h3': 'On vous contacte sous 24h',
+    'plans.step2.p': 'Un de nos fondateurs vous contacte directement pour planifier votre setup. On a besoin de 10 minutes de votre temps, c\'est tout.',
+    'plans.step3.num': 'ÉTAPE 03',
+    'plans.step3.h3': 'Setup complet en 10 minutes',
+    'plans.step3.p': 'On configure tout : QR Code personnalisé, SMS automatiques, connexion à votre fiche Google. Vous n\'avez rien à installer ni à apprendre.',
+    'plans.step4.num': 'ÉTAPE 04',
+    'plans.step4.h3': 'Le système tourne seul',
+    'plans.step4.p': 'Dès le premier client qui scanne votre QR Code, le système est en marche. Vous recevez vos premiers avis Google automatiquement.',
+    'plans.tarifs.eyebrow': 'Tarifs',
+    'plans.tarifs.h2': 'Trois forfaits, zéro complication',
+    'plans.starter.name': 'Starter',
+    'plans.starter.period': 'par mois',
+    'plans.starter.desc': 'Idéal pour démarrer. Tout ce qu\'il faut pour automatiser vos avis Google et protéger votre réputation, sans effort.',
+    'plans.starter.btn': 'Choisir Starter →',
+    'plans.starter.f1': 'Capture automatique des numéros clients via QR Code',
+    'plans.starter.f1n': 'Formulaire personnalisé installé en 5 minutes',
+    'plans.starter.f2': 'SMS automatique envoyé 2h après chaque visite',
+    'plans.starter.f2n': 'Message personnalisé avec lien direct vers votre fiche Google',
+    'plans.starter.f3': 'Réponses aux avis négatifs générées par IA',
+    'plans.starter.f3n': 'Claude IA rédige une réponse professionnelle en quelques secondes',
+    'plans.starter.f4': 'Setup complet inclus',
+    'plans.starter.f4n': 'On configure tout pour vous, zéro effort de votre part',
+    'plans.pro.badge': '⭐ PLUS POPULAIRE',
+    'plans.pro.name': 'Pro',
+    'plans.pro.period': 'par mois',
+    'plans.pro.desc': 'Pour les commerces qui veulent aller plus loin. Fidélisez vos clients existants et suivez vos performances en temps réel.',
+    'plans.pro.btn': 'Choisir Pro →',
+    'plans.pro.f1': 'Tout le forfait Starter',
+    'plans.pro.f2': 'SMS promotionnel mensuel envoyé à toute votre base',
+    'plans.pro.f2n': 'On rédige et envoie une promotion chaque mois à vos clients',
+    'plans.pro.f3': 'Rapport mensuel détaillé',
+    'plans.pro.f3n': 'Nombre d\'avis, progression de note, clients contactés',
+    'plans.pro.f4': 'Tableau de bord gérant',
+    'plans.pro.f4n': 'Page web privée pour suivre vos stats en temps réel',
+    'plans.premium.name': 'Premium',
+    'plans.premium.period': 'par mois',
+    'plans.premium.desc': 'La solution complète. Automatisez votre réputation ET votre recrutement. Concentrez-vous sur ce que vous faites de mieux.',
+    'plans.premium.btn': 'Choisir Premium →',
+    'plans.premium.f1': 'Tout le forfait Pro',
+    'plans.premium.f2': 'Recrutement automatisé par IA',
+    'plans.premium.f2n': 'L\'IA trie et analyse les CV entrants. Vous recevez seulement les bons profils.',
+    'plans.premium.f3': 'Support prioritaire',
+    'plans.premium.f3n': 'Réponse garantie en moins de 4h en tout temps',
+    'plans.premium.f4': 'Configuration en 10 minutes',
+    'plans.premium.f4n': 'Même pour les fonctionnalités avancées',
+    'plans.faq.eyebrow': 'Questions fréquentes',
+    'plans.faq.h2': 'Tout ce que vous voulez savoir',
+    'plans.faq1.q': 'Est-ce que je dois signer un contrat ?',
+    'plans.faq1.a': 'Non. FiveStar fonctionne sur une base mensuelle. Vous pouvez annuler en tout temps en nous écrivant à admin@fivestarai.ca.',
+    'plans.faq2.q': 'Comment fonctionne le QR Code ?',
+    'plans.faq2.a': 'On crée un QR Code personnalisé pour votre commerce. Vous l\'affichez à votre caisse ou sur vos tables. Quand un client le scanne, son numéro est capturé automatiquement.',
+    'plans.faq3.q': 'Est-ce que je dois faire quelque chose après le setup ?',
+    'plans.faq3.a': 'Non. C\'est le but. Une fois le setup complété en 10 minutes, le système tourne seul. Les SMS partent automatiquement, les réponses aux avis négatifs sont générées automatiquement.',
+    'plans.faq4.q': 'Combien de temps avant de voir des résultats ?',
+    'plans.faq4.a': 'En général, dès la première semaine. Le premier client qui scanne votre QR Code reçoit un SMS 2h après sa visite.',
+    'plans.faq5.q': 'Comment fonctionne le paiement ?',
+    'plans.faq5.a': 'Le paiement est traité de façon sécurisée. Votre abonnement est débité automatiquement chaque mois.',
+    'plans.cta.h2': 'Des questions ? On vous répond.',
+    'plans.cta.p': 'Écrivez-nous directement. On répond dans les 24h.',
+    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+
+    // ── POLITIQUE ──
+    'pol.eyebrow': 'Légal',
+    'pol.h1': 'Politique de confidentialité',
+    'pol.date': 'Dernière mise à jour : juin 2026',
+    'pol.intro': 'FiveStar AI (« nous », « notre ») s\'engage à protéger la confidentialité des informations personnelles de ses clients et des utilisateurs finaux de ses services.',
+    'pol.s1.h': '1. Données collectées',
+    'pol.s1.p': 'Dans le cadre de la prestation de nos services, nous collectons les types de données suivants :',
+    'pol.s2.h': '2. Utilisation des données',
+    'pol.s2.p': 'Les données collectées sont utilisées exclusivement pour :',
+    'pol.s3.h': '3. Partage des données',
+    'pol.s3.p': 'Nous ne vendons jamais vos données à des tiers.',
+    'pol.s4.h': '4. Conservation des données',
+    'pol.s4.p': 'Les numéros de téléphone des clients sont conservés aussi longtemps que le commerce partenaire est abonné. À la résiliation, les données sont supprimées dans les 30 jours.',
+    'pol.s5.h': '5. Droits des utilisateurs',
+    'pol.s6.h': '6. Sécurité',
+    'pol.s7.h': '7. Paiements',
+    'pol.s8.h': '8. Modifications',
+    'pol.s9.h': '9. Contact',
+
+    // ── RÉSULTATS ──
+    'res.eyebrow': 'Estimez vos résultats',
+    'res.h1': 'Vos résultats estimés<br><em>en 30 secondes.</em>',
+    'res.card1.title': '📊 Votre commerce',
+    'res.type.label': 'Type de commerce',
+    'res.type.restaurant': 'Restaurant / Bar',
+    'res.type.salon': 'Salon de coiffure / Spa',
+    'res.type.gym': 'Gym / Studio fitness',
+    'res.type.cafe': 'Café / Boulangerie',
+    'res.type.garage': 'Garage / Auto',
+    'res.type.clinique': 'Clinique / Santé',
+    'res.clients.label': 'Clients par semaine',
+    'res.valeur.label': 'Valeur moyenne par client ($)',
+    'res.note.label': 'Note Google actuelle',
+    'res.card2.title': '📈 Impact estimé',
+    'res.conv.label': 'Taux de conversion SMS → Avis',
+    'res.conv.note': 'Moyenne de nos clients : 18-22%',
+    'res.note2.label': 'Progression de note Google estimée',
+    'res.before': 'Avant',
+    'res.after': 'Après 60 jours',
+    'res.plan.label': 'Forfait FiveStar AI',
+    'res.result.eyebrow': '📊 Votre estimation sur 12 mois',
+    'res.r1.label': 'Nouveaux avis\nGoogle générés',
+    'res.r2.label': 'Clients\nsupplémentaires',
+    'res.r3.label': 'Revenus\nsupplémentaires',
+    'res.r4.label': 'Retour sur\ninvestissement',
+    'res.cost.label': '💳 Coût FiveStar AI sur 12 mois',
+    'res.cta.btn1': 'Commencer maintenant →',
+    'res.cta.btn2': 'Voir les forfaits',
+    'res.disclaimer': '* Les estimations sont basées sur les données moyennes de nos clients. Les résultats réels peuvent varier selon votre type de commerce, votre région et votre clientèle.',
+
+    // ── ANNULATION ──
+    'ann.warning.icon': '⚠️',
+    'ann.warning.title': 'Vous souhaitez annuler ?',
+    'ann.warning.desc': 'Avant de continuer, sachez que vous allez perdre l\'accès à tout ce que FiveStar AI fait pour vous automatiquement.',
+    'ann.loss1.title': 'SMS automatiques',
+    'ann.loss1.desc': 'Plus aucun SMS envoyé à vos clients après leur visite.',
+    'ann.loss2.title': 'Réponses IA',
+    'ann.loss2.desc': 'Les avis négatifs resteront sans réponse automatique.',
+    'ann.loss3.title': 'Collecte d\'avis',
+    'ann.loss3.desc': 'Votre note Google arrêtera de progresser automatiquement.',
+    'ann.loss4.title': 'Dashboard & stats',
+    'ann.loss4.desc': 'Accès à votre tableau de bord supprimé.',
+    'ann.btn.keep': '← Garder mon abonnement',
+    'ann.btn.continue': 'Continuer vers l\'annulation →',
+    'ann.form.title': 'Formulaire d\'annulation',
+    'ann.form.desc': 'Remplissez ce formulaire. Votre demande sera traitée dans les 2 jours ouvrables avant votre prochaine date de renouvellement.',
+    'ann.notice': 'La demande d\'annulation doit être soumise au moins 2 jours ouvrables avant votre prochaine date de renouvellement.',
+    'ann.f.name': 'Nom complet',
+    'ann.f.email': 'Adresse email du compte',
+    'ann.f.email.hint': 'L\'email avec lequel vous avez créé votre compte FiveStar AI',
+    'ann.f.commerce': 'Nom du commerce',
+    'ann.f.plan': 'Forfait actuel',
+    'ann.f.plan.select': 'Sélectionnez votre forfait',
+    'ann.f.date': 'Date de votre prochain renouvellement',
+    'ann.f.date.hint': 'Trouvez-la dans votre email de confirmation d\'abonnement',
+    'ann.f.reason': 'Raison de l\'annulation',
+    'ann.f.reason.select': 'Sélectionnez une raison',
+    'ann.f.r1': 'Le prix est trop élevé pour mon budget',
+    'ann.f.r2': 'Je ne vois pas assez de résultats',
+    'ann.f.r3': 'Je passe à une autre solution',
+    'ann.f.r4': 'Mon commerce ferme ou est vendu',
+    'ann.f.r5': 'Je veux faire une pause temporaire',
+    'ann.f.r6': 'Problème technique non résolu',
+    'ann.f.r7': 'Autre raison',
+    'ann.f.detail': 'Pouvez-vous préciser ?',
+    'ann.f.callback': 'Souhaitez-vous qu\'on vous rappelle avant de finaliser ?',
+    'ann.f.callback.no': 'Non, procéder à l\'annulation directement',
+    'ann.f.callback.yes': 'Oui, j\'aimerais qu\'un fondateur me contacte d\'abord',
+    'ann.f.callback.hint': 'Si oui, on vous contacte dans les 24h',
+    'ann.f.submit': 'Soumettre ma demande d\'annulation',
+    'ann.f.back': '← Retour',
+    'ann.confirm.title': 'Demande reçue',
+    'ann.confirm.desc': 'Votre demande d\'annulation a été soumise. Vous recevrez une confirmation par email dans les prochaines heures.',
+    'ann.confirm.summary': 'Résumé de votre demande',
+    'ann.confirm.name': 'Nom',
+    'ann.confirm.commerce': 'Commerce',
+    'ann.confirm.plan': 'Forfait',
+    'ann.confirm.renewal': 'Renouvellement',
+    'ann.confirm.reason': 'Raison',
+    'ann.confirm.callback': 'Rappel souhaité',
+    'ann.timeline.title': 'Ce qui va se passer',
+    'ann.tl1': 'Vous recevez un email de confirmation de votre demande dans les prochaines heures',
+    'ann.tl2': 'Un fondateur FiveStar AI traite votre demande dans les 24h ouvrables',
+    'ann.tl3': 'Votre abonnement est annulé avant la prochaine date de renouvellement',
+    'ann.tl4': 'Vous recevez un email de confirmation finale d\'annulation',
+    'ann.btn.home': 'Retour à l\'accueil',
+    'ann.change.title': 'Vous changez d\'avis ?',
+    'ann.change.desc': 'Écrivez-nous avant la date de renouvellement et on annule la demande.',
+
+    // ── DÉMO ──
+    'demo.eyebrow': 'Démo interactive',
+    'demo.h1': 'Voyez FiveStar AI<br><em>en action.</em>',
+    'demo.p': 'Simulation complète et aléatoire — chaque démo montre un client et un commerce différent. Cliquez "Lancer la démo" pour commencer.',
+    'demo.btn.play': '▶ Lancer la démo',
+    'demo.btn.reset': '↺ Autre scénario',
+    'demo.cta.p': 'Ce système fonctionne automatiquement pour votre commerce, 24h/24. Opérationnel en moins d\'une journée.',
+    'demo.cta.btn': 'Démarrer maintenant →',
+    'demo.step1': 'Le client visite votre commerce',
+    'demo.step2': 'Numéro capturé automatiquement',
+    'demo.step3': 'SMS envoyé automatiquement',
+    'demo.step4.pos': 'Le client laisse un avis positif',
+    'demo.step4.neg': 'Le client laisse un avis négatif',
+    'demo.step5.pos': 'Votre note Google progresse',
+    'demo.step5.neg': 'Notre IA rédige une réponse',
+    'demo.step6': 'Vous êtes notifié — sans rien faire',
+  },
+
+  en: {
+    // NAV commun
+    'nav.back': '← Back',
+    'nav.account': '← My account',
+    'nav.start': 'Get started →',
+    'nav.how': 'How it works',
+    'nav.pricing': 'Pricing',
+    'nav.about': 'About',
+    'nav.login': 'My account',
+
+    // FOOTER commun
+    'footer.rights': '© 2026 FiveStar AI — All rights reserved',
+
+    'logo': '⭐',
+
+    // ── COMPARAISON ──
+    'comp.eyebrow': 'Comparison',
+    'comp.h1': 'FiveStar AI vs<br><em>the alternatives.</em>',
+    'comp.p': 'Manage your reputation yourself, hire an agency, or automate with FiveStar AI. Here\'s the honest comparison.',
+    'comp.col.manual': 'Do it yourself',
+    'comp.col.manual.price': 'Your time',
+    'comp.col.agency': 'Agency',
+    'comp.col.agency.price': '$1,500–$3,500/mo',
+    'comp.col.fivestar.badge': '⭐ RECOMMENDED',
+    'comp.col.fivestar.price': '$297–$599/mo',
+    'comp.row1': 'Monthly cost',
+    'comp.row1.sub': 'What you pay each month',
+    'comp.row1.manual': '$0',
+    'comp.row1.manual.note': 'But your time is worth something',
+    'comp.row1.agency': '$1,500–$3,500',
+    'comp.row2': 'Your time required',
+    'comp.row2.sub': 'Per week',
+    'comp.row2.manual': '3–5h',
+    'comp.row2.manual.note': 'Monitor, respond, follow up',
+    'comp.row2.agency': '30–60 min',
+    'comp.row2.agency.note': 'Meetings, approvals',
+    'comp.row2.fivestar': '0 min',
+    'comp.row2.fivestar.note': '100% automatic',
+    'comp.row3': 'Setup time',
+    'comp.row3.sub': 'Before you\'re up and running',
+    'comp.row3.manual': 'Several months',
+    'comp.row3.manual.note': 'Learn, organize, test',
+    'comp.row3.agency': 'Several weeks',
+    'comp.row3.agency.note': 'Onboarding, contract, briefings',
+    'comp.row3.fivestar': 'Less than a day',
+    'comp.row4': 'First results',
+    'comp.row4.sub': 'Time before seeing reviews',
+    'comp.row4.manual': '4–8 weeks',
+    'comp.row4.agency': '2–4 weeks',
+    'comp.row4.fivestar': 'Within the first week',
+    'comp.row5': 'Automatic review collection',
+    'comp.row5.sub': 'SMS sent after each visit',
+    'comp.row5.agency': 'Sometimes',
+    'comp.row6': 'Negative review responses',
+    'comp.row6.sub': 'Automatic, 24/7',
+    'comp.row6.manual.note': 'You have to do it manually',
+    'comp.row6.agency': '24–48h delay',
+    'comp.row6.fivestar': 'Under 2 minutes',
+    'comp.row7': 'No commitment',
+    'comp.row7.sub': 'Freedom to cancel',
+    'comp.row7.agency.note': '6–12 month contract often required',
+    'comp.row7.fivestar.note': 'Month to month',
+    'comp.row8': 'Dashboard & statistics',
+    'comp.row8.sub': 'Real-time tracking',
+    'comp.row8.agency': 'Monthly reports',
+    'comp.row8.fivestar': 'Real-time',
+    'comp.row9': 'Promotional SMS to clients',
+    'comp.row9.sub': 'Customer retention',
+    'comp.row9.agency': 'Optional — extra cost',
+    'comp.row9.fivestar.note': 'Included in Pro',
+    'comp.row10': 'Return on investment',
+    'comp.row10.sub': 'Estimated over 12 months',
+    'comp.row10.manual': 'Hard to measure',
+    'comp.row10.agency': '2–4x if agency performs',
+    'comp.detail1.title': '⚒️ Do it yourself',
+    'comp.detail1.p1': 'No direct cost',
+    'comp.detail1.p2': 'Full control over each response',
+    'comp.detail1.c1': '3–5 hours per week minimum',
+    'comp.detail1.c2': 'Negative reviews at night with no quick response',
+    'comp.detail1.c3': 'No systematic review collection',
+    'comp.detail1.c4': 'Results vary based on your availability',
+    'comp.detail1.c5': 'You lose time from your core business',
+    'comp.detail2.title': '🏢 Hire an agency',
+    'comp.detail2.p1': 'Dedicated human expertise',
+    'comp.detail2.p2': 'Complete marketing strategy possible',
+    'comp.detail2.c1': '$1,500–$3,500/month minimum',
+    'comp.detail2.c2': '6 to 12 month commitment often required',
+    'comp.detail2.c3': 'Review response delay of 24–48h',
+    'comp.detail2.c4': 'Meetings and approvals = your time anyway',
+    'comp.detail2.c5': 'Results vary depending on the agency',
+    'comp.detail3.badge': '⭐ BEST OPTION',
+    'comp.detail3.title': '🤖 FiveStar AI',
+    'comp.detail3.p1': '$297–$599/month, no commitment',
+    'comp.detail3.p2': 'Up and running in less than a day',
+    'comp.detail3.p3': 'Automatic responses in under 2 minutes, 24/7',
+    'comp.detail3.p4': 'Zero hours of your time after launch',
+    'comp.detail3.p5': 'Real-time dashboard, monthly reports',
+    'comp.detail3.p6': 'Promotional SMS included (Pro and Premium)',
+    'comp.detail3.p7': 'Cancel anytime if not satisfied',
+    'comp.verdict.h2': 'The honest conclusion',
+    'comp.verdict.p1': 'If you have 3–5 hours per week and great discipline, manual management can work. If you have a $2,000/month budget and want a full marketing strategy, an agency might be worth it.',
+    'comp.verdict.p2': 'But if you want fast, automatic results with no effort — for an accessible price — FiveStar AI is the best option for a local business.',
+    'comp.verdict.btn1': 'Try FiveStar AI →',
+    'comp.verdict.btn2': 'Estimate your results',
+
+    // ── FORFAITS ──
+    'plans.eyebrow': 'Pricing',
+    'plans.h1': 'Choose your<br><em>level of automation</em>',
+    'plans.p': 'No contract. 10-minute setup. First Google review this week.',
+    'plans.process.eyebrow': 'The process',
+    'plans.process.h2': 'What happens after you sign up',
+    'plans.step1.num': 'STEP 01',
+    'plans.step1.h3': 'You choose your plan',
+    'plans.step1.p': 'Select the plan that fits your business. Secure payment. You receive a confirmation email within minutes.',
+    'plans.step2.num': 'STEP 02',
+    'plans.step2.h3': 'We contact you within 24h',
+    'plans.step2.p': 'One of our founders contacts you directly to schedule your setup. We need 10 minutes of your time, that\'s it.',
+    'plans.step3.num': 'STEP 03',
+    'plans.step3.h3': 'Complete setup in 10 minutes',
+    'plans.step3.p': 'We configure everything: personalized QR Code, automatic SMS, connection to your Google listing. Nothing to install or learn.',
+    'plans.step4.num': 'STEP 04',
+    'plans.step4.h3': 'The system runs itself',
+    'plans.step4.p': 'From the first customer who scans your QR Code, the system is live. You get your first Google reviews automatically.',
+    'plans.tarifs.eyebrow': 'Pricing',
+    'plans.tarifs.h2': 'Three plans, zero complications',
+    'plans.starter.name': 'Starter',
+    'plans.starter.period': 'per month',
+    'plans.starter.desc': 'Perfect to get started. Everything you need to automate your Google reviews and protect your reputation, effortlessly.',
+    'plans.starter.btn': 'Choose Starter →',
+    'plans.starter.f1': 'Automatic customer number capture via QR Code',
+    'plans.starter.f1n': 'Personalized form installed in 5 minutes',
+    'plans.starter.f2': 'Automatic SMS sent 2h after each visit',
+    'plans.starter.f2n': 'Personalized message with direct link to your Google listing',
+    'plans.starter.f3': 'AI-generated responses to negative reviews',
+    'plans.starter.f3n': 'Claude AI writes a professional response in seconds',
+    'plans.starter.f4': 'Complete setup included',
+    'plans.starter.f4n': 'We configure everything for you, zero effort on your part',
+    'plans.pro.badge': '⭐ MOST POPULAR',
+    'plans.pro.name': 'Pro',
+    'plans.pro.period': 'per month',
+    'plans.pro.desc': 'For businesses that want to go further. Retain your existing customers and track your performance in real time.',
+    'plans.pro.btn': 'Choose Pro →',
+    'plans.pro.f1': 'Everything in Starter',
+    'plans.pro.f2': 'Monthly promotional SMS sent to your entire base',
+    'plans.pro.f2n': 'We write and send a promotion every month to your customers',
+    'plans.pro.f3': 'Detailed monthly report',
+    'plans.pro.f3n': 'Number of reviews, rating progress, customers contacted',
+    'plans.pro.f4': 'Manager dashboard',
+    'plans.pro.f4n': 'Private web page to track your stats in real time',
+    'plans.premium.name': 'Premium',
+    'plans.premium.period': 'per month',
+    'plans.premium.desc': 'The complete solution. Automate your reputation AND your hiring. Focus on what you do best.',
+    'plans.premium.btn': 'Choose Premium →',
+    'plans.premium.f1': 'Everything in Pro',
+    'plans.premium.f2': 'AI-automated recruiting',
+    'plans.premium.f2n': 'AI sorts and analyzes incoming resumes. You only receive the right profiles.',
+    'plans.premium.f3': 'Priority support',
+    'plans.premium.f3n': 'Response guaranteed in under 4h at all times',
+    'plans.premium.f4': '10-minute configuration',
+    'plans.premium.f4n': 'Even for advanced features',
+    'plans.faq.eyebrow': 'Frequently asked questions',
+    'plans.faq.h2': 'Everything you want to know',
+    'plans.faq1.q': 'Do I need to sign a contract?',
+    'plans.faq1.a': 'No. FiveStar works on a monthly basis. You can cancel anytime by emailing admin@fivestarai.ca.',
+    'plans.faq2.q': 'How does the QR Code work?',
+    'plans.faq2.a': 'We create a personalized QR Code for your business. You display it at your counter. When a customer scans it, their number is captured automatically.',
+    'plans.faq3.q': 'Do I need to do anything after setup?',
+    'plans.faq3.a': 'No. That\'s the point. Once the 10-minute setup is done, the system runs itself. SMS go out automatically, negative review responses are generated automatically.',
+    'plans.faq4.q': 'How long before seeing results?',
+    'plans.faq4.a': 'Usually within the first week. The first customer to scan your QR Code receives an SMS 2h after their visit.',
+    'plans.faq5.q': 'How does payment work?',
+    'plans.faq5.a': 'Payment is processed securely. Your subscription is charged automatically each month.',
+    'plans.cta.h2': 'Questions? We\'ll answer them.',
+    'plans.cta.p': 'Write to us directly. We respond within 24h.',
+    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+
+    // ── POLITIQUE ──
+    'pol.eyebrow': 'Legal',
+    'pol.h1': 'Privacy Policy',
+    'pol.date': 'Last updated: June 2026',
+    'pol.intro': 'FiveStar AI ("we", "our") is committed to protecting the privacy of the personal information of its clients and end users.',
+    'pol.s1.h': '1. Data collected',
+    'pol.s1.p': 'As part of providing our services, we collect the following types of data:',
+    'pol.s2.h': '2. Use of data',
+    'pol.s2.p': 'The data collected is used exclusively for:',
+    'pol.s3.h': '3. Data sharing',
+    'pol.s3.p': 'We never sell your data to third parties.',
+    'pol.s4.h': '4. Data retention',
+    'pol.s4.p': 'Customer phone numbers are kept as long as the partner business is subscribed. Upon cancellation, data is deleted within 30 days.',
+    'pol.s5.h': '5. User rights',
+    'pol.s6.h': '6. Security',
+    'pol.s7.h': '7. Payments',
+    'pol.s8.h': '8. Modifications',
+    'pol.s9.h': '9. Contact',
+
+    // ── RÉSULTATS ──
+    'res.eyebrow': 'Estimate your results',
+    'res.h1': 'Your estimated results<br><em>in 30 seconds.</em>',
+    'res.card1.title': '📊 Your business',
+    'res.type.label': 'Business type',
+    'res.type.restaurant': 'Restaurant / Bar',
+    'res.type.salon': 'Hair salon / Spa',
+    'res.type.gym': 'Gym / Fitness studio',
+    'res.type.cafe': 'Café / Bakery',
+    'res.type.garage': 'Garage / Auto',
+    'res.type.clinique': 'Clinic / Health',
+    'res.clients.label': 'Customers per week',
+    'res.valeur.label': 'Average value per customer ($)',
+    'res.note.label': 'Current Google rating',
+    'res.card2.title': '📈 Estimated impact',
+    'res.conv.label': 'SMS → Review conversion rate',
+    'res.conv.note': 'Average of our clients: 18-22%',
+    'res.note2.label': 'Estimated Google rating improvement',
+    'res.before': 'Before',
+    'res.after': 'After 60 days',
+    'res.plan.label': 'FiveStar AI plan',
+    'res.result.eyebrow': '📊 Your 12-month estimate',
+    'res.r1.label': 'New Google reviews\ngenerated',
+    'res.r2.label': 'Additional\ncustomers',
+    'res.r3.label': 'Additional\nrevenue',
+    'res.r4.label': 'Return on\ninvestment',
+    'res.cost.label': '💳 FiveStar AI cost over 12 months',
+    'res.cta.btn1': 'Get started now →',
+    'res.cta.btn2': 'See pricing',
+    'res.disclaimer': '* Estimates are based on average data from our clients. Actual results may vary by business type, region, and customer base.',
+
+    // ── ANNULATION ──
+    'ann.warning.icon': '⚠️',
+    'ann.warning.title': 'You want to cancel?',
+    'ann.warning.desc': 'Before continuing, know that you will lose access to everything FiveStar AI does for you automatically.',
+    'ann.loss1.title': 'Automatic SMS',
+    'ann.loss1.desc': 'No more SMS sent to your customers after their visits.',
+    'ann.loss2.title': 'AI responses',
+    'ann.loss2.desc': 'Negative reviews will go unanswered automatically.',
+    'ann.loss3.title': 'Review collection',
+    'ann.loss3.desc': 'Your Google rating will stop progressing automatically.',
+    'ann.loss4.title': 'Dashboard & stats',
+    'ann.loss4.desc': 'Access to your dashboard will be removed.',
+    'ann.btn.keep': '← Keep my subscription',
+    'ann.btn.continue': 'Continue to cancellation →',
+    'ann.form.title': 'Cancellation form',
+    'ann.form.desc': 'Fill out this form. Your request will be processed within 2 business days before your next renewal date.',
+    'ann.notice': 'The cancellation request must be submitted at least 2 business days before your next renewal date.',
+    'ann.f.name': 'Full name',
+    'ann.f.email': 'Account email address',
+    'ann.f.email.hint': 'The email you used to create your FiveStar AI account',
+    'ann.f.commerce': 'Business name',
+    'ann.f.plan': 'Current plan',
+    'ann.f.plan.select': 'Select your plan',
+    'ann.f.date': 'Your next renewal date',
+    'ann.f.date.hint': 'Find it in your subscription confirmation email',
+    'ann.f.reason': 'Reason for cancellation',
+    'ann.f.reason.select': 'Select a reason',
+    'ann.f.r1': 'The price is too high for my budget',
+    'ann.f.r2': 'I\'m not seeing enough results',
+    'ann.f.r3': 'I\'m switching to another solution',
+    'ann.f.r4': 'My business is closing or being sold',
+    'ann.f.r5': 'I want to take a temporary break',
+    'ann.f.r6': 'Unresolved technical issue',
+    'ann.f.r7': 'Other reason',
+    'ann.f.detail': 'Can you elaborate?',
+    'ann.f.callback': 'Would you like us to call you before finalizing?',
+    'ann.f.callback.no': 'No, proceed with cancellation directly',
+    'ann.f.callback.yes': 'Yes, I\'d like a founder to contact me first',
+    'ann.f.callback.hint': 'If yes, we\'ll contact you within 24h',
+    'ann.f.submit': 'Submit my cancellation request',
+    'ann.f.back': '← Back',
+    'ann.confirm.title': 'Request received',
+    'ann.confirm.desc': 'Your cancellation request has been submitted. You\'ll receive a confirmation email within the next few hours.',
+    'ann.confirm.summary': 'Request summary',
+    'ann.confirm.name': 'Name',
+    'ann.confirm.commerce': 'Business',
+    'ann.confirm.plan': 'Plan',
+    'ann.confirm.renewal': 'Renewal',
+    'ann.confirm.reason': 'Reason',
+    'ann.confirm.callback': 'Callback requested',
+    'ann.timeline.title': 'What will happen',
+    'ann.tl1': 'You receive a confirmation email of your request within the next few hours',
+    'ann.tl2': 'A FiveStar AI founder processes your request within 24 business hours',
+    'ann.tl3': 'Your subscription is cancelled before the next renewal date',
+    'ann.tl4': 'You receive a final cancellation confirmation email',
+    'ann.btn.home': 'Back to home',
+    'ann.change.title': 'Changed your mind?',
+    'ann.change.desc': 'Write to us before the renewal date and we\'ll cancel the request.',
+
+    // ── DÉMO ──
+    'demo.eyebrow': 'Interactive demo',
+    'demo.h1': 'See FiveStar AI<br><em>in action.</em>',
+    'demo.p': 'Full random simulation — each demo shows a different customer and business. Click "Launch demo" to start.',
+    'demo.btn.play': '▶ Launch demo',
+    'demo.btn.reset': '↺ New scenario',
+    'demo.cta.p': 'This system runs automatically for your business, 24/7. Up and running in less than a day.',
+    'demo.cta.btn': 'Start now →',
+    'demo.step1': 'Customer visits your business',
+    'demo.step2': 'Number captured automatically',
+    'demo.step3': 'SMS sent automatically',
+    'demo.step4.pos': 'Customer leaves a positive review',
+    'demo.step4.neg': 'Customer leaves a negative review',
+    'demo.step5.pos': 'Your Google rating goes up',
+    'demo.step5.neg': 'Our AI writes a response',
+    'demo.step6': 'You\'re notified — without doing anything',
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// MOTEUR DE TRADUCTION
+// ═══════════════════════════════════════════════════════
+function t(key) {
+  const lang = localStorage.getItem('fsLang') || 'fr'
+  return LANG[lang]?.[key] || LANG['fr']?.[key] || key
+}
+
+function applyLang() {
+  const lang = localStorage.getItem('fsLang') || 'fr'
+  document.documentElement.lang = lang
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18n]
+    if (v !== undefined) el.textContent = v
+  })
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18nHtml]
+    if (v !== undefined) el.innerHTML = v
+  })
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18nPlaceholder]
+    if (v !== undefined) el.placeholder = v
+  })
+
+  // Boutons actifs
+  document.querySelectorAll('.lang-btn[data-lang]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang)
+  })
+}
+
+function setLang(lang) {
+  localStorage.setItem('fsLang', lang)
+  applyLang()
+  // Callback optionnel par page (ex: resultats.html recalcule)
+  if (typeof onLangChange === 'function') onLangChange(lang)
+}
+
+// Style commun du toggle (injecté automatiquement)
+function injectLangToggle(containerSelector) {
+  const container = document.querySelector(containerSelector)
+  if (!container) return
+  const toggle = document.createElement('div')
+  toggle.className = 'lang-toggle'
+  toggle.innerHTML = `
+    <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  `
+  container.appendChild(toggle)
+}
+
+function t(key) {
+  var lang = localStorage.getItem('fsLang') || 'fr'
+  return LANG[lang]?.[key] || LANG['fr']?.[key] || key
+}
+function applyLang() {
+  var lang = localStorage.getItem('fsLang') || 'fr'
+  document.documentElement.lang = lang
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var v = LANG[lang]?.[el.dataset.i18n]
+    if (v !== undefined) el.textContent = v
+  })
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var v = LANG[lang]?.[el.dataset.i18nHtml]
+    if (v !== undefined) el.innerHTML = v
+  })
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var v = LANG[lang]?.[el.dataset.i18nPlaceholder]
+    if (v !== undefined) el.placeholder = v
+  })
+}
+document.addEventListener('DOMContentLoaded', function() { applyLang(); });
+  </script>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
-  <div class="nav-links">
-    <a href="index.html">Accueil</a>
-    <a href="commerces.html">Par commerce</a>
-    <a href="roi.html">Calculateur ROI</a>
-    <a href="demo.html">Démo</a>
-    <a href="dashboard.html">Mon compte</a>
-    <a href="index.html#forfaits" class="nav-cta">Commencer →</a>
-  </div>
+  <a href="index.html" class="logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</a>
+  <a href="index.html" class="nav-back" data-i18n="nav.back">← Retour</a>
+  <a href="forfaits.html" class="nav-cta">Commencer →</a>
 </nav>
 
 <div class="page">
-  <!-- LIST VIEW -->
-  <div class="list-view" id="list-view">
-    <div class="page-label">Blog</div>
-    <h1 class="page-h1">Conseils pour votre<br><em>réputation en ligne.</em></h1>
-    <p class="page-p">Stratégies concrètes pour améliorer votre note Google, gérer vos avis et attirer plus de clients locaux.</p>
+  <div class="eyebrow">Blog</div>
+  <h1 class="page-h1">Conseils pour avoir<br>plus de clients.</h1>
+  <p class="page-p">Des articles pratiques pour les propriétaires de commerces locaux qui veulent améliorer leur réputation en ligne et attirer plus de clients.</p>
 
-    <!-- FEATURED -->
-    <div class="featured-post" onclick="showArticle('a1')" style="cursor:pointer">
-      <div>
-        <div class="post-tag">⭐ Article vedette</div>
-        <h2 class="post-h2">Pourquoi votre note Google est votre actif commercial le plus important en 2026</h2>
-        <p class="post-excerpt">87% des consommateurs lisent les avis en ligne avant de visiter un commerce local. Une note de 4.5 vs 3.8 peut doubler votre clientèle. Voici les données et les stratégies pour agir.</p>
-        <div class="post-meta">
-          <span>📅 Juin 2026</span>
-          <span>⏱️ 8 min de lecture</span>
-          <span>👁️ 2 341 lectures</span>
-        </div>
-        <div style="margin-top:16px"><span class="read-more">Lire l'article →</span></div>
-      </div>
-      <div class="featured-visual">
-        <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px">Impact de la note Google sur les clients</div>
-        <div class="mini-stat"><div class="mini-stat-label">Note 3.5 ⭐</div><div class="mini-stat-val" style="color:var(--red)">-40% de clients</div></div>
-        <div class="mini-stat"><div class="mini-stat-label">Note 4.0 ⭐</div><div class="mini-stat-val" style="color:#f97316">Référence</div></div>
-        <div class="mini-stat"><div class="mini-stat-label">Note 4.5 ⭐</div><div class="mini-stat-val" style="color:var(--green)">+32% de clients</div></div>
-        <div class="mini-stat"><div class="mini-stat-label">Note 5.0 ⭐</div><div class="mini-stat-val" style="color:var(--gold)">+58% de clients</div></div>
-      </div>
-    </div>
+  <div class="blog-grid" id="blog-grid"></div>
+</div>
 
-    <!-- POSTS GRID -->
-    <div class="posts-grid">
-      <div class="post-card" onclick="showArticle('a2')">
-        <div class="post-card-icon">💬</div>
-        <div class="post-card-tag">Gestion des avis</div>
-        <div class="post-card-title">Comment répondre à un avis négatif sans empirer la situation</div>
-        <div class="post-card-excerpt">Un avis 1 étoile non répondu fait fuir 30% des clients potentiels. Voici la méthode en 4 étapes pour transformer un avis négatif en opportunité.</div>
-        <div class="post-card-meta"><span>5 min · Juin 2026</span><span class="post-card-read">Lire →</span></div>
-      </div>
-      <div class="post-card" onclick="showArticle('a3')">
-        <div class="post-card-icon">📱</div>
-        <div class="post-card-tag">SMS Marketing</div>
-        <div class="post-card-title">Le timing parfait pour demander un avis Google à vos clients</div>
-        <div class="post-card-excerpt">Demandez trop tôt ou trop tard, vous perdez 70% de vos conversions. L'étude qui prouve pourquoi 2h après la visite est le moment idéal.</div>
-        <div class="post-card-meta"><span>4 min · Mai 2026</span><span class="post-card-read">Lire →</span></div>
-      </div>
-      <div class="post-card" onclick="showArticle('a4')">
-        <div class="post-card-icon">🗺️</div>
-        <div class="post-card-tag">SEO Local</div>
-        <div class="post-card-title">Comment apparaître en première position sur Google Maps</div>
-        <div class="post-card-excerpt">Les 3 facteurs que Google utilise pour classer les commerces locaux. Le nombre et la qualité de vos avis en est le plus important. Voici comment l'optimiser.</div>
-        <div class="post-card-meta"><span>6 min · Mai 2026</span><span class="post-card-read">Lire →</span></div>
-      </div>
-    </div>
-
-    <div class="newsletter">
-      <h3>📬 Conseils hebdomadaires</h3>
-      <p>Recevez chaque semaine nos meilleures stratégies pour votre réputation en ligne. Gratuit.</p>
-      <div class="newsletter-form">
-        <input class="newsletter-input" placeholder="votre@email.com"/>
-        <button class="btn-g" onclick="alert('Merci ! Vous êtes abonné.')">S\'abonner</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ARTICLE VIEWS -->
-  <div class="article-view" id="art-a1">
-    <button class="article-back" onclick="showList()">← Retour au blog</button>
-    <div class="article-tag">⭐ Article vedette</div>
-    <h1 class="article-h1">Pourquoi votre note Google est votre actif commercial le plus important en 2026</h1>
-    <div class="article-meta"><span>📅 Juin 2026</span><span>⏱️ 8 min de lecture</span><span>✍️ FiveStar AI</span></div>
-    <div class="article-body">
-      <p>En 2026, quand quelqu'un cherche un restaurant, un salon ou un gym dans sa ville, il fait la même chose systématiquement : il ouvre Google Maps, il regarde les photos, et il lit les avis. Ce processus dure en moyenne 90 secondes. Et dans ces 90 secondes, votre note Google décide si ce client vous choisit ou passe au suivant.</p>
-      <div class="stat-callout"><div class="stat-callout-num">87%</div><div class="stat-callout-text">des consommateurs consultent les avis Google avant de visiter un commerce local pour la première fois. (BrightLocal, 2025)</div></div>
-      <h2>La réalité des chiffres</h2>
-      <p>Ce n'est pas une opinion — c'est une donnée mesurable. Voici ce que les études montrent sur l'impact direct de votre note Google sur votre clientèle :</p>
-      <ul>
-        <li>Une note de <strong>3.5 étoiles</strong> fait perdre environ 40% des clients potentiels comparé à un concurrent noté 4.5</li>
-        <li>Une note de <strong>4.0 étoiles</strong> est le minimum psychologique — en dessous, beaucoup de gens ne vous considèrent même pas</li>
-        <li>Passer de <strong>4.0 à 4.5 étoiles</strong> augmente les conversions de visite de 32% en moyenne</li>
-        <li>Les commerces avec <strong>50+ avis</strong> reçoivent 3x plus de clics que ceux avec moins de 10 avis, même à note égale</li>
-      </ul>
-      <div class="highlight">La note Google n'est pas un indicateur de satisfaction client. C'est un levier d'acquisition. Les commerces qui l'ont compris traitent leur réputation en ligne comme ils traitent leur vitrine — avec autant d'attention et de soin.</div>
-      <h2>Pourquoi les bons commerces ont souvent de mauvaises notes</h2>
-      <p>Voici le paradoxe qu'on observe régulièrement : d'excellents commerces, avec des clients fidèles et satisfaits, ont des notes moyennes sur Google. Pendant que des concurrents mediocres ont 4.7 étoiles.</p>
-      <p>La raison est simple : <strong>les clients insatisfaits laissent des avis spontanément. Les clients satisfaits, eux, n'y pensent pas.</strong> Un client qui a attendu trop longtemps rentre chez lui frustré et écrit un avis 1 étoile. Un client qui a passé une excellente soirée rentre chez lui content... et ne fait rien.</p>
-      <p>Ce déséquilibre naturel crée une distorsion de votre réputation en ligne qui ne reflète pas la réalité de votre commerce.</p>
-      <h2>Comment corriger ce déséquilibre</h2>
-      <p>La solution n'est pas compliquée — elle est juste systématique. Il faut créer un mécanisme qui sollicite vos clients satisfaits au bon moment, avec le bon message, de façon automatique.</p>
-      <p>Les données montrent que le <strong>timing est critique</strong>. Une demande d'avis envoyée immédiatement après la visite obtient un taux de conversion de 8-12%. Une demande envoyée 2-3 heures après, quand le client est encore dans une disposition positive mais a eu le temps de "digérer" son expérience, obtient 18-22%.</p>
-      <div class="stat-callout"><div class="stat-callout-num">2h</div><div class="stat-callout-text">C'est le délai optimal entre la visite et la demande d'avis. Assez tôt pour que l'expérience soit fraîche, assez tard pour que le client soit détendu chez lui.</div></div>
-      <h2>L'impact sur votre visibilité Google</h2>
-      <p>Au-delà des conversions directes, votre note Google affecte votre visibilité dans les recherches locales. Google Maps utilise trois facteurs principaux pour classer les commerces :</p>
-      <ol>
-        <li><strong>Pertinence</strong> — votre fiche correspond-elle à ce que l'utilisateur cherche ?</li>
-        <li><strong>Distance</strong> — êtes-vous proche de l'utilisateur ?</li>
-        <li><strong>Notoriété</strong> — votre réputation en ligne, mesurée principalement par vos avis Google</li>
-      </ol>
-      <p>Ce troisième facteur est le seul que vous pouvez activement améliorer. La pertinence dépend de votre type de commerce, la distance dépend de votre adresse. Mais votre notoriété — le nombre et la qualité de vos avis — c'est entièrement entre vos mains.</p>
-      <h2>Ce que ça veut dire concrètement</h2>
-      <p>Un commerce qui passe de 3.8 à 4.5 étoiles et de 20 à 80 avis ne fait pas que "mieux paraître". Il remonte dans les résultats Google Maps pour des centaines de recherches locales chaque mois. Il convertit plus de visiteurs de profil en clients réels. Et il réduit l'impact des rares avis négatifs inévitables en les diluant dans une masse d'avis positifs.</p>
-      <p>C'est pour ça que la gestion de la réputation en ligne n'est pas une option pour les commerces locaux en 2026 — c'est une nécessité stratégique.</p>
-      <div class="article-cta">
-        <h3>Automatisez votre réputation en ligne.</h3>
-        <p>FiveStar AI fait tout ça automatiquement. Setup en 10 minutes.</p>
-        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-view" id="art-a2">
-    <button class="article-back" onclick="showList()">← Retour au blog</button>
-    <div class="article-tag">💬 Gestion des avis</div>
-    <h1 class="article-h1">Comment répondre à un avis négatif sans empirer la situation</h1>
-    <div class="article-meta"><span>📅 Juin 2026</span><span>⏱️ 5 min de lecture</span><span>✍️ FiveStar AI</span></div>
-    <div class="article-body">
-      <p>Un avis négatif sur Google, c'est stressant. La tentation naturelle est soit d'ignorer, soit de répondre de façon défensive. Les deux sont des erreurs. Voici comment transformer une critique en opportunité.</p>
-      <div class="stat-callout"><div class="stat-callout-num">45%</div><div class="stat-callout-text">des consommateurs disent qu'ils sont plus susceptibles de visiter un commerce qui répond à ses avis négatifs de façon professionnelle. (ReviewTrackers, 2025)</div></div>
-      <h2>Les 3 erreurs fatales à éviter</h2>
-      <ul>
-        <li><strong>Ignorer l'avis</strong> — 68% des gens qui lisent un avis négatif non répondu concluent que le commerce "s'en fout". C'est pire que l'avis lui-même.</li>
-        <li><strong>Répondre de façon défensive</strong> — "C'est faux, ce client ment" — même si c'est vrai, ça fait fuir les autres clients potentiels qui lisent l'échange.</li>
-        <li><strong>Copier-coller la même réponse générique</strong> — ça se voit immédiatement et donne l'impression d'un système robotique sans âme.</li>
-      </ul>
-      <h2>La méthode en 4 étapes</h2>
-      <h3>1. Remercier, même pour la critique</h3>
-      <p>Commencez toujours par remercier le client d'avoir pris le temps de laisser son avis. Pas de façon forcée — sincèrement. Un avis négatif est une information précieuse sur votre commerce.</p>
-      <h3>2. Reconnaître sans se justifier</h3>
-      <p>Reconnaissez l'expérience vécue par le client. Pas besoin d'admettre une faute si vous n'en avez pas commis — mais validez que son expérience n'était pas à la hauteur de vos standards.</p>
-      <h3>3. Expliquer brièvement ce qui s'est passé (si pertinent)</h3>
-      <p>Si l'avis est basé sur une situation exceptionnelle (matériel brisé ce jour-là, employé absent, rush inhabituel), vous pouvez l'expliquer brièvement. Mais évitez les longues justifications — elles sonnent comme des excuses.</p>
-      <h3>4. Offrir de rectifier et inviter au dialogue privé</h3>
-      <p>Terminez toujours en proposant de corriger la situation et en donnant un moyen de contact direct (email ou téléphone). Ça montre votre bonne foi et déplace la conversation hors de la vue publique.</p>
-      <div class="highlight">Exemple de bonne réponse : "Bonjour [Prénom], merci d'avoir pris le temps de nous faire part de votre expérience. Nous sommes sincèrement désolés que votre visite n'ait pas été à la hauteur de ce que nous voulons offrir. [Contexte bref si pertinent.] Nous aimerions corriger ça — n'hésitez pas à nous contacter directement à [email]. Nous espérons avoir l'occasion de vous faire vivre l'expérience que vous méritez."</div>
-      <h2>Pourquoi l'IA change la donne</h2>
-      <p>Le problème avec cette méthode, c'est le temps. Rédiger une réponse personnalisée et professionnelle pour chaque avis négatif prend 10-15 minutes. Quand vous gérez un commerce, vous n'avez pas ce temps — surtout à 2h du matin quand l'avis arrive.</p>
-      <p>C'est exactement pour ça que FiveStar AI utilise Claude IA pour générer automatiquement des réponses qui suivent cette méthode, personnalisées selon le contenu de chaque avis, en moins de 60 secondes.</p>
-      <div class="article-cta">
-        <h3>Plus jamais un avis négatif sans réponse.</h3>
-        <p>FiveStar AI répond automatiquement à vos avis négatifs, 24/7.</p>
-        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-view" id="art-a3">
-    <button class="article-back" onclick="showList()">← Retour au blog</button>
-    <div class="article-tag">📱 SMS Marketing</div>
-    <h1 class="article-h1">Le timing parfait pour demander un avis Google à vos clients</h1>
-    <div class="article-meta"><span>📅 Mai 2026</span><span>⏱️ 4 min de lecture</span><span>✍️ FiveStar AI</span></div>
-    <div class="article-body">
-      <p>La plupart des commerces qui essaient de collecter des avis Google font la même erreur : ils demandent au mauvais moment. Soit trop tôt (pendant la visite), soit trop tard (une semaine après). Résultat : des taux de conversion de 3-5% au lieu des 18-22% que nous observons chez nos clients.</p>
-      <h2>Pourquoi le timing est critique</h2>
-      <p>Laisser un avis Google demande un effort. Même petit. Pour que quelqu'un fasse cet effort, plusieurs conditions doivent être réunies :</p>
-      <ul>
-        <li>Il doit se souvenir clairement de son expérience</li>
-        <li>Il doit être dans un état émotionnel positif</li>
-        <li>Il doit avoir un moment libre sur son téléphone</li>
-        <li>Le lien doit être accessible immédiatement</li>
-      </ul>
-      <div class="stat-callout"><div class="stat-callout-num">2h</div><div class="stat-callout-text">Le délai optimal. Le client est chez lui, détendu, l'expérience est encore fraîche, et il a son téléphone à la main. Taux de conversion moyen : 18-22%.</div></div>
-      <h2>Les autres timings et pourquoi ils fonctionnent moins</h2>
-      <h3>Pendant la visite (0 minutes)</h3>
-      <p>Le client est encore dans votre établissement. Il est occupé, potentiellement pressé, et la demande semble forcée. Taux de conversion : 4-6%.</p>
-      <h3>Juste après la visite (15 minutes)</h3>
-      <p>Le client vient de partir. Il est en transit, dans sa voiture ou dans la rue. Pas le bon moment pour lire et cliquer. Taux de conversion : 8-10%.</p>
-      <h3>Le lendemain (24h)</h3>
-      <p>L'expérience s'est diluée dans les événements de la journée. L'émotion positive est moins vive. Taux de conversion : 6-8%.</p>
-      <h3>Une semaine après</h3>
-      <p>Presque personne ne se souvient assez clairement pour prendre le temps d'écrire. Taux de conversion : 1-3%.</p>
-      <h2>Le message qui convertit</h2>
-      <p>Le timing seul ne suffit pas. Le message doit être court, personnalisé, et contenir un lien direct. Pas de détour, pas d'étapes intermédiaires. Un clic et le client est directement sur votre fiche Google pour laisser son avis.</p>
-      <p>Le ton doit être chaleureux et humain — pas corporatif. "Merci d'être passé ce soir, ça nous ferait vraiment plaisir..." performe mieux que "Votre avis est important pour nous..."</p>
-      <div class="article-cta">
-        <h3>Le timing parfait, automatiquement.</h3>
-        <p>FiveStar AI envoie le SMS exactement 2h après chaque visite. Toujours.</p>
-        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-view" id="art-a4">
-    <button class="article-back" onclick="showList()">← Retour au blog</button>
-    <div class="article-tag">🗺️ SEO Local</div>
-    <h1 class="article-h1">Comment apparaître en première position sur Google Maps</h1>
-    <div class="article-meta"><span>📅 Mai 2026</span><span>⏱️ 6 min de lecture</span><span>✍️ FiveStar AI</span></div>
-    <div class="article-body">
-      <p>Quand quelqu'un cherche "restaurant près de moi" ou "coiffeur Montréal" sur Google, il voit une carte avec 3 résultats en premier. Ces 3 positions reçoivent 80% des clics. Si vous n'y êtes pas, vous êtes invisible pour la majorité des chercheurs.</p>
-      <div class="stat-callout"><div class="stat-callout-num">80%</div><div class="stat-callout-text">des clics vont aux 3 premiers résultats du "Local Pack" Google Maps. Les commerces qui ne s'y trouvent pas reçoivent les miettes.</div></div>
-      <h2>Les 3 facteurs de classement Google Maps</h2>
-      <h3>1. Pertinence</h3>
-      <p>Votre fiche Google Business correspond-elle à ce que l'utilisateur cherche ? Cela dépend de vos catégories, de la description de votre fiche, et des mots-clés présents dans vos avis. C'est partiellement hors de votre contrôle direct.</p>
-      <h3>2. Distance</h3>
-      <p>Google favorise les commerces proches de l'utilisateur. Vous ne pouvez pas changer votre adresse — mais vous pouvez optimiser votre zone de service dans votre fiche Google Business.</p>
-      <h3>3. Notoriété (le plus important)</h3>
-      <p>C'est le facteur que vous pouvez le plus activement influencer. Google mesure votre notoriété principalement via :</p>
-      <ul>
-        <li>Le <strong>nombre total d'avis</strong> — plus vous en avez, mieux c'est</li>
-        <li>La <strong>note moyenne</strong> — 4.0+ est le minimum pour être compétitif</li>
-        <li>La <strong>récence des avis</strong> — des avis récents signalent une activité active</li>
-        <li>La <strong>qualité des réponses</strong> — répondre à vos avis améliore votre score d'engagement</li>
-      </ul>
-      <h2>La stratégie concrète pour remonter</h2>
-      <p>Si vous êtes actuellement en position 4-10 sur Google Maps, voici ce qui va vous faire remonter :</p>
-      <ol>
-        <li><strong>Complétez votre fiche Google Business à 100%</strong> — photos, horaires, description, catégories. Les fiches incomplètes sont pénalisées.</li>
-        <li><strong>Collectez des avis de façon systématique</strong> — pas une fois de temps en temps, mais après chaque visite. L'automatisation est la seule façon de faire ça à l'échelle.</li>
-        <li><strong>Répondez à tous vos avis</strong> — positifs et négatifs. Google interprète les réponses comme un signe d'engagement actif.</li>
-        <li><strong>Maintenez des avis récents</strong> — un avis de cette semaine vaut plus qu'un avis de l'an dernier dans l'algorithme Google.</li>
-      </ol>
-      <div class="highlight">Un commerce qui reçoit 10 nouveaux avis par mois avec des réponses systématiques va graduellement dépasser ses concurrents qui ont plus d'avis mais ne les entretiennent pas. La récence et l'engagement comptent autant que le volume.</div>
-      <div class="article-cta">
-        <h3>Remontez dans Google Maps automatiquement.</h3>
-        <p>FiveStar AI collecte des avis récents et répond automatiquement à tous. Exactement ce que Google récompense.</p>
-        <a href="dashboard.html?signup=true&plan=pro" class="btn-g">Commencer maintenant →</a>
-      </div>
-    </div>
+<!-- MODAL ARTICLE -->
+<div class="modal" id="modal">
+  <div class="modal-inner">
+    <button class="modal-back" onclick="closeArticle()">← Retour au blog</button>
+    <div id="modal-content"></div>
   </div>
 </div>
 
-<footer>
-  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · <a href="conditions.html">CGU</a> · fivestarautomatisation@gmail.com</p>
-</footer>
+<footer><p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="politique.html">Confidentialité</a> · <a href="conditions.html">CGU</a> · admin@fivestarai.ca</p></footer>
 
 <script>
-function showArticle(id){
-  document.getElementById('list-view').classList.add('hide')
-  document.querySelectorAll('.article-view').forEach(el=>el.classList.remove('show'))
-  document.getElementById('art-'+id).classList.add('show')
+const POSTS = [
+  {
+    id: 1,
+    cat: 'Avis Google',
+    emoji: '⭐',
+    bg: 'linear-gradient(135deg,#1a1200,#0d0a00)',
+    date: 'Juin 2026',
+    title: 'Comment améliorer votre note Google en moins de 30 jours',
+    excerpt: 'Votre note Google influence directement le nombre de clients qui vous choisissent. Voici les étapes concrètes pour la faire monter rapidement.',
+    content: `
+      <h2>Pourquoi votre note Google est votre actif le plus important</h2>
+      <p>Quand un client potentiel cherche un restaurant, un salon ou un garage près de chez lui, la première chose qu'il regarde c'est la note Google. <strong>88% des consommateurs font autant confiance aux avis en ligne qu'aux recommandations personnelles.</strong> Une note de 4.5 contre 3.8 — c'est souvent la différence entre être choisi ou ignoré.</p>
+
+      <div class="highlight"><strong>Le problème :</strong> vos bons clients ne laissent pas d'avis spontanément. Vos clients insatisfaits, oui. C'est pour ça que la majorité des commerces locaux stagnent autour de 3.5–4.0.</div>
+
+      <h2>Étape 1 : Demandez systématiquement</h2>
+      <p>La raison numéro un pour laquelle vous n'avez pas assez d'avis ? Vous ne demandez pas. Vos clients satisfaits repartent contents — mais ils ont autre chose à faire que d'aller écrire un avis.</p>
+      <p>La solution : <strong>demander au bon moment, de la bonne façon.</strong> Le meilleur moment, c'est environ 2 heures après la visite — quand l'expérience est encore fraîche mais que le client est de retour dans son quotidien.</p>
+
+      <h2>Étape 2 : Faciliter au maximum</h2>
+      <p>Chaque obstacle entre votre client et son avis vous coûte des étoiles. Si vous lui dites "allez laisser un avis Google", il va devoir chercher votre commerce, trouver la section avis, se connecter... La majorité abandonne.</p>
+      <ul>
+        <li>Utilisez un lien direct vers votre fiche Google (g.page/votre-commerce)</li>
+        <li>Envoyez ce lien par SMS — le client clique en 10 secondes</li>
+        <li>Affichez un QR Code à la caisse pour ceux qui veulent le faire sur place</li>
+      </ul>
+
+      <h2>Étape 3 : Répondre aux avis négatifs rapidement</h2>
+      <p>Un avis négatif sans réponse fait plus de dégâts qu'un avis négatif avec une bonne réponse. Les clients lisent vos réponses — une réponse professionnelle et empathique montre que vous prenez soin de votre clientèle.</p>
+      <p><strong>Répondez dans les 2 heures.</strong> Plus vous attendez, plus l'avis est visible et plus il nuit.</p>
+
+      <h2>Étape 4 : Régularité plutôt que volume</h2>
+      <p>Google favorise les commerces qui reçoivent des avis <strong>régulièrement</strong> plutôt que ceux qui en ont eu beaucoup dans le passé. 5 avis par semaine pendant un an vaut mieux que 200 avis en un mois.</p>
+    `
+  },
+  {
+    id: 2,
+    cat: 'Visibilité locale',
+    emoji: '📍',
+    bg: 'linear-gradient(135deg,#001a0d,#000d06)',
+    date: 'Mai 2026',
+    title: 'Google Maps : pourquoi vos concurrents apparaissent avant vous',
+    excerpt: 'Le classement sur Google Maps n\'est pas aléatoire. Voici exactement les facteurs qui déterminent qui apparaît en premier — et comment les optimiser.',
+    content: `
+      <h2>Comment Google décide qui apparaît en premier</h2>
+      <p>Quand quelqu'un cherche "restaurant près de moi" ou "salon de coiffure Laval", Google choisit les 3 commerces à afficher dans le "pack local". Ce sont les 3 résultats avec la carte. <strong>Ces 3 positions représentent plus de 70% des clics.</strong></p>
+      <p>Google utilise 3 facteurs principaux :</p>
+      <ul>
+        <li><strong>Pertinence</strong> — Est-ce que votre fiche correspond à ce que le client cherche ?</li>
+        <li><strong>Distance</strong> — Êtes-vous proche de l'endroit où se trouve le client ?</li>
+        <li><strong>Notoriété</strong> — Êtes-vous reconnu comme un bon commerce dans votre domaine ?</li>
+      </ul>
+
+      <h2>La notoriété : le facteur que vous pouvez contrôler</h2>
+      <p>La distance, vous ne pouvez pas la changer. La pertinence se travaille une fois. Mais la <strong>notoriété — ça se construit activement.</strong></p>
+      <p>Les signaux de notoriété que Google mesure :</p>
+      <ul>
+        <li>Nombre total d'avis</li>
+        <li>Note moyenne (plus de 4.3 est idéal)</li>
+        <li>Fréquence des nouveaux avis (avis récents = commerce actif)</li>
+        <li>Taux de réponse aux avis</li>
+      </ul>
+
+      <h2>Cas concret</h2>
+      <p>Un restaurant avec 4.8 étoiles et 200 avis va presque toujours apparaître avant un restaurant avec 4.9 étoiles et 12 avis. <strong>Le volume et la régularité battent la perfection.</strong></p>
+
+      <div class="highlight">Un commerce qui reçoit 3-5 nouveaux avis par semaine de façon constante va progressivement grimper dans le classement local — même si sa note de départ est inférieure à ses concurrents.</div>
+
+      <h2>Ce que vous pouvez faire aujourd'hui</h2>
+      <ul>
+        <li>Demandez à vos clients actuels de laisser un avis (email ou SMS)</li>
+        <li>Répondez à tous vos avis existants — positifs et négatifs</li>
+        <li>Mettez en place un système pour collecter des avis régulièrement</li>
+        <li>Assurez-vous que votre fiche Google est complète (photos, horaires, description)</li>
+      </ul>
+    `
+  },
+  {
+    id: 3,
+    cat: 'Fidélisation',
+    emoji: '📱',
+    bg: 'linear-gradient(135deg,#0d0018,#060010)',
+    date: 'Mai 2026',
+    title: 'Le SMS après la visite : pourquoi ça marche si bien',
+    excerpt: 'Le SMS envoyé 2 heures après une visite convertit en moyenne 3x mieux qu\'un email. Voici la psychologie derrière et comment l\'utiliser.',
+    content: `
+      <h2>Pourquoi 2 heures après la visite ?</h2>
+      <p>Le timing est tout. Demandez un avis trop tôt — le client est encore dans votre commerce, c'est awkward. Trop tard — il a oublié les détails de son expérience et la motivation est partie.</p>
+      <p><strong>2 heures après la visite</strong>, c'est le sweet spot : le client est de retour dans sa routine, il a encore l'expérience fraîche en tête, et il est dans un contexte détendu où consulter son téléphone est naturel.</p>
+
+      <h2>SMS vs Email : pourquoi le SMS gagne</h2>
+      <ul>
+        <li>Taux d'ouverture SMS : <strong>98%</strong> vs 20-25% pour l'email</li>
+        <li>Temps de lecture moyen : <strong>90 secondes</strong> après réception vs plusieurs heures pour email</li>
+        <li>Le SMS arrive dans la même app que les conversations avec amis et famille — niveau de confiance naturellement plus élevé</li>
+        <li>Un lien dans un SMS se clique plus facilement qu'un lien dans un email sur mobile</li>
+      </ul>
+
+      <h2>La formule d'un SMS qui convertit</h2>
+      <p>Les meilleurs SMS de demande d'avis ont 3 éléments :</p>
+      <ol>
+        <li><strong>Personnalisation</strong> — Mentionnez le nom du commerce ou du type de service</li>
+        <li><strong>Question simple</strong> — "Vous avez apprécié ?" plutôt que "Laissez-nous un avis"</li>
+        <li><strong>Lien direct</strong> — Un clic et ils sont sur votre fiche Google. Pas deux, pas trois.</li>
+      </ol>
+
+      <div class="highlight">Exemple : "Merci de votre visite au Salon Bella ! ✂️ Vous avez aimé votre coupe ? Un avis Google nous ferait vraiment plaisir ⭐ → [lien direct]"</div>
+
+      <h2>Ce que vous ne devez pas faire</h2>
+      <ul>
+        <li>Envoyer le SMS plusieurs jours après la visite</li>
+        <li>Demander des avis seulement 5 étoiles (contraire aux CGU de Google)</li>
+        <li>Envoyer plusieurs SMS de relance — un seul suffit</li>
+        <li>Utiliser un numéro inconnu sans identifier votre commerce</li>
+      </ul>
+    `
+  },
+  {
+    id: 4,
+    cat: 'Réputation',
+    emoji: '🤖',
+    bg: 'linear-gradient(135deg,#001020,#000810)',
+    date: 'Avril 2026',
+    title: 'Comment répondre à un avis négatif (sans aggraver les choses)',
+    excerpt: 'Un avis négatif mal géré peut coûter plus cher que l\'avis lui-même. Voici la méthode exacte pour répondre de façon professionnelle — et transformer la situation.',
+    content: `
+      <h2>La réalité sur les avis négatifs</h2>
+      <p>Un commerce avec que des avis positifs paraît suspect. Les clients s'attendent à voir quelques avis négatifs — ce qui les influence vraiment, c'est <strong>comment vous y répondez.</strong></p>
+      <p>Une étude de Harvard Business Review a démontré que les commerces qui répondent professionnellement à leurs avis négatifs voient leur note moyenne augmenter de 0.12 point en moyenne — parce que les futurs clients voient que le commerce prend son service au sérieux.</p>
+
+      <h2>La méthode en 4 étapes</h2>
+      <ol>
+        <li><strong>Reconnaître</strong> — Commencez par remercier pour le retour et reconnaître l'expérience négative. Ne niez jamais.</li>
+        <li><strong>S'excuser sincèrement</strong> — Pas d'"excuses si vous avez été déçu" (conditionnel = non sincère). Excusez-vous directement.</li>
+        <li><strong>Expliquer (brièvement)</strong> — Donnez contexte si pertinent, sans vous justifier excessivement.</li>
+        <li><strong>Proposer de rectifier</strong> — Invitez à vous contacter directement pour régler la situation.</li>
+      </ol>
+
+      <div class="highlight">
+        <strong>Exemple de bonne réponse :</strong><br><br>
+        "Bonjour [Prénom], merci de nous avoir partagé votre expérience. Nous sommes sincèrement désolés que votre visite n'ait pas été à la hauteur de vos attentes — ce n'est clairement pas le niveau de service que nous voulons offrir. Nous aimerions beaucoup rectifier la situation. N'hésitez pas à nous écrire directement à admin@votrecommerce.ca — on s'en occupe personnellement."
+      </div>
+
+      <h2>Ce que vous ne devez jamais faire</h2>
+      <ul>
+        <li>Répondre agressivement ou défensivement</li>
+        <li>Nier les faits rapportés par le client</li>
+        <li>Répondre avec un texte générique copié-collé</li>
+        <li>Ignorer l'avis (le silence est pire)</li>
+        <li>Attendre plus de 48h pour répondre</li>
+      </ul>
+    `
+  },
+  {
+    id: 5,
+    cat: 'Stratégie',
+    emoji: '📊',
+    bg: 'linear-gradient(135deg,#120800,#080400)',
+    date: 'Avril 2026',
+    title: 'Combien d\'avis Google vous faut-il vraiment ?',
+    excerpt: 'Il n\'y a pas de chiffre magique — mais il y a des seuils qui changent tout. Voici les données réelles sur le nombre d\'avis et l\'impact sur vos ventes.',
+    content: `
+      <h2>Les seuils qui comptent vraiment</h2>
+      <p>Selon les données de BrightLocal (2024), voici les seuils psychologiques qui influencent la décision des clients :</p>
+      <ul>
+        <li><strong>0-9 avis</strong> : La majorité des clients hésitent. Pas assez de données pour faire confiance.</li>
+        <li><strong>10-49 avis</strong> : Seuil minimal de crédibilité. Les clients commencent à vous considérer sérieusement.</li>
+        <li><strong>50-99 avis</strong> : Zone de confiance. Vous êtes perçu comme un commerce établi.</li>
+        <li><strong>100+ avis</strong> : Zone d'autorité. Vous devenez une référence dans votre catégorie locale.</li>
+      </ul>
+
+      <h2>L'impact chiffré sur vos revenus</h2>
+      <p>Une note qui passe de 3.5 à 4.0 étoiles entraîne en moyenne une augmentation de <strong>9% du chiffre d'affaires</strong>. De 4.0 à 4.5 ? <strong>+18%</strong>. (Source : étude UC Berkeley, 2023)</p>
+      <p>Pour un restaurant qui fait 500 000$ par an, passer de 3.8 à 4.5 représente potentiellement <strong>90 000$ de revenus additionnels</strong> — sans changer quoi que ce soit à votre service.</p>
+
+      <h2>L'erreur de se concentrer sur le chiffre</h2>
+      <p>Le nombre d'avis importe moins que la <strong>régularité des nouveaux avis.</strong> Un commerce avec 500 avis dont le dernier date de 2 ans paraît moins actif qu'un commerce avec 80 avis dont 10 datent du mois dernier.</p>
+      <p>Google privilégie les avis récents dans son algorithme de classement.</p>
+
+      <div class="highlight">Objectif réaliste : 3 à 5 nouveaux avis par semaine. C'est suffisant pour progresser régulièrement dans le classement Google Maps de votre zone.</div>
+    `
+  },
+  {
+    id: 6,
+    cat: 'Croissance',
+    emoji: '🚀',
+    bg: 'linear-gradient(135deg,#0a1200,#050900)',
+    date: 'Mars 2026',
+    title: '5 erreurs qui font fuir vos clients avant même qu\'ils entrent',
+    excerpt: 'La majorité des clients consultent votre présence en ligne avant de visiter. Ces 5 erreurs communes vous coûtent des clients chaque jour.',
+    content: `
+      <h2>Erreur #1 : Informations incorrectes ou manquantes</h2>
+      <p>Un client qui cherche vos heures d'ouverture et trouve des informations incorrectes ou manquantes sur Google ne prend pas le risque de se déplacer pour rien. <strong>Vérifiez mensuellement :</strong> adresse, téléphone, horaires, site web.</p>
+
+      <h2>Erreur #2 : Aucune photo récente</h2>
+      <p>Les fiches Google avec photos reçoivent <strong>42% plus de demandes d'itinéraire</strong> et 35% plus de clics vers le site web. Si votre dernière photo date de 3 ans, ajoutez-en de nouvelles maintenant.</p>
+
+      <h2>Erreur #3 : Ne pas répondre aux avis</h2>
+      <p>60% des clients lisent les réponses du propriétaire avant de choisir un commerce. Ne pas répondre signale soit que vous vous en foutez, soit que vous n'êtes pas professionnel. Les deux sont mauvais.</p>
+
+      <h2>Erreur #4 : Une note en dessous de 4.0</h2>
+      <p>Selon Google, <strong>86% des consommateurs hésitent à acheter auprès d'un commerce avec une note inférieure à 4.0 étoiles.</strong> En dessous de ce seuil, vous perdez la majorité de vos clients potentiels avant même qu'ils lisent les avis.</p>
+
+      <h2>Erreur #5 : Avis non-représentatifs</h2>
+      <p>Si votre note ne reflète pas la vraie qualité de votre service, c'est souvent parce que seuls les clients insatisfaits laissent des avis. Vos clients satisfaits — la majorité — repartent sans rien écrire.</p>
+      <p>La solution n'est pas de supprimer les avis négatifs (impossible), mais d'équilibrer avec des avis positifs en demandant systématiquement à vos bons clients.</p>
+
+      <div class="highlight">Un commerce qui corrige ces 5 erreurs voit généralement une amélioration visible de sa note Google en 4 à 8 semaines — sans changer quoi que ce soit à son service.</div>
+    `
+  }
+]
+
+function renderGrid() {
+  const grid = document.getElementById('blog-grid')
+  grid.innerHTML = POSTS.map(p => `
+    <a class="post-card" onclick="openArticle(${p.id})" href="javascript:void(0)">
+      <div class="post-thumb" style="background:${p.bg}">
+        <span>${p.emoji}</span>
+        <div class="post-cat">${p.cat}</div>
+      </div>
+      <div class="post-body">
+        <div class="post-date">${p.date} · 4 min de lecture</div>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-read">Lire l'article →</div>
+      </div>
+    </a>
+  `).join('')
+}
+
+function openArticle(id) {
+  const p = POSTS.find(x => x.id === id)
+  if (!p) return
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-cat">${p.cat}</div>
+    <h1 class="modal-h1">${p.title}</h1>
+    <div class="modal-meta">${p.date} · 4 min de lecture · FiveStar AI Blog</div>
+    <div class="modal-body">${p.content}</div>
+    <div class="modal-cta">
+      <h3>Prêt à automatiser vos avis Google ?</h3>
+      <p>Setup en 10 minutes. Premiers avis dès cette semaine. Aucun contrat.</p>
+      <a href="forfaits.html" class="btn-g">Voir les forfaits →</a>
+    </div>
+  `
+  document.getElementById('modal').classList.add('open')
   window.scrollTo(0,0)
 }
-function showList(){
-  document.getElementById('list-view').classList.remove('hide')
-  document.querySelectorAll('.article-view').forEach(el=>el.classList.remove('show'))
-  window.scrollTo(0,0)
+
+function closeArticle() {
+  document.getElementById('modal').classList.remove('open')
 }
+
+renderGrid()
 </script>
 </body>
 </html>
