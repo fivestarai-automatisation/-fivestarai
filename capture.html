@@ -104,6 +104,7 @@
       <div class="badge">⭐ Offre exclusive</div>
       <div class="commerce-icon" id="c-icon">🏪</div>
       <div class="commerce-name" id="c-name">Chargement...</div>
+    <div id="c-ville" style="display:none;font-size:13px;color:var(--muted);margin-top:3px;margin-bottom:0"></div>
     </div>
 
     <div class="divider"></div>
@@ -154,10 +155,13 @@ const params = new URLSearchParams(window.location.search)
 const commerceNom = params.get('c') || 'Notre Commerce'
 const commerceId = params.get('id') || 'default'
 const commerceType = params.get('type') || 'default'
+const commerceVille = params.get('ville') || ''
 
 const icons = {restaurant:'🍽️', salon:'✂️', gym:'💪', cafe:'☕', garage:'🔧', clinique:'🏥', default:'🏪'}
 document.getElementById('c-icon').textContent = icons[commerceType] || icons.default
 document.getElementById('c-name').textContent = commerceNom
+document.getElementById('c-ville').textContent = commerceVille
+document.getElementById('c-ville').style.display = commerceVille ? 'block' : 'none'
 document.getElementById('legal-name').textContent = commerceNom
 
 // Format tel canadien
