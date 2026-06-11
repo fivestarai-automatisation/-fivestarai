@@ -250,8 +250,16 @@
     .notif-time{font-size:10.5px;color:#3a4560;margin-top:3px}
 
     /* RESPONSIVE */
+    .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;justify-content:center;align-items:center}
+    .ham-btn span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+    .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .ham-btn.open span:nth-child(2){opacity:0}
+    .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:149;backdrop-filter:blur(2px)}
+    .mob-overlay.show{display:block}
     @media(max-width:768px){
-      .sidebar{transform:translateX(-100%)}
+      .ham-btn{display:flex}
+      .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:150;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 32px rgba(0,0,0,.5)}
       .sidebar.mobile-open{transform:translateX(0)}
       .main{margin-left:0}
       .kpi-grid{grid-template-columns:repeat(2,1fr)}
@@ -269,7 +277,7 @@
     <div class="auth-glow"></div>
     <div class="auth-grid"></div>
     <div class="auth-card" id="auth-card">
-      <div class="auth-logo"><div class="auth-logo-text">⭐ Five<span>Star</span> AI</div></div>
+      <div class="auth-logo"><div class="auth-logo-text"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div></div>
       <div class="auth-subtitle">Portail gérant</div>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Connexion</button>
@@ -322,9 +330,10 @@
 <!-- DASHBOARD -->
 <div id="dash-page" style="display:none">
   <div class="dash">
+    <div class="mob-overlay" id="mob-overlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
       <div class="sb-header">
-        <div class="sb-logo">⭐ Five<span>Star</span> AI</div>
+        <div class="sb-logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div>
         <div class="sb-commerce" id="sb-commerce-name">—</div>
         <div class="sb-type" id="sb-commerce-type">—</div>
         <div id="sb-plan-tag"></div>
@@ -342,6 +351,9 @@
         <div class="sb-item" id="nav-smsPromo" onclick="goPage('smsPromo',this)"><span>📣</span> SMS promotionnel</div>
         <div class="sb-section-label">Premium</div>
         <div class="sb-item" id="nav-recrutement" onclick="goPage('recrutement',this)"><span>👥</span> Recrutement IA</div>
+        <div class="sb-section-label">Démarrage</div>
+        <div class="sb-item" onclick="window.location.href='onboarding.html'"><span>🚀</span> Guide de démarrage</div>
+        <div class="sb-item" onclick="goPage('lien',this)"><span>🔗</span> Mon lien d'avis</div>
         <div class="sb-section-label">Compte</div>
         <div class="sb-item" onclick="goPage('forfait',this)"><span>💳</span> Mon forfait</div>
         <div class="sb-item" onclick="goPage('parametres',this)"><span>⚙️</span> Paramètres</div>
@@ -360,6 +372,9 @@
     <div class="main">
       <div class="topbar">
         <div class="tb-left">
+          <button class="ham-btn" id="ham-btn" onclick="toggleSidebar()" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
           <span class="tb-icon" id="tb-icon">📊</span>
           <span class="tb-title" id="tb-title">Tableau de bord</span>
         </div>
@@ -380,10 +395,27 @@
 </div>
 
 <script>
+// ── SIDEBAR MOBILE ──
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar')
+  const ov=document.getElementById('mob-overlay')
+  const btn=document.getElementById('ham-btn')
+  const isOpen=sb.classList.contains('mobile-open')
+  sb.classList.toggle('mobile-open',!isOpen)
+  ov.classList.toggle('show',!isOpen)
+  btn.classList.toggle('open',!isOpen)
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('mobile-open')
+  document.getElementById('mob-overlay').classList.remove('show')
+  document.getElementById('ham-btn').classList.remove('open')
+}
+
 // ── INIT EMAILJS ──
 (function(){
-  // Remplace 'YOUR_PUBLIC_KEY' par ta clé EmailJS une fois configuré
-  if(window.emailjs) emailjs.init({publicKey:'YOUR_PUBLIC_KEY'})
+  try {
+    if(window.emailjs) emailjs.init({publicKey:'YOUR_PUBLIC_KEY'})
+  } catch(e) { console.log('EmailJS init skip'); }
 })()
 
 // ── DONNÉES ──
@@ -537,6 +569,12 @@ async function doSignup(){
         const subj=encodeURIComponent('🆕 Nouveau client FiveStar AI — '+commerce)
         const body=encodeURIComponent('Nouveau compte créé!\n\nNom: '+prenom+' '+nom+'\nCommerce: '+commerce+'\nType: '+type+'\nEmail: '+email+'\nTél: '+tel+'\nForfait: '+p.name+' — '+p.price+'$/mois\n\nAction: Contacter dans les 24h pour setup.')
         window.open('mailto:admin@fivestarai.ca?subject='+subj+'&body='+body)
+        localStorage.setItem('fivestar_user', JSON.stringify({
+          prenom: prenom, nom: nom, email: email,
+          commerce: commerce, type: type,
+          plan: p.name.toLowerCase(),
+          since: new Date().toISOString()
+        }))
       },1500)
     }
   }catch(e){console.log('EmailJS non configuré — fallback mailto utilisé')}
@@ -950,10 +988,53 @@ function renderAide(){
   set(`
   <div class="card">
     <div class="card-hdr"><div class="card-title">💬 Aide & support</div></div>
-    <div style="text-align:center;padding:20px 0 10px">
-      <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Une question ? On est là.</div>
-      <div style="font-size:14px;color:var(--muted);margin-bottom:20px">Réponse garantie dans les 24h ouvrables.</div>
-      <a href="mailto:admin@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:13px 30px;border-radius:9px;text-decoration:none;display:inline-block">✉️ admin@fivestarai.ca</a>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:10px">📧</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Email</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Réponse dans les 24h</div>
+        <a href="mailto:admin@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">admin@fivestarai.ca</a>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:10px">📱</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Texto direct</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Raphaël ou Olivier</div>
+        <a href="sms:+15144979236" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">Texter maintenant</a>
+      </div>
+    </div>
+    <div style="background:rgba(245,200,66,.04);border:1px solid rgba(245,200,66,.12);border-radius:12px;padding:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px">📋 Questions fréquentes</div>
+      ${[
+        ['Mon QR Code ne fonctionne pas','Vérifiez que vous êtes bien connecté à internet et réessayez. Si le problème persiste, textez-nous.'],
+        ['Je ne vois pas mes avis','Les avis Google peuvent prendre jusqu\'à 24h avant d\'apparaître. Vérifiez aussi la section Avis Google ci-dessus.'],
+        ['Je veux changer mon message SMS','Allez dans Paramètres → Message SMS personnalisé et sauvegardez.'],
+        ['Je veux mettre à jour mes infos','Allez dans Paramètres → Informations du commerce.'],
+      ].map(([q,a]) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(22,32,58,.5)"><div style="font-size:13.5px;font-weight:600;color:#fff;margin-bottom:5px">${q}</div><div style="font-size:13px;color:var(--muted);line-height:1.6">${a}</div></div>`).join('')}
+    </div>
+  </div>`)
+}
+
+function renderLien(){
+  const slug=(user.commerce||'commerce').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')
+  const lien = `https://fivestarai.ca/avis/${slug}`
+  set(`
+  <div class="card">
+    <div class="card-hdr"><div class="card-title">🔗 Mon lien d'avis Google</div></div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7">Partagez ce lien directement avec vos clients. Un clic et ils arrivent sur votre fiche Google pour laisser un avis.</p>
+    <div style="background:var(--surface2);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-family:monospace;font-size:13px;color:var(--gold);margin-bottom:16px;word-break:break-all">${lien}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+      <button class="btn-save" onclick="navigator.clipboard.writeText('${lien}').then(()=>{this.textContent='✓ Copié!';this.style.background='var(--green)';setTimeout(()=>{this.textContent='📋 Copier le lien';this.style.background=''},2000)})">📋 Copier le lien</button>
+      <a href="sms:?body=Merci%20de%20votre%20visite%20!%20Laissez-nous%20un%20avis%20Google%20%E2%AD%90%20${encodeURIComponent(lien)}" class="btn-qr" style="text-decoration:none;display:inline-flex;align-items:center">📤 Envoyer par SMS</a>
+      <a href="mailto:?subject=Laissez-nous%20un%20avis%20Google&body=Merci%20de%20votre%20visite%20!%20Votre%20avis%20nous%20aide%20beaucoup%20%E2%AD%90%20${encodeURIComponent(lien)}" class="btn-qr" style="text-decoration:none;display:inline-flex;align-items:center">✉️ Envoyer par email</a>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px">
+      <div style="font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">💡 Comment l'utiliser</div>
+      ${[
+        ['📌','Affichez-le en story Instagram ou Facebook','Vos abonnés deviennent des ambassadeurs'],
+        ['📧','Ajoutez-le à votre signature email','Chaque email devient une opportunité d\'avis'],
+        ['🖨️','Imprimez-le sur vos reçus ou factures','Capturez les clients au moment de payer'],
+        ['💬','Envoyez-le dans vos groupes WhatsApp','Vos clients habituels adorent aider'],
+      ].map(([ico,t,d]) => `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(22,32,58,.5)"><span style="font-size:18px;flex-shrink:0">${ico}</span><div><div style="font-size:13.5px;font-weight:600;color:#fff">${t}</div><div style="font-size:12px;color:var(--muted)">${d}</div></div></div>`).join('')}
     </div>
   </div>`)
 }
@@ -981,6 +1062,15 @@ if(up.get('signup')==='true'){
     document.querySelectorAll('.plan-opt').forEach(x=>x.classList.remove('sel'))
     const el=document.getElementById('po-'+plan)
     if(el){el.classList.add('sel');selectedPlan=plan}
+  }
+}
+
+// Accès restreint — ex: quelqu'un essaie d'aller sur onboarding.html sans plan
+if(up.get('access')==='restricted'){
+  switchTab('signup')
+  const msg = document.getElementById('auth-msg')
+  if(msg){
+    msg.innerHTML = '<div style="background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--gold);margin-bottom:16px;text-align:center">⭐ Choisissez un forfait pour accéder à cette page.</div>'
   }
 }
 </script>
