@@ -79,11 +79,685 @@
       .form-card,.warning-card{padding:28px 20px}
     }
   </style>
+
+  <style>
+    .lang-toggle{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:4px}
+    .lang-btn{font-size:12px;font-weight:700;padding:4px 10px;border-radius:5px;border:none;background:transparent;color:#6b7591;cursor:pointer;transition:all .2s;font-family:inherit;letter-spacing:.4px}
+    .lang-btn.active{background:#f5c842;color:#000}
+    .lang-btn:hover:not(.active){color:#fff}
+  </style>
+  <script>
+// ═══════════════════════════════════════════════════════
+// FiveStar AI — Système de traduction global
+// Chaque page charge ce fichier + appelle initLang()
+// ═══════════════════════════════════════════════════════
+
+const LANG = {
+  fr: {
+    // NAV commun
+    'nav.back': '← Retour',
+    'nav.account': '← Mon compte',
+    'nav.start': 'Commencer →',
+    'nav.how': 'Comment ça marche',
+    'nav.pricing': 'Forfaits',
+    'nav.about': 'À propos',
+    'nav.login': 'Mon compte',
+
+    // FOOTER commun
+    'footer.rights': '© 2026 FiveStar AI — Tous droits réservés',
+
+    // LOGO (toutes les pages)
+    'logo': '⭐',
+
+    // ── COMPARAISON ──
+    'comp.eyebrow': 'Comparaison',
+    'comp.h1': 'FiveStar AI vs<br><em>les alternatives.</em>',
+    'comp.p': 'Gérer votre réputation vous-même, passer par une agence, ou automatiser avec FiveStar AI. Voici la comparaison honnête.',
+    'comp.col.manual': 'Vous-même',
+    'comp.col.manual.price': 'Votre temps',
+    'comp.col.agency': 'Agence',
+    'comp.col.agency.price': '1 500–3 500$/mois',
+    'comp.col.fivestar.badge': '⭐ RECOMMANDÉ',
+    'comp.col.fivestar.price': '297–599$/mois',
+    'comp.row1': 'Coût mensuel',
+    'comp.row1.sub': 'Ce que vous payez chaque mois',
+    'comp.row1.manual': '0$',
+    'comp.row1.manual.note': 'Mais votre temps vaut quelque chose',
+    'comp.row1.agency': '1 500–3 500$',
+    'comp.row2': 'Temps de votre part',
+    'comp.row2.sub': 'Par semaine',
+    'comp.row2.manual': '3–5h',
+    'comp.row2.manual.note': 'Surveiller, répondre, relancer',
+    'comp.row2.agency': '30–60 min',
+    'comp.row2.agency.note': 'Réunions, approbations',
+    'comp.row2.fivestar': '0 min',
+    'comp.row2.fivestar.note': '100% automatique',
+    'comp.row3': 'Mise en place',
+    'comp.row3.sub': 'Avant d\'être opérationnel',
+    'comp.row3.manual': 'Plusieurs mois',
+    'comp.row3.manual.note': 'Apprendre, organiser, tester',
+    'comp.row3.agency': 'Plusieurs semaines',
+    'comp.row3.agency.note': 'Onboarding, contrat, briefings',
+    'comp.row3.fivestar': 'Moins d\'une journée',
+    'comp.row4': 'Premiers résultats',
+    'comp.row4.sub': 'Délai avant de voir des avis',
+    'comp.row4.manual': '4–8 semaines',
+    'comp.row4.agency': '2–4 semaines',
+    'comp.row4.fivestar': 'Dès la 1re semaine',
+    'comp.row5': 'Collecte d\'avis automatique',
+    'comp.row5.sub': 'SMS envoyés après chaque visite',
+    'comp.row5.agency': 'Parfois',
+    'comp.row6': 'Réponses aux avis négatifs',
+    'comp.row6.sub': 'Automatique, 24/7',
+    'comp.row6.manual.note': 'Vous devez le faire manuellement',
+    'comp.row6.agency': '24–48h de délai',
+    'comp.row6.fivestar': 'En moins de 2 min',
+    'comp.row7': 'Sans engagement',
+    'comp.row7.sub': 'Liberté d\'annuler',
+    'comp.row7.agency.note': 'Contrat 6–12 mois souvent requis',
+    'comp.row7.fivestar.note': 'Mois par mois',
+    'comp.row8': 'Dashboard & statistiques',
+    'comp.row8.sub': 'Suivi en temps réel',
+    'comp.row8.agency': 'Rapports mensuels',
+    'comp.row8.fivestar': 'Temps réel',
+    'comp.row9': 'SMS promotionnels clients',
+    'comp.row9.sub': 'Fidélisation de votre base',
+    'comp.row9.agency': 'En option — coût extra',
+    'comp.row9.fivestar.note': 'Inclus en Pro',
+    'comp.row10': 'Retour sur investissement',
+    'comp.row10.sub': 'Estimé sur 12 mois',
+    'comp.row10.manual': 'Difficile à mesurer',
+    'comp.row10.agency': '2–4x si l\'agence performe',
+    'comp.detail1.title': '⚒️ Gérer vous-même',
+    'comp.detail1.p1': 'Aucun coût direct',
+    'comp.detail1.p2': 'Contrôle total sur chaque réponse',
+    'comp.detail1.c1': '3–5 heures par semaine minimum',
+    'comp.detail1.c2': 'Avis négatifs la nuit sans réponse rapide',
+    'comp.detail1.c3': 'Aucune collecte systématique d\'avis',
+    'comp.detail1.c4': 'Résultats variables selon votre disponibilité',
+    'comp.detail1.c5': 'Vous perdez du temps sur votre cœur de métier',
+    'comp.detail2.title': '🏢 Passer par une agence',
+    'comp.detail2.p1': 'Expertise humaine dédiée',
+    'comp.detail2.p2': 'Stratégie marketing complète possible',
+    'comp.detail2.c1': '1 500–3 500$/mois minimum',
+    'comp.detail2.c2': 'Engagement de 6 à 12 mois souvent requis',
+    'comp.detail2.c3': 'Délai de réponse aux avis de 24–48h',
+    'comp.detail2.c4': 'Réunions et approbations = votre temps quand même',
+    'comp.detail2.c5': 'Résultats variables selon l\'agence',
+    'comp.detail3.badge': '⭐ MEILLEURE OPTION',
+    'comp.detail3.title': '🤖 FiveStar AI',
+    'comp.detail3.p1': '297–599$/mois, sans engagement',
+    'comp.detail3.p2': 'Opérationnel en moins d\'une journée',
+    'comp.detail3.p3': 'Réponses automatiques en moins de 2 minutes, 24/7',
+    'comp.detail3.p4': 'Zéro heure de votre temps après démarrage',
+    'comp.detail3.p5': 'Dashboard temps réel, rapports mensuels',
+    'comp.detail3.p6': 'SMS promotionnels inclus (Pro et Premium)',
+    'comp.detail3.p7': 'Annulez à tout moment si pas satisfait',
+    'comp.verdict.h2': 'La conclusion honnête',
+    'comp.verdict.p1': 'Si vous avez 3–5 heures par semaine à y consacrer et une grande discipline, la gestion manuelle peut fonctionner. Si vous avez un budget de 2 000$/mois et voulez une stratégie marketing complète, une agence peut valoir le coup.',
+    'comp.verdict.p2': 'Mais si vous voulez des résultats rapides, automatiques, sans effort de votre part, pour un prix accessible — FiveStar AI est la meilleure option pour un commerce local.',
+    'comp.verdict.btn1': 'Essayer FiveStar AI →',
+    'comp.verdict.btn2': 'Estimez vos résultats',
+
+    // ── FORFAITS ──
+    'plans.eyebrow': 'Forfaits',
+    'plans.h1': 'Choisissez votre<br><em>niveau d\'automatisation</em>',
+    'plans.p': 'Pas de contrat. Setup rapide. Premier avis Google dès cette semaine.',
+    'plans.process.eyebrow': 'Le processus',
+    'plans.process.h2': 'Ce qui se passe après votre inscription',
+    'plans.step1.num': 'ÉTAPE 01',
+    'plans.step1.h3': 'Vous choisissez votre forfait',
+    'plans.step1.p': 'Sélectionnez le plan qui correspond à votre commerce. Paiement sécurisé. Vous recevez une confirmation par email dans les minutes qui suivent.',
+    'plans.step2.num': 'ÉTAPE 02',
+    'plans.step2.h3': 'On vous contacte sous 24h',
+    'plans.step2.p': 'Un de nos fondateurs vous contacte directement pour planifier votre setup. On a besoin de 10 minutes de votre temps, c\'est tout.',
+    'plans.step3.num': 'ÉTAPE 03',
+    'plans.step3.h3': 'Setup simple et rapide',
+    'plans.step3.p': 'On configure tout : QR Code personnalisé, SMS automatiques, connexion à votre fiche Google. Vous n\'avez rien à installer ni à apprendre.',
+    'plans.step4.num': 'ÉTAPE 04',
+    'plans.step4.h3': 'Le système tourne seul',
+    'plans.step4.p': 'Dès le premier client qui scanne votre QR Code, le système est en marche. Vous recevez vos premiers avis Google automatiquement.',
+    'plans.tarifs.eyebrow': 'Tarifs',
+    'plans.tarifs.h2': 'Trois forfaits, zéro complication',
+    'plans.starter.name': 'Starter',
+    'plans.starter.period': 'par mois',
+    'plans.starter.desc': 'Idéal pour démarrer. Tout ce qu\'il faut pour automatiser vos avis Google et protéger votre réputation, sans effort.',
+    'plans.starter.btn': 'Choisir Starter →',
+    'plans.starter.f1': 'Capture automatique des numéros clients via QR Code',
+    'plans.starter.f1n': 'Formulaire personnalisé installé en 5 minutes',
+    'plans.starter.f2': 'SMS automatique envoyé 2h après chaque visite',
+    'plans.starter.f2n': 'Message personnalisé avec lien direct vers votre fiche Google',
+    'plans.starter.f3': 'Réponses aux avis négatifs générées par IA',
+    'plans.starter.f3n': 'Claude IA rédige une réponse professionnelle en quelques secondes',
+    'plans.starter.f4': 'Setup complet inclus',
+    'plans.starter.f4n': 'On configure tout pour vous, zéro effort de votre part',
+    'plans.pro.badge': '⭐ PLUS POPULAIRE',
+    'plans.pro.name': 'Pro',
+    'plans.pro.period': 'par mois',
+    'plans.pro.desc': 'Pour les commerces qui veulent aller plus loin. Fidélisez vos clients existants et suivez vos performances en temps réel.',
+    'plans.pro.btn': 'Choisir Pro →',
+    'plans.pro.f1': 'Tout le forfait Starter',
+    'plans.pro.f2': 'SMS promotionnel mensuel envoyé à toute votre base',
+    'plans.pro.f2n': 'On rédige et envoie une promotion chaque mois à vos clients',
+    'plans.pro.f3': 'Rapport mensuel détaillé',
+    'plans.pro.f3n': 'Nombre d\'avis, progression de note, clients contactés',
+    'plans.pro.f4': 'Tableau de bord gérant',
+    'plans.pro.f4n': 'Page web privée pour suivre vos stats en temps réel',
+    'plans.premium.name': 'Premium',
+    'plans.premium.period': 'par mois',
+    'plans.premium.desc': 'La solution complète. Automatisez votre réputation ET votre recrutement. Concentrez-vous sur ce que vous faites de mieux.',
+    'plans.premium.btn': 'Choisir Premium →',
+    'plans.premium.f1': 'Tout le forfait Pro',
+    'plans.premium.f2': 'Recrutement automatisé par IA',
+    'plans.premium.f2n': 'L\'IA trie et analyse les CV entrants. Vous recevez seulement les bons profils.',
+    'plans.premium.f3': 'Support prioritaire',
+    'plans.premium.f3n': 'Réponse garantie en moins de 4h en tout temps',
+    'plans.premium.f4': 'Configuration en 10 minutes',
+    'plans.premium.f4n': 'Même pour les fonctionnalités avancées',
+    'plans.faq.eyebrow': 'Questions fréquentes',
+    'plans.faq.h2': 'Tout ce que vous voulez savoir',
+    'plans.faq1.q': 'Est-ce que je dois signer un contrat ?',
+    'plans.faq1.a': 'Non. FiveStar fonctionne sur une base mensuelle. Vous pouvez annuler en tout temps en nous écrivant à admin@fivestarai.ca.',
+    'plans.faq2.q': 'Comment fonctionne le QR Code ?',
+    'plans.faq2.a': 'On crée un QR Code personnalisé pour votre commerce. Vous l\'affichez à votre caisse ou sur vos tables. Quand un client le scanne, son numéro est capturé automatiquement.',
+    'plans.faq3.q': 'Est-ce que je dois faire quelque chose après le setup ?',
+    'plans.faq3.a': 'Non. C\'est le but. Une fois le setup complété en 10 minutes, le système tourne seul. Les SMS partent automatiquement, les réponses aux avis négatifs sont générées automatiquement.',
+    'plans.faq4.q': 'Combien de temps avant de voir des résultats ?',
+    'plans.faq4.a': 'En général, dès la première semaine. Le premier client qui scanne votre QR Code reçoit un SMS 2h après sa visite.',
+    'plans.faq5.q': 'Comment fonctionne le paiement ?',
+    'plans.faq5.a': 'Le paiement est traité de façon sécurisée. Votre abonnement est débité automatiquement chaque mois.',
+    'plans.cta.h2': 'Des questions ? On vous répond.',
+    'plans.cta.p': 'Écrivez-nous directement. On répond dans les 24h.',
+    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+
+    // ── POLITIQUE ──
+    'pol.eyebrow': 'Légal',
+    'pol.h1': 'Politique de confidentialité',
+    'pol.date': 'Dernière mise à jour : juin 2026',
+    'pol.intro': 'FiveStar AI (« nous », « notre ») s\'engage à protéger la confidentialité des informations personnelles de ses clients et des utilisateurs finaux de ses services.',
+    'pol.s1.h': '1. Données collectées',
+    'pol.s1.p': 'Dans le cadre de la prestation de nos services, nous collectons les types de données suivants :',
+    'pol.s2.h': '2. Utilisation des données',
+    'pol.s2.p': 'Les données collectées sont utilisées exclusivement pour :',
+    'pol.s3.h': '3. Partage des données',
+    'pol.s3.p': 'Nous ne vendons jamais vos données à des tiers.',
+    'pol.s4.h': '4. Conservation des données',
+    'pol.s4.p': 'Les numéros de téléphone des clients sont conservés aussi longtemps que le commerce partenaire est abonné. À la résiliation, les données sont supprimées dans les 30 jours.',
+    'pol.s5.h': '5. Droits des utilisateurs',
+    'pol.s6.h': '6. Sécurité',
+    'pol.s7.h': '7. Paiements',
+    'pol.s8.h': '8. Modifications',
+    'pol.s9.h': '9. Contact',
+
+    // ── RÉSULTATS ──
+    'res.eyebrow': 'Estimez vos résultats',
+    'res.h1': 'Vos résultats estimés<br><em>en 30 secondes.</em>',
+    'res.card1.title': '📊 Votre commerce',
+    'res.type.label': 'Type de commerce',
+    'res.type.restaurant': 'Restaurant / Bar',
+    'res.type.salon': 'Salon de coiffure / Spa',
+    'res.type.gym': 'Gym / Studio fitness',
+    'res.type.cafe': 'Café / Boulangerie',
+    'res.type.garage': 'Garage / Auto',
+    'res.type.clinique': 'Clinique / Santé',
+    'res.clients.label': 'Clients par semaine',
+    'res.valeur.label': 'Valeur moyenne par client ($)',
+    'res.note.label': 'Note Google actuelle',
+    'res.card2.title': '📈 Impact estimé',
+    'res.conv.label': 'Taux de conversion SMS → Avis',
+    'res.conv.note': 'Moyenne de nos clients : 18-22%',
+    'res.note2.label': 'Progression de note Google estimée',
+    'res.before': 'Avant',
+    'res.after': 'Après 60 jours',
+    'res.plan.label': 'Forfait FiveStar AI',
+    'res.result.eyebrow': '📊 Votre estimation sur 12 mois',
+    'res.r1.label': 'Nouveaux avis\nGoogle générés',
+    'res.r2.label': 'Clients\nsupplémentaires',
+    'res.r3.label': 'Revenus\nsupplémentaires',
+    'res.r4.label': 'Retour sur\ninvestissement',
+    'res.cost.label': '💳 Coût FiveStar AI sur 12 mois',
+    'res.cta.btn1': 'Commencer maintenant →',
+    'res.cta.btn2': 'Voir les forfaits',
+    'res.disclaimer': '* Les estimations sont basées sur les données moyennes de nos clients. Les résultats réels peuvent varier selon votre type de commerce, votre région et votre clientèle.',
+
+    // ── ANNULATION ──
+    'ann.warning.icon': '⚠️',
+    'ann.warning.title': 'Vous souhaitez annuler ?',
+    'ann.warning.desc': 'Avant de continuer, sachez que vous allez perdre l\'accès à tout ce que FiveStar AI fait pour vous automatiquement.',
+    'ann.loss1.title': 'SMS automatiques',
+    'ann.loss1.desc': 'Plus aucun SMS envoyé à vos clients après leur visite.',
+    'ann.loss2.title': 'Réponses IA',
+    'ann.loss2.desc': 'Les avis négatifs resteront sans réponse automatique.',
+    'ann.loss3.title': 'Collecte d\'avis',
+    'ann.loss3.desc': 'Votre note Google arrêtera de progresser automatiquement.',
+    'ann.loss4.title': 'Dashboard & stats',
+    'ann.loss4.desc': 'Accès à votre tableau de bord supprimé.',
+    'ann.btn.keep': '← Garder mon abonnement',
+    'ann.btn.continue': 'Continuer vers l\'annulation →',
+    'ann.form.title': 'Formulaire d\'annulation',
+    'ann.form.desc': 'Remplissez ce formulaire. Votre demande sera traitée dans les 2 jours ouvrables avant votre prochaine date de renouvellement.',
+    'ann.notice': 'La demande d\'annulation doit être soumise au moins 2 jours ouvrables avant votre prochaine date de renouvellement.',
+    'ann.f.name': 'Nom complet',
+    'ann.f.email': 'Adresse email du compte',
+    'ann.f.email.hint': 'L\'email avec lequel vous avez créé votre compte FiveStar AI',
+    'ann.f.commerce': 'Nom du commerce',
+    'ann.f.plan': 'Forfait actuel',
+    'ann.f.plan.select': 'Sélectionnez votre forfait',
+    'ann.f.date': 'Date de votre prochain renouvellement',
+    'ann.f.date.hint': 'Trouvez-la dans votre email de confirmation d\'abonnement',
+    'ann.f.reason': 'Raison de l\'annulation',
+    'ann.f.reason.select': 'Sélectionnez une raison',
+    'ann.f.r1': 'Le prix est trop élevé pour mon budget',
+    'ann.f.r2': 'Je ne vois pas assez de résultats',
+    'ann.f.r3': 'Je passe à une autre solution',
+    'ann.f.r4': 'Mon commerce ferme ou est vendu',
+    'ann.f.r5': 'Je veux faire une pause temporaire',
+    'ann.f.r6': 'Problème technique non résolu',
+    'ann.f.r7': 'Autre raison',
+    'ann.f.detail': 'Pouvez-vous préciser ?',
+    'ann.f.callback': 'Souhaitez-vous qu\'on vous rappelle avant de finaliser ?',
+    'ann.f.callback.no': 'Non, procéder à l\'annulation directement',
+    'ann.f.callback.yes': 'Oui, j\'aimerais qu\'un fondateur me contacte d\'abord',
+    'ann.f.callback.hint': 'Si oui, on vous contacte dans les 24h',
+    'ann.f.submit': 'Soumettre ma demande d\'annulation',
+    'ann.f.back': '← Retour',
+    'ann.confirm.title': 'Demande reçue',
+    'ann.confirm.desc': 'Votre demande d\'annulation a été soumise. Vous recevrez une confirmation par email dans les prochaines heures.',
+    'ann.confirm.summary': 'Résumé de votre demande',
+    'ann.confirm.name': 'Nom',
+    'ann.confirm.commerce': 'Commerce',
+    'ann.confirm.plan': 'Forfait',
+    'ann.confirm.renewal': 'Renouvellement',
+    'ann.confirm.reason': 'Raison',
+    'ann.confirm.callback': 'Rappel souhaité',
+    'ann.timeline.title': 'Ce qui va se passer',
+    'ann.tl1': 'Vous recevez un email de confirmation de votre demande dans les prochaines heures',
+    'ann.tl2': 'Un fondateur FiveStar AI traite votre demande dans les 24h ouvrables',
+    'ann.tl3': 'Votre abonnement est annulé avant la prochaine date de renouvellement',
+    'ann.tl4': 'Vous recevez un email de confirmation finale d\'annulation',
+    'ann.btn.home': 'Retour à l\'accueil',
+    'ann.change.title': 'Vous changez d\'avis ?',
+    'ann.change.desc': 'Écrivez-nous avant la date de renouvellement et on annule la demande.',
+
+    // ── DÉMO ──
+    'demo.eyebrow': 'Démo interactive',
+    'demo.h1': 'Voyez FiveStar AI<br><em>en action.</em>',
+    'demo.p': 'Simulation complète et aléatoire — chaque démo montre un client et un commerce différent. Cliquez "Lancer la démo" pour commencer.',
+    'demo.btn.play': '▶ Lancer la démo',
+    'demo.btn.reset': '↺ Autre scénario',
+    'demo.cta.p': 'Ce système fonctionne automatiquement pour votre commerce, 24h/24. Opérationnel en moins d\'une journée.',
+    'demo.cta.btn': 'Démarrer maintenant →',
+    'demo.step1': 'Le client visite votre commerce',
+    'demo.step2': 'Numéro capturé automatiquement',
+    'demo.step3': 'SMS envoyé automatiquement',
+    'demo.step4.pos': 'Le client laisse un avis positif',
+    'demo.step4.neg': 'Le client laisse un avis négatif',
+    'demo.step5.pos': 'Votre note Google progresse',
+    'demo.step5.neg': 'Notre IA rédige une réponse',
+    'demo.step6': 'Vous êtes notifié — sans rien faire',
+  },
+
+  en: {
+    // NAV commun
+    'nav.back': '← Back',
+    'nav.account': '← My account',
+    'nav.start': 'Get started →',
+    'nav.how': 'How it works',
+    'nav.pricing': 'Pricing',
+    'nav.about': 'About',
+    'nav.login': 'My account',
+
+    // FOOTER commun
+    'footer.rights': '© 2026 FiveStar AI — All rights reserved',
+
+    'logo': '⭐',
+
+    // ── COMPARAISON ──
+    'comp.eyebrow': 'Comparison',
+    'comp.h1': 'FiveStar AI vs<br><em>the alternatives.</em>',
+    'comp.p': 'Manage your reputation yourself, hire an agency, or automate with FiveStar AI. Here\'s the honest comparison.',
+    'comp.col.manual': 'Do it yourself',
+    'comp.col.manual.price': 'Your time',
+    'comp.col.agency': 'Agency',
+    'comp.col.agency.price': '$1,500–$3,500/mo',
+    'comp.col.fivestar.badge': '⭐ RECOMMENDED',
+    'comp.col.fivestar.price': '$297–$599/mo',
+    'comp.row1': 'Monthly cost',
+    'comp.row1.sub': 'What you pay each month',
+    'comp.row1.manual': '$0',
+    'comp.row1.manual.note': 'But your time is worth something',
+    'comp.row1.agency': '$1,500–$3,500',
+    'comp.row2': 'Your time required',
+    'comp.row2.sub': 'Per week',
+    'comp.row2.manual': '3–5h',
+    'comp.row2.manual.note': 'Monitor, respond, follow up',
+    'comp.row2.agency': '30–60 min',
+    'comp.row2.agency.note': 'Meetings, approvals',
+    'comp.row2.fivestar': '0 min',
+    'comp.row2.fivestar.note': '100% automatic',
+    'comp.row3': 'Setup time',
+    'comp.row3.sub': 'Before you\'re up and running',
+    'comp.row3.manual': 'Several months',
+    'comp.row3.manual.note': 'Learn, organize, test',
+    'comp.row3.agency': 'Several weeks',
+    'comp.row3.agency.note': 'Onboarding, contract, briefings',
+    'comp.row3.fivestar': 'Less than a day',
+    'comp.row4': 'First results',
+    'comp.row4.sub': 'Time before seeing reviews',
+    'comp.row4.manual': '4–8 weeks',
+    'comp.row4.agency': '2–4 weeks',
+    'comp.row4.fivestar': 'Within the first week',
+    'comp.row5': 'Automatic review collection',
+    'comp.row5.sub': 'SMS sent after each visit',
+    'comp.row5.agency': 'Sometimes',
+    'comp.row6': 'Negative review responses',
+    'comp.row6.sub': 'Automatic, 24/7',
+    'comp.row6.manual.note': 'You have to do it manually',
+    'comp.row6.agency': '24–48h delay',
+    'comp.row6.fivestar': 'Under 2 minutes',
+    'comp.row7': 'No commitment',
+    'comp.row7.sub': 'Freedom to cancel',
+    'comp.row7.agency.note': '6–12 month contract often required',
+    'comp.row7.fivestar.note': 'Month to month',
+    'comp.row8': 'Dashboard & statistics',
+    'comp.row8.sub': 'Real-time tracking',
+    'comp.row8.agency': 'Monthly reports',
+    'comp.row8.fivestar': 'Real-time',
+    'comp.row9': 'Promotional SMS to clients',
+    'comp.row9.sub': 'Customer retention',
+    'comp.row9.agency': 'Optional — extra cost',
+    'comp.row9.fivestar.note': 'Included in Pro',
+    'comp.row10': 'Return on investment',
+    'comp.row10.sub': 'Estimated over 12 months',
+    'comp.row10.manual': 'Hard to measure',
+    'comp.row10.agency': '2–4x if agency performs',
+    'comp.detail1.title': '⚒️ Do it yourself',
+    'comp.detail1.p1': 'No direct cost',
+    'comp.detail1.p2': 'Full control over each response',
+    'comp.detail1.c1': '3–5 hours per week minimum',
+    'comp.detail1.c2': 'Negative reviews at night with no quick response',
+    'comp.detail1.c3': 'No systematic review collection',
+    'comp.detail1.c4': 'Results vary based on your availability',
+    'comp.detail1.c5': 'You lose time from your core business',
+    'comp.detail2.title': '🏢 Hire an agency',
+    'comp.detail2.p1': 'Dedicated human expertise',
+    'comp.detail2.p2': 'Complete marketing strategy possible',
+    'comp.detail2.c1': '$1,500–$3,500/month minimum',
+    'comp.detail2.c2': '6 to 12 month commitment often required',
+    'comp.detail2.c3': 'Review response delay of 24–48h',
+    'comp.detail2.c4': 'Meetings and approvals = your time anyway',
+    'comp.detail2.c5': 'Results vary depending on the agency',
+    'comp.detail3.badge': '⭐ BEST OPTION',
+    'comp.detail3.title': '🤖 FiveStar AI',
+    'comp.detail3.p1': '$297–$599/month, no commitment',
+    'comp.detail3.p2': 'Up and running quickly',
+    'comp.detail3.p3': 'Automatic responses in under 2 minutes, 24/7',
+    'comp.detail3.p4': 'Zero hours of your time after launch',
+    'comp.detail3.p5': 'Real-time dashboard, monthly reports',
+    'comp.detail3.p6': 'Promotional SMS included (Pro and Premium)',
+    'comp.detail3.p7': 'Cancel anytime if not satisfied',
+    'comp.verdict.h2': 'The honest conclusion',
+    'comp.verdict.p1': 'If you have 3–5 hours per week and great discipline, manual management can work. If you have a $2,000/month budget and want a full marketing strategy, an agency might be worth it.',
+    'comp.verdict.p2': 'But if you want fast, automatic results with no effort — for an accessible price — FiveStar AI is the best option for a local business.',
+    'comp.verdict.btn1': 'Try FiveStar AI →',
+    'comp.verdict.btn2': 'Estimate your results',
+
+    // ── FORFAITS ──
+    'plans.eyebrow': 'Pricing',
+    'plans.h1': 'Choose your<br><em>level of automation</em>',
+    'plans.p': 'No contract. Quick setup. First Google review this week.',
+    'plans.process.eyebrow': 'The process',
+    'plans.process.h2': 'What happens after you sign up',
+    'plans.step1.num': 'STEP 01',
+    'plans.step1.h3': 'You choose your plan',
+    'plans.step1.p': 'Select the plan that fits your business. Secure payment. You receive a confirmation email within minutes.',
+    'plans.step2.num': 'STEP 02',
+    'plans.step2.h3': 'We contact you within 24h',
+    'plans.step2.p': 'One of our founders contacts you directly to schedule your setup. We need 10 minutes of your time, that\'s it.',
+    'plans.step3.num': 'STEP 03',
+    'plans.step3.h3': 'Complete quick setup',
+    'plans.step3.p': 'We configure everything: personalized QR Code, automatic SMS, connection to your Google listing. Nothing to install or learn.',
+    'plans.step4.num': 'STEP 04',
+    'plans.step4.h3': 'The system runs itself',
+    'plans.step4.p': 'From the first customer who scans your QR Code, the system is live. You get your first Google reviews automatically.',
+    'plans.tarifs.eyebrow': 'Pricing',
+    'plans.tarifs.h2': 'Three plans, zero complications',
+    'plans.starter.name': 'Starter',
+    'plans.starter.period': 'per month',
+    'plans.starter.desc': 'Perfect to get started. Everything you need to automate your Google reviews and protect your reputation, effortlessly.',
+    'plans.starter.btn': 'Choose Starter →',
+    'plans.starter.f1': 'Automatic customer number capture via QR Code',
+    'plans.starter.f1n': 'Personalized form installed in 5 minutes',
+    'plans.starter.f2': 'Automatic SMS sent 2h after each visit',
+    'plans.starter.f2n': 'Personalized message with direct link to your Google listing',
+    'plans.starter.f3': 'AI-generated responses to negative reviews',
+    'plans.starter.f3n': 'Claude AI writes a professional response in seconds',
+    'plans.starter.f4': 'Complete setup included',
+    'plans.starter.f4n': 'We configure everything for you, zero effort on your part',
+    'plans.pro.badge': '⭐ MOST POPULAR',
+    'plans.pro.name': 'Pro',
+    'plans.pro.period': 'per month',
+    'plans.pro.desc': 'For businesses that want to go further. Retain your existing customers and track your performance in real time.',
+    'plans.pro.btn': 'Choose Pro →',
+    'plans.pro.f1': 'Everything in Starter',
+    'plans.pro.f2': 'Monthly promotional SMS sent to your entire base',
+    'plans.pro.f2n': 'We write and send a promotion every month to your customers',
+    'plans.pro.f3': 'Detailed monthly report',
+    'plans.pro.f3n': 'Number of reviews, rating progress, customers contacted',
+    'plans.pro.f4': 'Manager dashboard',
+    'plans.pro.f4n': 'Private web page to track your stats in real time',
+    'plans.premium.name': 'Premium',
+    'plans.premium.period': 'per month',
+    'plans.premium.desc': 'The complete solution. Automate your reputation AND your hiring. Focus on what you do best.',
+    'plans.premium.btn': 'Choose Premium →',
+    'plans.premium.f1': 'Everything in Pro',
+    'plans.premium.f2': 'AI-automated recruiting',
+    'plans.premium.f2n': 'AI sorts and analyzes incoming resumes. You only receive the right profiles.',
+    'plans.premium.f3': 'Priority support',
+    'plans.premium.f3n': 'Response guaranteed in under 4h at all times',
+    'plans.premium.f4': '10-minute configuration',
+    'plans.premium.f4n': 'Even for advanced features',
+    'plans.faq.eyebrow': 'Frequently asked questions',
+    'plans.faq.h2': 'Everything you want to know',
+    'plans.faq1.q': 'Do I need to sign a contract?',
+    'plans.faq1.a': 'No. FiveStar works on a monthly basis. You can cancel anytime by emailing admin@fivestarai.ca.',
+    'plans.faq2.q': 'How does the QR Code work?',
+    'plans.faq2.a': 'We create a personalized QR Code for your business. You display it at your counter. When a customer scans it, their number is captured automatically.',
+    'plans.faq3.q': 'Do I need to do anything after setup?',
+    'plans.faq3.a': 'No. That\'s the point. Once the Quick setup is done, the system runs itself. SMS go out automatically, negative review responses are generated automatically.',
+    'plans.faq4.q': 'How long before seeing results?',
+    'plans.faq4.a': 'Usually within the first week. The first customer to scan your QR Code receives an SMS 2h after their visit.',
+    'plans.faq5.q': 'How does payment work?',
+    'plans.faq5.a': 'Payment is processed securely. Your subscription is charged automatically each month.',
+    'plans.cta.h2': 'Questions? We\'ll answer them.',
+    'plans.cta.p': 'Write to us directly. We respond within 24h.',
+    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+
+    // ── POLITIQUE ──
+    'pol.eyebrow': 'Legal',
+    'pol.h1': 'Privacy Policy',
+    'pol.date': 'Last updated: June 2026',
+    'pol.intro': 'FiveStar AI ("we", "our") is committed to protecting the privacy of the personal information of its clients and end users.',
+    'pol.s1.h': '1. Data collected',
+    'pol.s1.p': 'As part of providing our services, we collect the following types of data:',
+    'pol.s2.h': '2. Use of data',
+    'pol.s2.p': 'The data collected is used exclusively for:',
+    'pol.s3.h': '3. Data sharing',
+    'pol.s3.p': 'We never sell your data to third parties.',
+    'pol.s4.h': '4. Data retention',
+    'pol.s4.p': 'Customer phone numbers are kept as long as the partner business is subscribed. Upon cancellation, data is deleted within 30 days.',
+    'pol.s5.h': '5. User rights',
+    'pol.s6.h': '6. Security',
+    'pol.s7.h': '7. Payments',
+    'pol.s8.h': '8. Modifications',
+    'pol.s9.h': '9. Contact',
+
+    // ── RÉSULTATS ──
+    'res.eyebrow': 'Estimate your results',
+    'res.h1': 'Your estimated results<br><em>in 30 seconds.</em>',
+    'res.card1.title': '📊 Your business',
+    'res.type.label': 'Business type',
+    'res.type.restaurant': 'Restaurant / Bar',
+    'res.type.salon': 'Hair salon / Spa',
+    'res.type.gym': 'Gym / Fitness studio',
+    'res.type.cafe': 'Café / Bakery',
+    'res.type.garage': 'Garage / Auto',
+    'res.type.clinique': 'Clinic / Health',
+    'res.clients.label': 'Customers per week',
+    'res.valeur.label': 'Average value per customer ($)',
+    'res.note.label': 'Current Google rating',
+    'res.card2.title': '📈 Estimated impact',
+    'res.conv.label': 'SMS → Review conversion rate',
+    'res.conv.note': 'Average of our clients: 18-22%',
+    'res.note2.label': 'Estimated Google rating improvement',
+    'res.before': 'Before',
+    'res.after': 'After 60 days',
+    'res.plan.label': 'FiveStar AI plan',
+    'res.result.eyebrow': '📊 Your 12-month estimate',
+    'res.r1.label': 'New Google reviews\ngenerated',
+    'res.r2.label': 'Additional\ncustomers',
+    'res.r3.label': 'Additional\nrevenue',
+    'res.r4.label': 'Return on\ninvestment',
+    'res.cost.label': '💳 FiveStar AI cost over 12 months',
+    'res.cta.btn1': 'Get started now →',
+    'res.cta.btn2': 'See pricing',
+    'res.disclaimer': '* Estimates are based on average data from our clients. Actual results may vary by business type, region, and customer base.',
+
+    // ── ANNULATION ──
+    'ann.warning.icon': '⚠️',
+    'ann.warning.title': 'You want to cancel?',
+    'ann.warning.desc': 'Before continuing, know that you will lose access to everything FiveStar AI does for you automatically.',
+    'ann.loss1.title': 'Automatic SMS',
+    'ann.loss1.desc': 'No more SMS sent to your customers after their visits.',
+    'ann.loss2.title': 'AI responses',
+    'ann.loss2.desc': 'Negative reviews will go unanswered automatically.',
+    'ann.loss3.title': 'Review collection',
+    'ann.loss3.desc': 'Your Google rating will stop progressing automatically.',
+    'ann.loss4.title': 'Dashboard & stats',
+    'ann.loss4.desc': 'Access to your dashboard will be removed.',
+    'ann.btn.keep': '← Keep my subscription',
+    'ann.btn.continue': 'Continue to cancellation →',
+    'ann.form.title': 'Cancellation form',
+    'ann.form.desc': 'Fill out this form. Your request will be processed within 2 business days before your next renewal date.',
+    'ann.notice': 'The cancellation request must be submitted at least 2 business days before your next renewal date.',
+    'ann.f.name': 'Full name',
+    'ann.f.email': 'Account email address',
+    'ann.f.email.hint': 'The email you used to create your FiveStar AI account',
+    'ann.f.commerce': 'Business name',
+    'ann.f.plan': 'Current plan',
+    'ann.f.plan.select': 'Select your plan',
+    'ann.f.date': 'Your next renewal date',
+    'ann.f.date.hint': 'Find it in your subscription confirmation email',
+    'ann.f.reason': 'Reason for cancellation',
+    'ann.f.reason.select': 'Select a reason',
+    'ann.f.r1': 'The price is too high for my budget',
+    'ann.f.r2': 'I\'m not seeing enough results',
+    'ann.f.r3': 'I\'m switching to another solution',
+    'ann.f.r4': 'My business is closing or being sold',
+    'ann.f.r5': 'I want to take a temporary break',
+    'ann.f.r6': 'Unresolved technical issue',
+    'ann.f.r7': 'Other reason',
+    'ann.f.detail': 'Can you elaborate?',
+    'ann.f.callback': 'Would you like us to call you before finalizing?',
+    'ann.f.callback.no': 'No, proceed with cancellation directly',
+    'ann.f.callback.yes': 'Yes, I\'d like a founder to contact me first',
+    'ann.f.callback.hint': 'If yes, we\'ll contact you within 24h',
+    'ann.f.submit': 'Submit my cancellation request',
+    'ann.f.back': '← Back',
+    'ann.confirm.title': 'Request received',
+    'ann.confirm.desc': 'Your cancellation request has been submitted. You\'ll receive a confirmation email within the next few hours.',
+    'ann.confirm.summary': 'Request summary',
+    'ann.confirm.name': 'Name',
+    'ann.confirm.commerce': 'Business',
+    'ann.confirm.plan': 'Plan',
+    'ann.confirm.renewal': 'Renewal',
+    'ann.confirm.reason': 'Reason',
+    'ann.confirm.callback': 'Callback requested',
+    'ann.timeline.title': 'What will happen',
+    'ann.tl1': 'You receive a confirmation email of your request within the next few hours',
+    'ann.tl2': 'A FiveStar AI founder processes your request within 24 business hours',
+    'ann.tl3': 'Your subscription is cancelled before the next renewal date',
+    'ann.tl4': 'You receive a final cancellation confirmation email',
+    'ann.btn.home': 'Back to home',
+    'ann.change.title': 'Changed your mind?',
+    'ann.change.desc': 'Write to us before the renewal date and we\'ll cancel the request.',
+
+    // ── DÉMO ──
+    'demo.eyebrow': 'Interactive demo',
+    'demo.h1': 'See FiveStar AI<br><em>in action.</em>',
+    'demo.p': 'Full random simulation — each demo shows a different customer and business. Click "Launch demo" to start.',
+    'demo.btn.play': '▶ Launch demo',
+    'demo.btn.reset': '↺ New scenario',
+    'demo.cta.p': 'This system runs automatically for your business, 24/7. Up and running quickly.',
+    'demo.cta.btn': 'Start now →',
+    'demo.step1': 'Customer visits your business',
+    'demo.step2': 'Number captured automatically',
+    'demo.step3': 'SMS sent automatically',
+    'demo.step4.pos': 'Customer leaves a positive review',
+    'demo.step4.neg': 'Customer leaves a negative review',
+    'demo.step5.pos': 'Your Google rating goes up',
+    'demo.step5.neg': 'Our AI writes a response',
+    'demo.step6': 'You\'re notified — without doing anything',
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// MOTEUR DE TRADUCTION
+// ═══════════════════════════════════════════════════════
+function t(key) {
+  const lang = localStorage.getItem('fsLang') || 'fr'
+  return LANG[lang]?.[key] || LANG['fr']?.[key] || key
+}
+
+function applyLang() {
+  const lang = localStorage.getItem('fsLang') || 'fr'
+  document.documentElement.lang = lang
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18n]
+    if (v !== undefined) el.textContent = v
+  })
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18nHtml]
+    if (v !== undefined) el.innerHTML = v
+  })
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = LANG[lang]?.[el.dataset.i18nPlaceholder]
+    if (v !== undefined) el.placeholder = v
+  })
+
+  // Boutons actifs
+  document.querySelectorAll('.lang-btn[data-lang]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang)
+  })
+}
+
+function setLang(lang) {
+  localStorage.setItem('fsLang', lang)
+  applyLang()
+  // Callback optionnel par page (ex: resultats.html recalcule)
+  if (typeof onLangChange === 'function') onLangChange(lang)
+}
+
+// Style commun du toggle (injecté automatiquement)
+function injectLangToggle(containerSelector) {
+  const container = document.querySelector(containerSelector)
+  if (!container) return
+  const toggle = document.createElement('div')
+  toggle.className = 'lang-toggle'
+  toggle.innerHTML = `
+    <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  `
+  container.appendChild(toggle)
+}
+
+  </script>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
-  <a href="dashboard.html" class="nav-back">← Mon compte</a>
+  <a href="index.html" class="logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</a>
+  <a href="dashboard.html" class="nav-back" data-i18n="nav.account">← Mon compte</a>
 </nav>
 
 <div class="page">
@@ -92,8 +766,8 @@
   <div class="step-view show" id="step-0">
     <div class="warning-card">
       <div class="warning-icon">⚠️</div>
-      <div class="warning-title">Vous souhaitez annuler ?</div>
-      <div class="warning-desc">Avant de continuer, sachez que vous allez perdre l'accès à tout ce que FiveStar AI fait pour vous automatiquement.</div>
+      <div class="warning-title" data-i18n="ann.warning.title">Vous souhaitez annuler ?</div>
+      <div class="warning-desc">Votre demande sera traitée dans les <strong style="color:#fff">2 jours ouvrables</strong> suivant la réception. Un membre de notre équipe vous contactera pour confirmer avant de mettre fin à votre abonnement.</div>
 
       <div class="loss-grid">
         <div class="loss-item">
@@ -114,12 +788,8 @@
         </div>
       </div>
 
-      <button class="btn-keep" onclick="window.location.href='dashboard.html'">
-        ← Garder mon abonnement
-      </button>
-      <button class="btn-cancel-anyway" onclick="goStep(1)">
-        Continuer vers l'annulation →
-      </button>
+      <button class="btn-keep" onclick="window.location.href='dashboard.html'" data-i18n="ann.btn.keep">← Garder mon abonnement</button>
+      <button class="btn-cancel-anyway" onclick="goStep(1)" data-i18n="ann.btn.continue">Continuer vers l'annulation →</button>
     </div>
   </div>
 
@@ -127,12 +797,12 @@
   <div class="step-view" id="step-1">
     <div class="form-card">
       <div class="form-icon">📋</div>
-      <div class="form-title">Formulaire d'annulation</div>
+      <div class="form-title" data-i18n="ann.form.title">Formulaire d'annulation</div>
       <div class="form-desc">Remplissez ce formulaire. Votre demande sera traitée dans les 2 jours ouvrables avant votre prochaine date de renouvellement.</div>
 
       <div class="notice-box">
         <span style="font-size:16px;flex-shrink:0">⚠️</span>
-        <span><strong style="color:#fff">Important :</strong> La demande d'annulation doit être soumise au moins <strong style="color:#fff">2 jours ouvrables avant</strong> votre prochaine date de renouvellement pour éviter d'être facturé pour la période suivante.</span>
+        <span><strong style="color:#fff">Important :</strong> Votre demande doit être soumise au moins <strong style="color:#fff">2 jours ouvrables avant</strong> votre prochaine date de renouvellement. On vous contacte pour confirmer — c'est nous qui mettons fin à l'abonnement.</span>
       </div>
 
       <div class="field">
@@ -179,13 +849,9 @@
         <label>Pouvez-vous préciser ?</label>
         <textarea id="f-detail" rows="3" placeholder="Dites-nous en plus..."></textarea>
       </div>
-      <div class="field">
-        <label>Souhaitez-vous qu'on vous rappelle avant de finaliser ?</label>
-        <select id="f-rappel">
-          <option value="non">Non, procéder à l'annulation directement</option>
-          <option value="oui">Oui, j'aimerais qu'un fondateur me contacte d'abord</option>
-        </select>
-        <div class="field-hint">Si oui, on vous contacte dans les 24h pour voir si on peut arranger quelque chose</div>
+      <div style="background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.15);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--muted);line-height:1.65;">
+        <strong style="color:var(--gold)">📞 On vous contacte toujours avant</strong><br>
+        Après réception de votre formulaire, un membre de l'équipe FiveStar AI vous contactera dans les 24h ouvrables pour confirmer votre demande. C'est nous qui mettons fin à l'abonnement de notre côté.
       </div>
 
       <button class="btn-submit" onclick="submitForm()">Soumettre ma demande d'annulation</button>
@@ -197,7 +863,7 @@
   <div class="step-view" id="step-2">
     <div class="confirm-card">
       <div class="confirm-icon">✅</div>
-      <div class="confirm-title">Demande reçue</div>
+      <div class="confirm-title" data-i18n="ann.confirm.title">Demande reçue</div>
       <div class="confirm-desc">Votre demande d'annulation a été soumise. Vous recevrez une confirmation par email dans les prochaines heures.</div>
 
       <div class="confirm-summary">
@@ -207,7 +873,7 @@
         <div class="cs-row"><div class="cs-label">Forfait</div><div class="cs-val" id="s-forfait">—</div></div>
         <div class="cs-row"><div class="cs-label">Renouvellement</div><div class="cs-val" id="s-date">—</div></div>
         <div class="cs-row"><div class="cs-label">Raison</div><div class="cs-val" id="s-raison">—</div></div>
-        <div class="cs-row"><div class="cs-label">Rappel souhaité</div><div class="cs-val" id="s-rappel">—</div></div>
+
       </div>
 
       <div class="timeline-box">
@@ -218,7 +884,7 @@
         <div class="tl-item"><div class="tl-dot">4</div><span>Vous recevez un email de confirmation finale d'annulation de notre système de paiement</span></div>
       </div>
 
-      <a href="index.html" class="btn-home">Retour à l'accueil</a>
+      <a href="index.html" class="btn-home" data-i18n="ann.btn.home">Retour à l'accueil</a>
     </div>
 
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
@@ -269,51 +935,67 @@ function submitForm() {
   const forfait = document.getElementById('f-forfait').value
   const date = document.getElementById('f-date').value
   const raison = document.getElementById('f-raison').value
-  const rappel = document.getElementById('f-rappel').value
 
   if (!nom || !email || !commerce || !forfait || !date || !raison) {
     alert('Veuillez remplir tous les champs obligatoires.')
     return
   }
 
-  // Remplir le résumé
+  // Remplir le résumé de confirmation
   document.getElementById('s-nom').textContent = nom
   document.getElementById('s-commerce').textContent = commerce
   document.getElementById('s-forfait').textContent = forfait
   document.getElementById('s-date').textContent = new Date(date).toLocaleDateString('fr-CA', {year:'numeric',month:'long',day:'numeric'})
   document.getElementById('s-raison').textContent = document.getElementById('f-raison').options[document.getElementById('f-raison').selectedIndex].text
-  document.getElementById('s-rappel').textContent = rappel === 'oui' ? 'Oui' : 'Non'
 
-  // Adapter le texte de la timeline selon rappel
-  if (rappel === 'oui') {
-    document.getElementById('tl-rappel-text').textContent = 'Un fondateur vous contacte dans les 24h pour discuter avant de finaliser'
-  }
-
-  // Construire et ouvrir l'email
+  // Construire et envoyer l'email à l'équipe FiveStar AI
   const raisonTexte = document.getElementById('f-raison').options[document.getElementById('f-raison').selectedIndex].text
   const detail = document.getElementById('f-detail').value || 'Non précisé'
-  const sujet = encodeURIComponent(`Demande d'annulation — ${commerce} (${forfait})`)
+  const dateFormatee = new Date(date).toLocaleDateString('fr-CA', {year:'numeric',month:'long',day:'numeric'})
+  const sujet = encodeURIComponent(`🚨 Demande d'annulation — ${commerce} (${forfait})`)
   const corps = encodeURIComponent(
-    `DEMANDE D'ANNULATION FIVESTAR AI\n` +
-    `=====================================\n\n` +
-    `Nom : ${nom}\n` +
-    `Email : ${email}\n` +
-    `Commerce : ${commerce}\n` +
-    `Forfait : ${forfait}\n` +
-    `Date de renouvellement : ${new Date(date).toLocaleDateString('fr-CA', {year:'numeric',month:'long',day:'numeric'})}\n\n` +
-    `Raison : ${raisonTexte}\n` +
-    `Détails : ${detail}\n\n` +
-    `Rappel souhaité : ${rappel === 'oui' ? 'OUI — Contacter le client avant de finaliser' : 'NON — Procéder directement'}\n\n` +
-    `=====================================\n` +
-    `ACTION REQUISE : Traiter cette demande au moins 2 jours ouvrables avant le ${new Date(date).toLocaleDateString('fr-CA', {year:'numeric',month:'long',day:'numeric'})}`
+    `DEMANDE D'ANNULATION — ACTION REQUISE
+` +
+    `=====================================
+
+` +
+    `Client : ${nom}
+` +
+    `Email : ${email}
+` +
+    `Commerce : ${commerce}
+` +
+    `Forfait : ${forfait}
+` +
+    `Renouvellement : ${dateFormatee}
+
+` +
+    `Raison : ${raisonTexte}
+` +
+    `Détails : ${detail}
+
+` +
+    `=====================================
+` +
+    `⚠️ CONTACTER LE CLIENT DANS LES 24H OUVRABLES
+` +
+    `⚠️ METTRE FIN À L'ABONNEMENT AVANT LE ${dateFormatee}
+` +
+    `=====================================
+` +
+    `Contact client : ${email}`
   )
 
-  // Ouvrir le client email avec tout pré-rempli
   window.location.href = `mailto:admin@fivestarai.ca?subject=${sujet}&body=${corps}`
-
-  // Aller à la page de confirmation
   setTimeout(() => goStep(2), 500)
 }
+</script>
+
+<script>
+// Appliquer la langue sauvegardée (choisie sur l'index)
+document.addEventListener('DOMContentLoaded', function() {
+  applyLang();
+});
 </script>
 </body>
 </html>
