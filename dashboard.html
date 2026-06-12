@@ -995,7 +995,7 @@ function renderLocked(page){
   set(`<div class="locked-card"><div class="locked-icon">🔒</div><div class="locked-title">${names[page]||page} — Forfait ${plans[page]||'supérieur'}</div><div class="locked-text">Cette fonctionnalité est disponible à partir du forfait ${plans[page]||'supérieur'}. Passez à un forfait supérieur pour y accéder.</div><button class="btn-upgrade" onclick="goPage('forfait',null)">Voir les forfaits →</button></div>`)
 }
 
-async async function supprimerCompte(){
+async function supprimerCompte(){
   if(!confirm('Êtes-vous sûr ? Cette action est irréversible.')) return
   if(!confirm('Dernière confirmation — supprimer définitivement votre compte ?')) return
   try {
@@ -1021,7 +1021,7 @@ async async function supprimerCompte(){
   }
 }
 
-function doLogout(){
+async function doLogout(){
   try{ await _sb.auth.signOut() }catch(e){}
   user=null
   document.getElementById('dash-page').style.display='none'
