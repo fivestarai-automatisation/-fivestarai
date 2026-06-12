@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FiveStar AI — Email confirmé</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050810;--surface:#090d1a;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .glow{position:fixed;top:-10%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(34,197,94,.06) 0%,transparent 65%);pointer-events:none}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:52px 40px;width:100%;max-width:440px;text-align:center;position:relative;z-index:1;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+    .icon{font-size:64px;margin-bottom:20px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+    @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+    .title{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:10px}
+    .desc{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:32px}
+    .btn{display:block;background:var(--gold);color:#000;font-weight:800;font-size:15px;padding:14px;border-radius:10px;text-decoration:none;transition:all .2s}
+    .btn:hover{background:var(--gold2);transform:translateY(-1px)}
+    .logo{font-size:15px;font-weight:900;color:#fff;margin-bottom:32px;display:block}
+    .logo span{color:var(--gold)}
+    .error-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:var(--red);display:none}
+  </style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="card">
+  <a href="index.html" class="logo">⭐ Five<span>Star</span> AI</a>
+  <div id="main-view">
+    <div class="icon">✅</div>
+    <div class="title">Adresse email confirmée !</div>
+    <div class="desc">Votre compte est maintenant actif. Connectez-vous pour accéder à votre espace gérant.</div>
+    <div class="error-box" id="err-box"></div>
+    <a href="dashboard.html" class="btn">Se connecter →</a>
+  </div>
+  <div id="error-view" style="display:none">
+    <div class="icon">❌</div>
+    <div class="title">Lien invalide ou expiré</div>
+    <div class="desc">Ce lien de confirmation est invalide ou a déjà été utilisé. Recréez votre compte ou reconnectez-vous.</div>
+    <a href="dashboard.html" class="btn">Retour à la connexion →</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _sb = window.supabase.createClient(
+  'https://teceosbjdipzvvkmxixd.supabase.co',
+  'sb_publishable_uY6yWPVgjkk9TsG1kj-smA_4Hvsa5A9'
+)
+
+// Vérifier si c'est une erreur ou un succès dans l'URL
+const hash = window.location.hash
+const params = new URLSearchParams(hash.replace('#',''))
+const errorCode = params.get('error_code')
+const errorDesc = params.get('error_description')
+
+if(errorCode || errorDesc) {
+  document.getElementById('main-view').style.display = 'none'
+  document.getElementById('error-view').style.display = 'block'
+} else {
+  // Confirmation réussie — la session est automatiquement établie par Supabase
+  document.getElementById('main-view').style.display = 'block'
+}
+</script>
+</body>
+</html>
