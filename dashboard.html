@@ -8,6 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <!-- Supabase Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const _sb = window.supabase.createClient('https://teceosbjdipzvvkmxixd.supabase.co','sb_publishable_uY6yWPVgjkk9TsG1kj-smA_4Hvsa5A9')
+  </script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#050810;--surface:#090d1a;--surface2:#0e1322;--border:#16203a;--gold:#f5c842;--gold2:#d4a800;--text:#e2e6f0;--muted:#6b7591;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa;--orange:#f97316}
@@ -250,16 +255,8 @@
     .notif-time{font-size:10.5px;color:#3a4560;margin-top:3px}
 
     /* RESPONSIVE */
-    .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;justify-content:center;align-items:center}
-    .ham-btn span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
-    .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-    .ham-btn.open span:nth-child(2){opacity:0}
-    .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:149;backdrop-filter:blur(2px)}
-    .mob-overlay.show{display:block}
     @media(max-width:768px){
-      .ham-btn{display:flex}
-      .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:150;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 32px rgba(0,0,0,.5)}
+      .sidebar{transform:translateX(-100%)}
       .sidebar.mobile-open{transform:translateX(0)}
       .main{margin-left:0}
       .kpi-grid{grid-template-columns:repeat(2,1fr)}
@@ -277,7 +274,7 @@
     <div class="auth-glow"></div>
     <div class="auth-grid"></div>
     <div class="auth-card" id="auth-card">
-      <div class="auth-logo"><div class="auth-logo-text"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div></div>
+      <div class="auth-logo"><div class="auth-logo-text">⭐ FiveStar AI</div></div>
       <div class="auth-subtitle">Portail gérant</div>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Connexion</button>
@@ -330,10 +327,9 @@
 <!-- DASHBOARD -->
 <div id="dash-page" style="display:none">
   <div class="dash">
-    <div class="mob-overlay" id="mob-overlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
       <div class="sb-header">
-        <div class="sb-logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div>
+        <div class="sb-logo">⭐ FiveStar AI</div>
         <div class="sb-commerce" id="sb-commerce-name">—</div>
         <div class="sb-type" id="sb-commerce-type">—</div>
         <div id="sb-plan-tag"></div>
@@ -351,9 +347,6 @@
         <div class="sb-item" id="nav-smsPromo" onclick="goPage('smsPromo',this)"><span>📣</span> SMS promotionnel</div>
         <div class="sb-section-label">Premium</div>
         <div class="sb-item" id="nav-recrutement" onclick="goPage('recrutement',this)"><span>👥</span> Recrutement IA</div>
-        <div class="sb-section-label">Démarrage</div>
-        <div class="sb-item" onclick="window.location.href='onboarding.html'"><span>🚀</span> Guide de démarrage</div>
-        <div class="sb-item" onclick="goPage('lien',this)"><span>🔗</span> Mon lien d'avis</div>
         <div class="sb-section-label">Compte</div>
         <div class="sb-item" onclick="goPage('forfait',this)"><span>💳</span> Mon forfait</div>
         <div class="sb-item" onclick="goPage('parametres',this)"><span>⚙️</span> Paramètres</div>
@@ -372,9 +365,6 @@
     <div class="main">
       <div class="topbar">
         <div class="tb-left">
-          <button class="ham-btn" id="ham-btn" onclick="toggleSidebar()" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
           <span class="tb-icon" id="tb-icon">📊</span>
           <span class="tb-title" id="tb-title">Tableau de bord</span>
         </div>
@@ -395,27 +385,10 @@
 </div>
 
 <script>
-// ── SIDEBAR MOBILE ──
-function toggleSidebar(){
-  const sb=document.getElementById('sidebar')
-  const ov=document.getElementById('mob-overlay')
-  const btn=document.getElementById('ham-btn')
-  const isOpen=sb.classList.contains('mobile-open')
-  sb.classList.toggle('mobile-open',!isOpen)
-  ov.classList.toggle('show',!isOpen)
-  btn.classList.toggle('open',!isOpen)
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('mobile-open')
-  document.getElementById('mob-overlay').classList.remove('show')
-  document.getElementById('ham-btn').classList.remove('open')
-}
-
 // ── INIT EMAILJS ──
 (function(){
-  try {
-    if(window.emailjs) emailjs.init({publicKey:'YOUR_PUBLIC_KEY'})
-  } catch(e) { console.log('EmailJS init skip'); }
+  // Remplace 'YOUR_PUBLIC_KEY' par ta clé EmailJS une fois configuré
+  if(window.emailjs) emailjs.init({publicKey:'YOUR_PUBLIC_KEY'})
 })()
 
 // ── DONNÉES ──
@@ -494,15 +467,34 @@ function showMsg(msg,type='err'){
   document.getElementById('auth-msg').innerHTML=`<div class="auth-${type}">${msg}</div>`
 }
 
-function doLogin(){
+async function doLogin(){
   const email=document.getElementById('l-email').value.trim()
   const pass=document.getElementById('l-pass').value
+  if(!email||!pass){showMsg('Entrez votre email et mot de passe.');return}
+  const btn=document.getElementById('btn-login')
+  btn.disabled=true; btn.textContent='Connexion...'
+  // Comptes démo en premier
   const acc=DEMOS[email]
   if(acc&&acc.pass===pass){
     user={email,...acc}
+    btn.disabled=false; btn.textContent='Se connecter →'
+    launchDash(); return
+  }
+  // Supabase Auth pour les vrais comptes
+  try {
+    const {data,error}=await _sb.auth.signInWithPassword({email,password:pass})
+    if(error){
+      showMsg(error.message.includes('Invalid')?'Email ou mot de passe incorrect.':error.message)
+      btn.disabled=false; btn.textContent='Se connecter →'; return
+    }
+    const {data:profile}=await _sb.from('profiles').select('*').eq('id',data.user.id).single()
+    const base=DEMOS['demo@restaurant.com']
+    user={...base,...(profile||{}),email:data.user.email,plan:(profile?.plan)||'starter'}
+    btn.disabled=false; btn.textContent='Se connecter →'
     launchDash()
-  }else{
-    showMsg('Email ou mot de passe incorrect. Utilisez un compte démo.')
+  } catch(e){
+    showMsg('Erreur de connexion. Réessayez.')
+    btn.disabled=false; btn.textContent='Se connecter →'
   }
 }
 
@@ -514,72 +506,67 @@ async function doSignup(){
   const tel=document.getElementById('s-tel').value.trim()
   const email=document.getElementById('s-email').value.trim()
   const pass=document.getElementById('s-pass').value
-
   if(!prenom||!nom||!commerce||!type||!email||!pass){showMsg('Veuillez remplir tous les champs.');return}
-  if(pass.length<8){showMsg('Le mot de passe doit contenir au moins 8 caractères.');return}
-  if(!email.includes('@')){showMsg('Adresse email invalide.');return}
-
+  if(pass.length<8){showMsg('Mot de passe: 8 caractères minimum.');return}
   const btn=document.getElementById('btn-signup')
-  btn.disabled=true
-  btn.textContent='Création en cours...'
-
-  // Afficher l'écran de confirmation email
+  btn.disabled=true; btn.textContent='Création en cours...'
   const p=PLANS[selectedPlan]
-  document.getElementById('auth-card').innerHTML=`
-    <div class="email-confirm-screen">
-      <div class="ec-icon">📧</div>
-      <div class="ec-title">Confirmez votre adresse email</div>
-      <div class="ec-desc">Nous avons envoyé un lien de confirmation à :</div>
-      <div class="ec-email-box">${email}</div>
-      <div class="ec-steps">
-        <div class="ec-step"><span style="color:var(--green)">✅</span> Compte créé — ${commerce} · Forfait ${p.name}</div>
-        <div class="ec-step"><span style="color:var(--gold)">📧</span> Email de confirmation envoyé à ${email}</div>
-        <div class="ec-step"><span style="color:var(--gold)">📞</span> Un fondateur vous contacte dans les <strong>24h</strong> pour finaliser le paiement et le setup</div>
-        <div class="ec-step"><span style="color:var(--muted)">💳</span> Paiement sécurisé traité lors du setup</div>
-        <div class="ec-step"><span style="color:var(--muted)">🚀</span> Système actif dès le setup complété</div>
-      </div>
-      <button class="btn-resend" onclick="resendEmail('${email}','${commerce}','${p.name}')">Renvoyer l'email</button>
-      <div style="margin-top:16px;font-size:13px;color:var(--muted)">Déjà confirmé ? <span style="color:var(--gold);cursor:pointer" onclick="location.reload()">Se connecter →</span></div>
-      <div style="margin-top:10px;font-size:12px;color:#3a4560">Vérifiez aussi vos courriers indésirables (spam)</div>
-    </div>`
-
-  // Envoyer email via EmailJS (si configuré) ou ouvrir mailto comme fallback
-  try{
-    if(window.emailjs&&window.emailjs.send){
-      await emailjs.send('service_fivestarai','template_confirm',{
-        to_email:email,
-        to_name:prenom+' '+nom,
-        commerce:commerce,
-        forfait:p.name,
-        prix:p.price+'$/mois',
-        reply_to:'admin@fivestarai.ca'
-      })
-      // Notifier les fondateurs
-      await emailjs.send('service_fivestarai','template_nouveau_client',{
-        commerce:commerce,
-        type_commerce:type,
-        nom_complet:prenom+' '+nom,
-        email:email,
-        tel:tel,
-        forfait:p.name,
-        prix:p.price+'$/mois'
-      })
-    }else{
-      // Fallback: ouvrir mailto
-      setTimeout(()=>{
-        const subj=encodeURIComponent('🆕 Nouveau client FiveStar AI — '+commerce)
-        const body=encodeURIComponent('Nouveau compte créé!\n\nNom: '+prenom+' '+nom+'\nCommerce: '+commerce+'\nType: '+type+'\nEmail: '+email+'\nTél: '+tel+'\nForfait: '+p.name+' — '+p.price+'$/mois\n\nAction: Contacter dans les 24h pour setup.')
-        window.open('mailto:admin@fivestarai.ca?subject='+subj+'&body='+body)
-        localStorage.setItem('fivestar_user', JSON.stringify({
-          prenom: prenom, nom: nom, email: email,
-          commerce: commerce, type: type,
-          plan: p.name.toLowerCase(),
-          since: new Date().toISOString()
-        }))
-      },1500)
+  try {
+    // Créer le compte Supabase (envoie email de confirmation automatiquement)
+    const {data,error}=await _sb.auth.signUp({
+      email,password:pass,
+      options:{
+        emailRedirectTo:'https://fivestarai.ca/dashboard.html',
+        data:{prenom,nom,commerce,type_commerce:type,tel,plan:selectedPlan}
+      }
+    })
+    if(error){
+      showMsg(error.message.includes('already')?'Un compte existe déjà avec cet email. Connectez-vous.':error.message)
+      btn.disabled=false; btn.textContent='Créer mon compte →'; return
     }
-  }catch(e){console.log('EmailJS non configuré — fallback mailto utilisé')}
+    // Sauvegarder le profil
+    if(data.user){
+      await _sb.from('profiles').upsert({
+        id:data.user.id,prenom,nom,commerce,type_commerce:type,
+        tel,email,plan:selectedPlan,forfait_nom:p.name,forfait_prix:p.price
+      })
+    }
+    // Notifier les fondateurs
+    try{
+      const subj=encodeURIComponent('Nouveau client FiveStar AI — '+commerce)
+      const body=encodeURIComponent('Nouveau compte!\nNom: '+prenom+' '+nom+'\nCommerce: '+commerce+'\nEmail: '+email+'\nTél: '+tel+'\nForfait: '+p.name)
+      window.open('mailto:admin@fivestarai.ca?subject='+subj+'&body='+body)
+    }catch(e){}
+    // Afficher l'écran de confirmation
+    document.getElementById('auth-card').innerHTML=`
+      <div class="email-confirm-screen">
+        <div class="ec-icon">📧</div>
+        <div class="ec-title">Vérifiez votre email !</div>
+        <div class="ec-desc">Un lien de confirmation a été envoyé à :</div>
+        <div class="ec-email-box">${email}</div>
+        <div class="ec-steps">
+          <div class="ec-step"><span style="color:var(--green)">✅</span> Compte créé — ${commerce} · Forfait ${p.name}</div>
+          <div class="ec-step"><span style="color:var(--gold)">📧</span> Cliquez le lien dans votre email pour activer votre compte</div>
+          <div class="ec-step"><span style="color:var(--gold)">📞</span> Un fondateur vous contacte dans les <strong>24h</strong> pour le paiement et le setup</div>
+          <div class="ec-step"><span style="color:var(--muted)">🚀</span> Système actif dès le setup complété</div>
+        </div>
+        <button class="btn-resend" onclick="resendConfirm('${email}')">Renvoyer l'email</button>
+        <div style="margin-top:16px;font-size:13px;color:var(--muted)">Déjà confirmé ? <span style="color:var(--gold);cursor:pointer" onclick="location.reload()">Se connecter →</span></div>
+        <div style="margin-top:10px;font-size:12px;color:#3a4560">Vérifiez aussi vos courriers indésirables (spam)</div>
+      </div>`
+  } catch(e){
+    showMsg('Erreur lors de la création. Réessayez.')
+    btn.disabled=false; btn.textContent='Créer mon compte →'
+  }
 }
+
+async function resendConfirm(email){
+  try{
+    await _sb.auth.resend({type:'signup',email})
+    alert('Email renvoyé à '+email)
+  }catch(e){alert('Erreur lors du renvoi.')}
+}
+
 
 function resendEmail(email,commerce,forfait){
   const subj=encodeURIComponent('Confirmation FiveStar AI — '+commerce)
@@ -989,53 +976,10 @@ function renderAide(){
   set(`
   <div class="card">
     <div class="card-hdr"><div class="card-title">💬 Aide & support</div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
-        <div style="font-size:28px;margin-bottom:10px">📧</div>
-        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Email</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Réponse dans les 24h</div>
-        <a href="mailto:admin@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">admin@fivestarai.ca</a>
-      </div>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
-        <div style="font-size:28px;margin-bottom:10px">📱</div>
-        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Texto direct</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Raphaël ou Olivier</div>
-        <a href="sms:+15144979236" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">Texter maintenant</a>
-      </div>
-    </div>
-    <div style="background:rgba(245,200,66,.04);border:1px solid rgba(245,200,66,.12);border-radius:12px;padding:20px">
-      <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px">📋 Questions fréquentes</div>
-      ${[
-        ['Mon QR Code ne fonctionne pas','Vérifiez que vous êtes bien connecté à internet et réessayez. Si le problème persiste, textez-nous.'],
-        ['Je ne vois pas mes avis','Les avis Google peuvent prendre jusqu\'à 24h avant d\'apparaître. Vérifiez aussi la section Avis Google ci-dessus.'],
-        ['Je veux changer mon message SMS','Allez dans Paramètres → Message SMS personnalisé et sauvegardez.'],
-        ['Je veux mettre à jour mes infos','Allez dans Paramètres → Informations du commerce.'],
-      ].map(([q,a]) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(22,32,58,.5)"><div style="font-size:13.5px;font-weight:600;color:#fff;margin-bottom:5px">${q}</div><div style="font-size:13px;color:var(--muted);line-height:1.6">${a}</div></div>`).join('')}
-    </div>
-  </div>`)
-}
-
-function renderLien(){
-  const slug=(user.commerce||'commerce').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')
-  const lien = `https://fivestarai.ca/avis/${slug}`
-  set(`
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">🔗 Mon lien d'avis Google</div></div>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7">Partagez ce lien directement avec vos clients. Un clic et ils arrivent sur votre fiche Google pour laisser un avis.</p>
-    <div style="background:var(--surface2);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-family:monospace;font-size:13px;color:var(--gold);margin-bottom:16px;word-break:break-all">${lien}</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
-      <button class="btn-save" onclick="navigator.clipboard.writeText('${lien}').then(()=>{this.textContent='✓ Copié!';this.style.background='var(--green)';setTimeout(()=>{this.textContent='📋 Copier le lien';this.style.background=''},2000)})">📋 Copier le lien</button>
-      <a href="sms:?body=Merci%20de%20votre%20visite%20!%20Laissez-nous%20un%20avis%20Google%20%E2%AD%90%20${encodeURIComponent(lien)}" class="btn-qr" style="text-decoration:none;display:inline-flex;align-items:center">📤 Envoyer par SMS</a>
-      <a href="mailto:?subject=Laissez-nous%20un%20avis%20Google&body=Merci%20de%20votre%20visite%20!%20Votre%20avis%20nous%20aide%20beaucoup%20%E2%AD%90%20${encodeURIComponent(lien)}" class="btn-qr" style="text-decoration:none;display:inline-flex;align-items:center">✉️ Envoyer par email</a>
-    </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px">
-      <div style="font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">💡 Comment l'utiliser</div>
-      ${[
-        ['📌','Affichez-le en story Instagram ou Facebook','Vos abonnés deviennent des ambassadeurs'],
-        ['📧','Ajoutez-le à votre signature email','Chaque email devient une opportunité d\'avis'],
-        ['🖨️','Imprimez-le sur vos reçus ou factures','Capturez les clients au moment de payer'],
-        ['💬','Envoyez-le dans vos groupes WhatsApp','Vos clients habituels adorent aider'],
-      ].map(([ico,t,d]) => `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(22,32,58,.5)"><span style="font-size:18px;flex-shrink:0">${ico}</span><div><div style="font-size:13.5px;font-weight:600;color:#fff">${t}</div><div style="font-size:12px;color:var(--muted)">${d}</div></div></div>`).join('')}
+    <div style="text-align:center;padding:20px 0 10px">
+      <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Une question ? On est là.</div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:20px">Réponse garantie dans les 24h ouvrables.</div>
+      <a href="mailto:admin@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:15px;padding:13px 30px;border-radius:9px;text-decoration:none;display:inline-block">✉️ admin@fivestarai.ca</a>
     </div>
   </div>`)
 }
@@ -1046,7 +990,8 @@ function renderLocked(page){
   set(`<div class="locked-card"><div class="locked-icon">🔒</div><div class="locked-title">${names[page]||page} — Forfait ${plans[page]||'supérieur'}</div><div class="locked-text">Cette fonctionnalité est disponible à partir du forfait ${plans[page]||'supérieur'}. Passez à un forfait supérieur pour y accéder.</div><button class="btn-upgrade" onclick="goPage('forfait',null)">Voir les forfaits →</button></div>`)
 }
 
-function doLogout(){
+async function doLogout(){
+  try{ await _sb.auth.signOut() }catch(e){}
   user=null
   document.getElementById('dash-page').style.display='none'
   document.getElementById('auth-page').style.display='flex'
@@ -1065,15 +1010,19 @@ if(up.get('signup')==='true'){
     if(el){el.classList.add('sel');selectedPlan=plan}
   }
 }
+// ── VÉRIFIER SESSION SUPABASE AU CHARGEMENT ──
+;(async function(){
+  try{
+    const {data:{session}}=await _sb.auth.getSession()
+    if(session){
+      const {data:profile}=await _sb.from('profiles').select('*').eq('id',session.user.id).single()
+      const base=DEMOS['demo@restaurant.com']
+      user={...base,...(profile||{}),email:session.user.email,plan:(profile?.plan)||'starter'}
+      launchDash()
+    }
+  }catch(e){}
+})()
 
-// Accès restreint — ex: quelqu'un essaie d'aller sur onboarding.html sans plan
-if(up.get('access')==='restricted'){
-  switchTab('signup')
-  const msg = document.getElementById('auth-msg')
-  if(msg){
-    msg.innerHTML = '<div style="background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--gold);margin-bottom:16px;text-align:center">⭐ Choisissez un forfait pour accéder à cette page.</div>'
-  }
-}
 </script>
 </body>
 </html>
