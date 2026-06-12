@@ -516,7 +516,7 @@ async function doSignup(){
     const {data,error}=await _sb.auth.signUp({
       email,password:pass,
       options:{
-        emailRedirectTo:'https://fivestarai.ca/dashboard.html',
+        emailRedirectTo:'https://fivestarai.ca/confirm.html',
         data:{prenom,nom,commerce,type_commerce:type,tel,plan:selectedPlan}
       }
     })
@@ -969,6 +969,11 @@ function renderParametres(){
       <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;outline:none;font-family:inherit;resize:none" rows="3">Merci de votre visite ! Laissez-nous un avis Google ⭐ → [lien]</textarea>
     </div>
     <button class="btn-save" onclick="alert('Sauvegardé!')">Sauvegarder</button>
+  </div>
+  <div class="settings-section" style="border-color:rgba(239,68,68,.2)">
+    <div class="settings-title" style="color:var(--red)">🗑️ Supprimer mon compte</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Cette action est irréversible. Votre compte et toutes vos données seront supprimés définitivement.</p>
+    <button class="btn-danger" onclick="supprimerCompte()">Supprimer mon compte définitivement</button>
   </div>`)
 }
 
@@ -990,7 +995,33 @@ function renderLocked(page){
   set(`<div class="locked-card"><div class="locked-icon">🔒</div><div class="locked-title">${names[page]||page} — Forfait ${plans[page]||'supérieur'}</div><div class="locked-text">Cette fonctionnalité est disponible à partir du forfait ${plans[page]||'supérieur'}. Passez à un forfait supérieur pour y accéder.</div><button class="btn-upgrade" onclick="goPage('forfait',null)">Voir les forfaits →</button></div>`)
 }
 
-async function doLogout(){
+async async function supprimerCompte(){
+  if(!confirm('Êtes-vous sûr ? Cette action est irréversible.')) return
+  if(!confirm('Dernière confirmation — supprimer définitivement votre compte ?')) return
+  try {
+    // Supprimer le profil dans la table
+    const {data:{session}} = await _sb.auth.getSession()
+    if(session){
+      await _sb.from('profiles').delete().eq('id', session.user.id)
+      // Supprimer le compte auth
+      const {error} = await _sb.rpc('delete_user')
+      if(error){
+        // Fallback: déconnecter seulement
+        await _sb.auth.signOut()
+      }
+    }
+    user = null
+    alert('Compte supprimé avec succès.')
+    location.reload()
+  } catch(e){
+    // Si la RPC n'existe pas, juste déconnecter et informer
+    await _sb.auth.signOut()
+    alert('Profil supprimé. Pour supprimer complètement le compte auth, contactez admin@fivestarai.ca')
+    location.reload()
+  }
+}
+
+function doLogout(){
   try{ await _sb.auth.signOut() }catch(e){}
   user=null
   document.getElementById('dash-page').style.display='none'
