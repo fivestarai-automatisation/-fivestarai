@@ -1042,17 +1042,21 @@ if(up.get('signup')==='true'){
   }
 }
 // ── VÉRIFIER SESSION SUPABASE AU CHARGEMENT ──
-;(async function(){
-  try{
-    const {data:{session}}=await _sb.auth.getSession()
+// Session check au chargement — protégé
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof _sb === 'undefined') return
+  _sb.auth.getSession().then(function(res){
+    const session = res.data && res.data.session
     if(session){
-      const {data:profile}=await _sb.from('profiles').select('*').eq('id',session.user.id).single()
-      const base=DEMOS['demo@restaurant.com']
-      user={...base,...(profile||{}),email:session.user.email,plan:(profile?.plan)||'starter'}
-      launchDash()
+      _sb.from('profiles').select('*').eq('id', session.user.id).single().then(function(r){
+        const profile = r.data
+        const base = DEMOS['demo@restaurant.com']
+        user = Object.assign({}, base, profile||{}, {email:session.user.email, plan:(profile&&profile.plan)||'starter'})
+        launchDash()
+      }).catch(function(){})
     }
-  }catch(e){}
-})()
+  }).catch(function(){})
+})
 
 </script>
 </body>
