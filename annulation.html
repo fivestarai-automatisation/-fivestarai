@@ -257,7 +257,7 @@ const LANG = {
     'plans.faq.eyebrow': 'Questions fréquentes',
     'plans.faq.h2': 'Tout ce que vous voulez savoir',
     'plans.faq1.q': 'Est-ce que je dois signer un contrat ?',
-    'plans.faq1.a': 'Non. FiveStar fonctionne sur une base mensuelle. Vous pouvez annuler en tout temps en nous écrivant à admin@fivestarai.ca.',
+    'plans.faq1.a': 'Non. FiveStar fonctionne sur une base mensuelle. Vous pouvez annuler en tout temps en nous écrivant à support@fivestarai.ca.',
     'plans.faq2.q': 'Comment fonctionne le QR Code ?',
     'plans.faq2.a': 'On crée un QR Code personnalisé pour votre commerce. Vous l\'affichez à votre caisse ou sur vos tables. Quand un client le scanne, son numéro est capturé automatiquement.',
     'plans.faq3.q': 'Est-ce que je dois faire quelque chose après le setup ?',
@@ -268,7 +268,7 @@ const LANG = {
     'plans.faq5.a': 'Le paiement est traité de façon sécurisée. Votre abonnement est débité automatiquement chaque mois.',
     'plans.cta.h2': 'Des questions ? On vous répond.',
     'plans.cta.p': 'Écrivez-nous directement. On répond dans les 24h.',
-    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+    'plans.cta.btn': '✉️ support@fivestarai.ca',
 
     // ── POLITIQUE ──
     'pol.eyebrow': 'Légal',
@@ -560,7 +560,7 @@ const LANG = {
     'plans.faq.eyebrow': 'Frequently asked questions',
     'plans.faq.h2': 'Everything you want to know',
     'plans.faq1.q': 'Do I need to sign a contract?',
-    'plans.faq1.a': 'No. FiveStar works on a monthly basis. You can cancel anytime by emailing admin@fivestarai.ca.',
+    'plans.faq1.a': 'No. FiveStar works on a monthly basis. You can cancel anytime by emailing support@fivestarai.ca.',
     'plans.faq2.q': 'How does the QR Code work?',
     'plans.faq2.a': 'We create a personalized QR Code for your business. You display it at your counter. When a customer scans it, their number is captured automatically.',
     'plans.faq3.q': 'Do I need to do anything after setup?',
@@ -571,7 +571,7 @@ const LANG = {
     'plans.faq5.a': 'Payment is processed securely. Your subscription is charged automatically each month.',
     'plans.cta.h2': 'Questions? We\'ll answer them.',
     'plans.cta.p': 'Write to us directly. We respond within 24h.',
-    'plans.cta.btn': '✉️ admin@fivestarai.ca',
+    'plans.cta.btn': '✉️ support@fivestarai.ca',
 
     // ── POLITIQUE ──
     'pol.eyebrow': 'Legal',
@@ -890,14 +890,14 @@ function injectLangToggle(containerSelector) {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
       <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:8px">Vous changez d'avis ?</div>
       <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Écrivez-nous avant la date de renouvellement et on annule la demande.</div>
-      <a href="mailto:admin@fivestarai.ca?subject=Annulation de ma demande d'annulation" style="color:var(--gold);font-size:13.5px;font-weight:600;text-decoration:none">admin@fivestarai.ca →</a>
+      <a href="mailto:support@fivestarai.ca?subject=Annulation de ma demande d'annulation" style="color:var(--gold);font-size:13.5px;font-weight:600;text-decoration:none">support@fivestarai.ca →</a>
     </div>
   </div>
 
 </div>
 
 <footer>
-  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="conditions.html">CGU</a> · <a href="politique.html">Confidentialité</a> · admin@fivestarai.ca</p>
+  <p>© 2026 <a href="index.html">FiveStar AI</a> · <a href="conditions.html">CGU</a> · <a href="politique.html">Confidentialité</a> · support@fivestarai.ca</p>
 </footer>
 
 <script>
@@ -986,7 +986,7 @@ function submitForm() {
     `Contact client : ${email}`
   )
 
-  window.location.href = `mailto:admin@fivestarai.ca?subject=${sujet}&body=${corps}`
+  window.location.href = `mailto:support@fivestarai.ca?subject=${sujet}&body=${corps}`
   setTimeout(() => goStep(2), 500)
 }
 </script>
