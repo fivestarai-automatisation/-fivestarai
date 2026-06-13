@@ -624,7 +624,9 @@ async function doSignup(){
 
   const p=PLANS[selectedPlan]
 
-  // 1. Créer le compte Auth — Resend envoie l'email de confirmation automatiquement
+  // 1. Créer le compte Auth — le trigger SQL on_auth_user_created
+  // crée automatiquement la ligne profiles à partir de ces métadonnées.
+  // Resend envoie l'email de confirmation automatiquement.
   const {data:authData, error:authError} = await _sb.auth.signUp({
     email: email,
     password: pass,
@@ -632,7 +634,12 @@ async function doSignup(){
       data:{
         prenom: prenom,
         nom: nom,
-        commerce: commerce
+        commerce: commerce,
+        type_commerce: type,
+        tel: tel,
+        plan: selectedPlan,
+        forfait_nom: p.name,
+        forfait_prix: p.price
       }
     }
   })
@@ -655,28 +662,7 @@ async function doSignup(){
     return
   }
 
-  // 2. Insérer le profil dans la table profiles
-  const {error:profileError} = await _sb.from('profiles').insert({
-    id: authData.user.id,
-    prenom: prenom,
-    nom: nom,
-    commerce: commerce,
-    type_commerce: type,
-    tel: tel,
-    email: email,
-    plan: selectedPlan,
-    forfait_nom: p.name,
-    forfait_prix: p.price
-  })
-
-  if(profileError){
-    btn.disabled=false
-    btn.textContent='Créer mon compte →'
-    showMsg('Compte créé mais erreur lors de la sauvegarde du profil : '+profileError.message+'. Contactez admin@fivestarai.ca avec votre email pour qu\'on corrige ça manuellement.')
-    return
-  }
-
-  // 3. Afficher l'écran de confirmation email
+  // 2. Afficher l'écran de confirmation email
   document.getElementById('auth-card').innerHTML=`
     <div class="email-confirm-screen">
       <div class="ec-icon">📧</div>
