@@ -6,9 +6,7 @@
   <title>FiveStar AI — Mon espace</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <!-- Supabase Auth -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const _sb = window.supabase.createClient('https://teceosbjdipzvvkmxixd.supabase.co','sb_publishable_uY6yWPVgjkk9TsG1kj-smA_4Hvsa5A9')
@@ -65,6 +63,10 @@
     .ec-step:last-child{border-bottom:none}
     .btn-resend{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
     .btn-resend:hover{border-color:var(--gold);color:var(--gold)}
+    .remember-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .remember-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+    .remember-row label{font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+    .welcome-banner{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--green)}
 
     /* ── DASHBOARD LAYOUT ── */
     .dash{display:flex;min-height:100vh}
@@ -282,8 +284,13 @@
       </div>
       <div id="auth-msg"></div>
       <div id="auth-form-login">
+        <div id="welcome-banner" style="display:none" class="welcome-banner">✅ Email confirmé ! Connectez-vous pour accéder à votre espace.</div>
         <div class="field"><label>Email</label><input id="l-email" type="email" placeholder="votre@email.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
         <div class="field"><label>Mot de passe</label><input id="l-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+        <div class="remember-row">
+          <input type="checkbox" id="remember-me"/>
+          <label for="remember-me">Se souvenir de moi</label>
+        </div>
         <button class="btn-auth" id="btn-login" onclick="doLogin()">Se connecter →</button>
         <div class="demo-hint">
           <div class="demo-hint-title">Comptes démo</div>
@@ -329,7 +336,7 @@
   <div class="dash">
     <div class="sidebar" id="sidebar">
       <div class="sb-header">
-        <div class="sb-logo">⭐ FiveStar AI</div>
+        <div class="sb-logo">⭐ <span>FiveStar</span> AI</div>
         <div class="sb-commerce" id="sb-commerce-name">—</div>
         <div class="sb-type" id="sb-commerce-type">—</div>
         <div id="sb-plan-tag"></div>
@@ -385,13 +392,10 @@
 </div>
 
 <script>
-// ── INIT EMAILJS ──
 (function(){
-  // Remplace 'YOUR_PUBLIC_KEY' par ta clé EmailJS une fois configuré
   if(window.emailjs) emailjs.init({publicKey:'YOUR_PUBLIC_KEY'})
 })()
 
-// ── DONNÉES ──
 const PLANS={
   starter:{name:'Starter',price:297,tag:'pt-starter',dashboard:false,rapport:false,smsPromo:false,recrutement:false},
   pro:{name:'Pro',price:499,tag:'pt-pro',dashboard:true,rapport:true,smsPromo:true,recrutement:false},
@@ -399,14 +403,14 @@ const PLANS={
 }
 const DEMOS={
   'demo@restaurant.com':{
-    pass:'demo123',prenom:'Marco',nom:'Rossi',commerce:'Restaurant Le Bon Goût',type:'Restaurant',tel:'+1 514 555-0101',plan:'pro',newAccount:false,
+    pass:'demo123',prenom:'Marco',nom:'Rossi',commerce:'Restaurant Le Bon Goût',type:'Restaurant',tel:'+1 514 555-0101',plan:'pro',
     stats:{noteGoogle:4.6,noteAvant:3.9,avisTotal:47,avisPos:43,avisNeg:4,smsSent:234,smsConv:47,clients:234,moisActif:3},
     avis:[
       {nom:'Marie T.',note:5,texte:'Service impeccable, je reviendrai sans hésiter!',date:'Il y a 2h',rep:null,source:'SMS FiveStar AI'},
       {nom:'Jean P.',note:2,texte:'Attente de 40 minutes pour être servi. Vraiment décevant pour un samedi soir.',date:'Il y a 5h',rep:'Bonjour Jean, nous sommes sincèrement désolés de votre expérience ce soir-là. Le temps d\'attente était effectivement trop long et ce n\'est pas l\'expérience que nous souhaitons offrir. Nous avons revu notre organisation en salle. Nous espérons vous revoir pour vous montrer le meilleur de nous-mêmes.',source:'Direct Google'},
-      {nom:'Sophie L.',note:5,texte:'Excellent repas, ambiance chaleureuse et service parfait. Un de mes restaurants préférés!',date:'Hier',rep:null,source:'SMS FiveStar AI'},
+      {nom:'Sophie L.',note:5,texte:'Excellent repas, ambiance chaleureuse et service parfait.',date:'Hier',rep:null,source:'SMS FiveStar AI'},
       {nom:'Marc R.',note:4,texte:'Très bon repas dans l\'ensemble. La carte des vins est impressionnante.',date:'Il y a 2 jours',rep:null,source:'SMS FiveStar AI'},
-      {nom:'Isabelle D.',note:1,texte:'Commande complètement ratée, plat froid et serveur impoli.',date:'Il y a 3 jours',rep:'Bonjour Isabelle, votre retour nous touche profondément. Nous ne tolérons pas ce type d\'expérience et avons adressé la situation avec notre équipe. Nous aimerions vous offrir une visite de compensation pour vous montrer notre vrai niveau de service.',source:'Direct Google'},
+      {nom:'Isabelle D.',note:1,texte:'Commande complètement ratée, plat froid et serveur impoli.',date:'Il y a 3 jours',rep:'Bonjour Isabelle, votre retour nous touche profondément. Nous ne tolérons pas ce type d\'expérience et avons adressé la situation avec notre équipe.',source:'Direct Google'},
     ],
     sms:[
       {num:'+1 514 ***-**67',msg:'Merci de votre visite! Laissez-nous un avis ⭐',statut:'ok',date:'Aujourd\'hui 14:32'},
@@ -423,11 +427,11 @@ const DEMOS={
     ]
   },
   'demo@salon.com':{
-    pass:'demo123',prenom:'Sandra',nom:'Leblanc',commerce:'Salon Bella Vita',type:'Salon de coiffure',tel:'+1 450 555-0202',plan:'starter',newAccount:false,
+    pass:'demo123',prenom:'Sandra',nom:'Leblanc',commerce:'Salon Bella Vita',type:'Salon de coiffure',tel:'+1 450 555-0202',plan:'starter',
     stats:{noteGoogle:4.3,noteAvant:3.7,avisTotal:18,avisPos:16,avisNeg:2,smsSent:89,smsConv:18,clients:89,moisActif:2},
     avis:[
       {nom:'Lucie M.',note:5,texte:'Coupe parfaite, je suis ravie! Je reviendrai certainement.',date:'Il y a 3h',rep:null,source:'SMS FiveStar AI'},
-      {nom:'Anna K.',note:1,texte:'Pas du tout satisfaite du résultat. Rien à voir avec ce que je voulais.',date:'Il y a 8h',rep:'Bonjour Anna, nous sommes désolés que le résultat ne vous ait pas satisfaite. Chaque cliente mérite de partir heureuse. Contactez-nous pour qu\'on arrange cela gratuitement.',source:'Direct Google'},
+      {nom:'Anna K.',note:1,texte:'Pas du tout satisfaite du résultat.',date:'Il y a 8h',rep:'Bonjour Anna, nous sommes désolés que le résultat ne vous ait pas satisfaite.',source:'Direct Google'},
     ],
     sms:[{num:'+1 514 ***-**34',msg:'Merci de votre visite! Laissez-nous un avis ⭐',statut:'ok',date:'Aujourd\'hui 11:20'}],
     chartData:[0,3,7,11,15,18],
@@ -473,19 +477,25 @@ async function doLogin(){
   if(!email||!pass){showMsg('Entrez votre email et mot de passe.');return}
   const btn=document.getElementById('btn-login')
   btn.disabled=true; btn.textContent='Connexion...'
-  // Comptes démo en premier
+
+  // Comptes démo
   const acc=DEMOS[email]
   if(acc&&acc.pass===pass){
     user={email,...acc}
     btn.disabled=false; btn.textContent='Se connecter →'
     launchDash(); return
   }
-  // Supabase Auth pour les vrais comptes
+
+  // Supabase Auth
   try {
+    const remember=document.getElementById('remember-me')?.checked
     const {data,error}=await _sb.auth.signInWithPassword({email,password:pass})
     if(error){
-      showMsg(error.message.includes('Invalid')?'Email ou mot de passe incorrect.':error.message)
+      showMsg(error.message.includes('Invalid')||error.message.includes('credentials')?'Email ou mot de passe incorrect.':error.message)
       btn.disabled=false; btn.textContent='Se connecter →'; return
+    }
+    if(data?.session&&remember){
+      localStorage.setItem('fs_remember','true')
     }
     const {data:profile}=await _sb.from('profiles').select('*').eq('id',data.user.id).single()
     const base=DEMOS['demo@restaurant.com']
@@ -512,7 +522,6 @@ async function doSignup(){
   btn.disabled=true; btn.textContent='Création en cours...'
   const p=PLANS[selectedPlan]
   try {
-    // Créer le compte Supabase (envoie email de confirmation automatiquement)
     const {data,error}=await _sb.auth.signUp({
       email,password:pass,
       options:{
@@ -524,20 +533,12 @@ async function doSignup(){
       showMsg(error.message.includes('already')?'Un compte existe déjà avec cet email. Connectez-vous.':error.message)
       btn.disabled=false; btn.textContent='Créer mon compte →'; return
     }
-    // Sauvegarder le profil
     if(data.user){
       await _sb.from('profiles').upsert({
         id:data.user.id,prenom,nom,commerce,type_commerce:type,
         tel,email,plan:selectedPlan,forfait_nom:p.name,forfait_prix:p.price
       })
     }
-    // Notifier les fondateurs
-    try{
-      const subj=encodeURIComponent('Nouveau client FiveStar AI — '+commerce)
-      const body=encodeURIComponent('Nouveau compte!\nNom: '+prenom+' '+nom+'\nCommerce: '+commerce+'\nEmail: '+email+'\nTél: '+tel+'\nForfait: '+p.name)
-      window.open('mailto:admin@fivestarai.ca?subject='+subj+'&body='+body)
-    }catch(e){}
-    // Afficher l'écran de confirmation
     document.getElementById('auth-card').innerHTML=`
       <div class="email-confirm-screen">
         <div class="ec-icon">📧</div>
@@ -567,19 +568,11 @@ async function resendConfirm(email){
   }catch(e){alert('Erreur lors du renvoi.')}
 }
 
-
-function resendEmail(email,commerce,forfait){
-  const subj=encodeURIComponent('Confirmation FiveStar AI — '+commerce)
-  alert('Email de confirmation renvoyé à '+email)
-}
-
 // ── DASHBOARD ──
 function launchDash(){
   document.getElementById('auth-page').style.display='none'
   document.getElementById('dash-page').style.display='block'
   const p=PLANS[user.plan]
-
-  // Sidebar
   document.getElementById('sb-commerce-name').textContent=user.commerce
   document.getElementById('sb-commerce-type').textContent=user.type
   document.getElementById('sb-plan-tag').innerHTML=`<div class="plan-tag ${p.tag}">${p.name}</div>`
@@ -588,13 +581,9 @@ function launchDash(){
   document.getElementById('sb-user-email').textContent=user.email
   document.getElementById('tb-plan').innerHTML=`<span class="${p.tag}">${p.name}</span>`
   document.getElementById('tb-plan').className='plan-tag tb-plan '+p.tag
-
-  // Lock/unlock sidebar items
   if(!p.rapport){document.getElementById('nav-rapport').classList.add('locked');document.getElementById('nav-rapport').innerHTML+='<span class="sb-lock">🔒</span>'}
   if(!p.smsPromo){document.getElementById('nav-smsPromo').classList.add('locked');document.getElementById('nav-smsPromo').innerHTML+='<span class="sb-lock">🔒</span>'}
   if(!p.recrutement){document.getElementById('nav-recrutement').classList.add('locked');document.getElementById('nav-recrutement').innerHTML+='<span class="sb-lock">🔒</span>'}
-
-  // Notifications
   renderNotifs()
   goPage('overview',document.querySelector('.sb-item'))
 }
@@ -624,8 +613,7 @@ const pageTitles={overview:'Tableau de bord',activite:'Activité récente',avis:
 function goPage(page,el){
   const p=PLANS[user.plan]
   if((page==='rapport'&&!p.rapport)||(page==='smsPromo'&&!p.smsPromo)||(page==='recrutement'&&!p.recrutement)){
-    renderLocked(page);
-    updateNav(el,page);return
+    renderLocked(page);updateNav(el,page);return
   }
   updateNav(el,page)
   const renders={overview:renderOverview,activite:renderActivite,avis:renderAvis,sms:renderSMS,qrcode:renderQR,rapport:renderRapport,smsPromo:renderSMSPromo,recrutement:renderRecrutement,forfait:renderForfait,parametres:renderParametres,aide:renderAide}
@@ -639,7 +627,6 @@ function updateNav(el,page){
   document.getElementById('tb-title').textContent=pageTitles[page]||'Dashboard'
 }
 
-// ── PAGES ──
 function set(html){document.getElementById('page-content').innerHTML=html}
 
 function renderOverview(){
@@ -719,8 +706,8 @@ function renderOverview(){
 
 function renderActivite(){
   const acts=[
-    {icon:'⭐',bg:'rgba(245,200,66,.1)',text:'Nouvel avis 5 étoiles — Marie T.',sub:'Via votre QR Code · Restaurant Le Bon Goût',time:'Il y a 2h'},
-    {icon:'🤖',bg:'rgba(167,139,250,.1)',text:'Notre IA a répondu à un avis négatif',sub:'Jean P. 2★ — Réponse publiée automatiquement sur Google',time:'Il y a 5h'},
+    {icon:'⭐',bg:'rgba(245,200,66,.1)',text:'Nouvel avis 5 étoiles — Marie T.',sub:'Via votre QR Code',time:'Il y a 2h'},
+    {icon:'🤖',bg:'rgba(167,139,250,.1)',text:'Notre IA a répondu à un avis négatif',sub:'Jean P. 2★ — Réponse publiée automatiquement',time:'Il y a 5h'},
     {icon:'📱',bg:'rgba(59,130,246,.1)',text:'SMS envoyé automatiquement',sub:'+1 514 ***-**12 · 2h après sa visite',time:'Il y a 6h'},
     {icon:'📲',bg:'rgba(34,197,94,.1)',text:'Nouveau numéro capturé via QR Code',sub:'+1 438 ***-**12 · Caisse principale',time:'Il y a 6h'},
     {icon:'⭐',bg:'rgba(245,200,66,.1)',text:'Nouvel avis 5 étoiles — Sophie L.',sub:'Via SMS de suivi',time:'Hier 19:45'},
@@ -729,12 +716,6 @@ function renderActivite(){
     {icon:'📊',bg:'rgba(245,200,66,.08)',text:'Rapport hebdomadaire généré',sub:'47 avis · 234 SMS · Note 4.6 ⭐',time:'Dimanche 09:00'},
   ]
   set(`
-  <div class="tabs">
-    <button class="tab-btn active">Tout</button>
-    <button class="tab-btn" onclick="filterActs('avis',this)">⭐ Avis</button>
-    <button class="tab-btn" onclick="filterActs('sms',this)">📱 SMS</button>
-    <button class="tab-btn" onclick="filterActs('ia',this)">🤖 IA</button>
-  </div>
   <div class="card">
     <div class="card-hdr"><div class="card-title">⚡ Activité récente</div><div style="font-size:12px;color:var(--muted)">${acts.length} événements</div></div>
     ${acts.map(a=>`
@@ -747,7 +728,6 @@ function renderActivite(){
       <div style="font-size:11px;color:#3a4560;flex-shrink:0;margin-left:12px">${a.time}</div>
     </div>`).join('')}
   </div>`)
-  document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active')})
 }
 
 function renderAvis(){
@@ -762,11 +742,9 @@ function renderAvis(){
     <button class="tab-btn active" onclick="filterAvisTab('all',this)">Tous (${user.avis.length})</button>
     <button class="tab-btn" onclick="filterAvisTab('pos',this)">Positifs (${user.avis.filter(a=>a.note>=4).length})</button>
     <button class="tab-btn" onclick="filterAvisTab('neg',this)">Négatifs (${user.avis.filter(a=>a.note<=3).length})</button>
-    <button class="tab-btn" onclick="filterAvisTab('rep',this)">Répondus par IA (${user.avis.filter(a=>a.rep).length})</button>
+    <button class="tab-btn" onclick="filterAvisTab('rep',this)">Répondus IA (${user.avis.filter(a=>a.rep).length})</button>
   </div>
-  <div class="card" id="avis-list">
-    ${renderAvisList(user.avis)}
-  </div>`)
+  <div class="card" id="avis-list">${renderAvisList(user.avis)}</div>`)
 }
 
 function renderAvisList(list){
@@ -800,20 +778,12 @@ function renderSMS(){
   </div>
   <div class="card">
     <div class="card-hdr"><div class="card-title">📱 Historique des SMS</div></div>
-    ${user.sms.length===0?'<div style="text-align:center;padding:40px;color:var(--muted)">Aucun SMS encore. Les SMS partiront automatiquement 2h après chaque visite.</div>':
+    ${user.sms.length===0?'<div style="text-align:center;padding:40px;color:var(--muted)">Aucun SMS encore.</div>':
     user.sms.map(s=>`
     <div class="sms-item">
       <div><div class="sms-num">${s.num}</div><div class="sms-msg">${s.msg}</div><div class="sms-date">${s.date}</div></div>
       <span class="s-pill ${s.statut==='ok'?'s-ok':'s-sent'}">${s.statut==='ok'?'✓ Avis laissé':'→ Envoyé'}</span>
     </div>`).join('')}
-  </div>
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">✏️ Votre message SMS personnalisé</div></div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">APERÇU DU SMS</div>
-      <div style="font-size:13.5px;color:var(--text);line-height:1.6">Merci de votre visite chez <strong>${user.commerce}</strong> ! Vous avez passé un bon moment ? Ça nous ferait vraiment plaisir de lire votre avis Google ⭐ → [lien]</div>
-    </div>
-    <div style="font-size:13px;color:var(--muted)">Pour modifier votre message SMS, allez dans <span style="color:var(--gold);cursor:pointer" onclick="goPage('parametres',null)">Paramètres →</span></div>
   </div>`)
 }
 
@@ -824,7 +794,7 @@ function renderQR(){
       <div class="qr-box">QR Code personnalisé<br/><br/>${user.commerce}<br/><br/>Généré lors du setup</div>
       <div class="qr-label">Votre QR Code — à afficher à la caisse</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn-qr" onclick="alert('Téléchargement du QR Code...')">⬇️ Télécharger PNG</button>
+        <button class="btn-qr" onclick="alert('Téléchargement...')">⬇️ Télécharger PNG</button>
         <button class="btn-qr" onclick="alert('Téléchargement PDF...')">📄 Télécharger PDF</button>
       </div>
     </div>
@@ -835,17 +805,6 @@ function renderQR(){
         {l:'Numéros capturés',v:user.stats.clients,color:'var(--green)'},
         {l:'Taux de complétion',v:'94%',color:'var(--blue)'},
       ].map(k=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(22,32,58,.5)"><span style="font-size:14px;color:var(--muted)">${k.l}</span><span style="font-size:16px;font-weight:700;color:${k.color}">${k.v}</span></div>`).join('')}
-      <div style="margin-top:16px;font-size:13px;color:var(--muted);line-height:1.65">Votre QR Code est affiché à la caisse. Chaque scan ajoute automatiquement le client à votre base et déclenche un SMS 2h après sa visite.</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">💡 Conseils d'affichage</div></div>
-    <div class="card-3">
-      ${[
-        {ico:'🖨️',t:'Format recommandé',d:'10×10 cm minimum pour un scan facile'},
-        {ico:'📍',t:'Emplacement idéal',d:'À la caisse, sur les tables, ou à l\'entrée'},
-        {ico:'☀️',t:'Évitez les reflets',d:'Matière mate pour une meilleure lisibilité'},
-      ].map(x=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center"><div style="font-size:24px;margin-bottom:8px">${x.ico}</div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px">${x.t}</div><div style="font-size:12px;color:var(--muted)">${x.d}</div></div>`).join('')}
     </div>
   </div>`)
 }
@@ -863,12 +822,6 @@ function renderRapport(){
         {l:'Taux de conversion',v:conv+'%',c:'var(--purple)'},
       ].map(k=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">${k.l}</div><div style="font-size:28px;font-weight:900;color:${k.c};letter-spacing:-1px">${k.v}</div></div>`).join('')}
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title" style="margin-bottom:14px">📝 Résumé du mois</div>
-    <div style="font-size:15px;color:var(--muted);line-height:1.85">
-      Ce mois-ci, votre système FiveStar AI a collecté <strong style="color:#fff">${s.avisTotal} avis</strong> pour <strong style="color:#fff">${user.commerce}</strong>. Votre note Google est passée de <strong style="color:var(--red)">${s.noteAvant}</strong> à <strong style="color:var(--green)">${s.noteGoogle} ⭐</strong>. Sur les <strong style="color:#fff">${s.smsSent} SMS envoyés</strong>, <strong style="color:#fff">${s.smsConv} ont converti</strong> en avis Google (${conv}%). ${s.avisNeg>0?`Notre IA a répondu automatiquement aux <strong style="color:#fff">${s.avisNeg} avis négatifs</strong> en moins de 2 minutes chaque fois.`:''}
-    </div>
   </div>`)
 }
 
@@ -877,17 +830,13 @@ function renderSMSPromo(){
   <div class="card">
     <div class="card-hdr"><div class="card-title">📣 SMS promotionnel mensuel</div></div>
     <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13.5px;color:var(--green)">
-      ✓ Base de <strong>${user.stats.clients} clients</strong> prête à recevoir votre promo. Prochain envoi automatique : <strong>1er juillet 2026</strong>
+      ✓ Base de <strong>${user.stats.clients} clients</strong> prête. Prochain envoi : <strong>1er juillet 2026</strong>
     </div>
     <div class="field" style="margin-bottom:16px">
       <label style="display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Message du mois</label>
-      <textarea style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;outline:none;font-family:inherit;resize:none;transition:border-color .2s" rows="3">🍽️ Promotion juillet — -15% sur votre prochain repas ce weekend. Code : FIVESTAR15 → Réservez maintenant!</textarea>
+      <textarea style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;outline:none;font-family:inherit;resize:none" rows="3">🍽️ Promotion juillet — -15% ce weekend. Code : FIVESTAR15 → Réservez maintenant!</textarea>
     </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">APERÇU</div>
-      <div style="font-size:13.5px;color:var(--text)">🍽️ Promotion juillet — -15% sur votre prochain repas ce weekend. Code : FIVESTAR15 → Réservez maintenant!</div>
-    </div>
-    <button class="btn-save" onclick="alert('SMS programmé pour le 1er juillet!')">Programmer l\'envoi →</button>
+    <button class="btn-save" onclick="alert('SMS programmé pour le 1er juillet!')">Programmer l'envoi →</button>
   </div>`)
 }
 
@@ -899,17 +848,11 @@ function renderRecrutement(){
     <div style="text-align:center;padding:20px 0 28px">
       <div style="font-size:40px;margin-bottom:14px">🤖</div>
       <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Lien de candidature actif</div>
-      <div style="font-size:14px;color:var(--muted);max-width:400px;margin:0 auto 20px">Partagez ce lien. Notre IA analyse chaque candidature et vous envoie seulement les meilleurs profils.</div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 18px;font-family:monospace;font-size:13px;color:var(--gold);display:inline-block;margin-bottom:16px">fivestarai.ca/apply/${slug}</div>
       <div style="display:flex;gap:8px;justify-content:center">
         <button class="btn-save" onclick="navigator.clipboard.writeText('fivestarai.ca/apply/${slug}').then(()=>alert('Lien copié!'))">📋 Copier le lien</button>
-        <button class="btn-qr" onclick="alert('Partage...')">📤 Partager</button>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">📋 Candidatures reçues</div></div>
-    <div style="text-align:center;padding:32px;color:var(--muted);font-size:14px">Aucune candidature reçue pour l'instant. Partagez votre lien pour commencer à recevoir des CV.</div>
   </div>`)
 }
 
@@ -935,13 +878,18 @@ function renderForfait(){
       ${k===user.plan?'<div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:8px">✓ ACTUEL</div>':''}
       <div class="plan-card-name">${p.name}</div>
       <div class="plan-card-price">${p.price}$<span style="font-size:14px;font-weight:400;color:var(--muted)">/mois</span></div>
-      ${['QR Code & capture auto','SMS automatiques','Réponses IA',p.dashboard?'Dashboard complet':'Dashboard','SMS promo mensuel','Rapport mensuel',p.recrutement?'Recrutement IA':'Recrutement IA'].map((f,i)=>`<div class="plan-card-feat ${i>2&&!([3,4,5,6].slice(0,p.dashboard?3:0+p.smsPromo?1:0+p.rapport?1:0+p.recrutement?1:0).includes(i))&&!p[['dashboard','smsPromo','rapport','recrutement'][i-3]]?'off':''}">${f}</div>`).join('')}
+      <div class="plan-card-feat">QR Code & capture auto</div>
+      <div class="plan-card-feat">SMS automatiques</div>
+      <div class="plan-card-feat">Réponses IA</div>
+      <div class="plan-card-feat ${p.dashboard?'':'off'}">Dashboard complet</div>
+      <div class="plan-card-feat ${p.smsPromo?'':'off'}">SMS promo mensuel</div>
+      <div class="plan-card-feat ${p.rapport?'':'off'}">Rapport mensuel</div>
+      <div class="plan-card-feat ${p.recrutement?'':'off'}">Recrutement IA</div>
       <button class="plan-card-btn ${k===user.plan?'current-btn':''}" onclick="${k!==user.plan?`alert('Contactez admin@fivestarai.ca pour changer de forfait.')`:''}">${k===user.plan?'Forfait actuel':p.price>cp.price?'Passer à '+p.name:'Rétrograder'}</button>
     </div>`).join('')}
   </div>
   <div class="settings-section" style="margin-top:16px">
     <div class="settings-title">💳 Facturation</div>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:16px">Paiements traités de façon sécurisée. Prochaine facturation : <strong style="color:#fff">10 juillet 2026</strong></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn-save" onclick="alert('Redirection vers le portail de facturation...')">Gérer la facturation</button>
       <button class="btn-danger" onclick="window.location.href='annulation.html'">Annuler l'abonnement</button>
@@ -972,7 +920,7 @@ function renderParametres(){
   </div>
   <div class="settings-section" style="border-color:rgba(239,68,68,.2)">
     <div class="settings-title" style="color:var(--red)">🗑️ Supprimer mon compte</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Cette action est irréversible. Votre compte et toutes vos données seront supprimés définitivement.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Cette action est irréversible.</p>
     <button class="btn-danger" onclick="supprimerCompte()">Supprimer mon compte définitivement</button>
   </div>`)
 }
@@ -992,45 +940,39 @@ function renderAide(){
 function renderLocked(page){
   const names={rapport:'Rapport mensuel',smsPromo:'SMS promotionnel',recrutement:'Recrutement IA'}
   const plans={rapport:'Pro',smsPromo:'Pro',recrutement:'Premium'}
-  set(`<div class="locked-card"><div class="locked-icon">🔒</div><div class="locked-title">${names[page]||page} — Forfait ${plans[page]||'supérieur'}</div><div class="locked-text">Cette fonctionnalité est disponible à partir du forfait ${plans[page]||'supérieur'}. Passez à un forfait supérieur pour y accéder.</div><button class="btn-upgrade" onclick="goPage('forfait',null)">Voir les forfaits →</button></div>`)
+  set(`<div class="locked-card"><div class="locked-icon">🔒</div><div class="locked-title">${names[page]||page} — Forfait ${plans[page]||'supérieur'}</div><div class="locked-text">Cette fonctionnalité est disponible à partir du forfait ${plans[page]||'supérieur'}.</div><button class="btn-upgrade" onclick="goPage('forfait',null)">Voir les forfaits →</button></div>`)
 }
 
 async function supprimerCompte(){
   if(!confirm('Êtes-vous sûr ? Cette action est irréversible.')) return
   if(!confirm('Dernière confirmation — supprimer définitivement votre compte ?')) return
   try {
-    // Supprimer le profil dans la table
-    const {data:{session}} = await _sb.auth.getSession()
+    const {data:{session}}=await _sb.auth.getSession()
     if(session){
-      await _sb.from('profiles').delete().eq('id', session.user.id)
-      // Supprimer le compte auth
-      const {error} = await _sb.rpc('delete_user')
-      if(error){
-        // Fallback: déconnecter seulement
-        await _sb.auth.signOut()
-      }
+      await _sb.from('profiles').delete().eq('id',session.user.id)
+      await _sb.auth.signOut()
     }
-    user = null
-    alert('Compte supprimé avec succès.')
+    user=null
+    alert('Compte supprimé. Contactez admin@fivestarai.ca pour confirmation.')
     location.reload()
   } catch(e){
-    // Si la RPC n'existe pas, juste déconnecter et informer
     await _sb.auth.signOut()
-    alert('Profil supprimé. Pour supprimer complètement le compte auth, contactez admin@fivestarai.ca')
     location.reload()
   }
 }
 
 async function doLogout(){
-  try{ await _sb.auth.signOut() }catch(e){}
+  try{await _sb.auth.signOut()}catch(e){}
   user=null
   document.getElementById('dash-page').style.display='none'
   document.getElementById('auth-page').style.display='flex'
   document.getElementById('l-email').value=''
   document.getElementById('l-pass').value=''
+  document.getElementById('welcome-banner').style.display='none'
   switchTab('login')
 }
 
+// ── INIT ──
 const up=new URLSearchParams(window.location.search)
 if(up.get('signup')==='true'){
   switchTab('signup')
@@ -1041,23 +983,36 @@ if(up.get('signup')==='true'){
     if(el){el.classList.add('sel');selectedPlan=plan}
   }
 }
-// ── VÉRIFIER SESSION SUPABASE AU CHARGEMENT ──
-// Session check au chargement — protégé
-document.addEventListener('DOMContentLoaded', function(){
-  if(typeof _sb === 'undefined') return
+
+// Afficher banner bienvenue si on arrive de confirmation.html
+if(up.get('login')==='true'){
+  document.getElementById('welcome-banner').style.display='flex'
+}
+
+// Vérifier session Supabase — login forcé si ?login=true (après confirmation email)
+document.addEventListener('DOMContentLoaded',function(){
+  if(typeof _sb==='undefined') return
+  const forcedLogin=up.get('login')==='true'
+  if(forcedLogin){
+    // On force l'affichage du formulaire login même si session existe
+    // La session Supabase sera utilisée après que l'user entre son mot de passe
+    return
+  }
+  // Sinon : reconnexion auto si "Se souvenir de moi" était coché
+  const remember=localStorage.getItem('fs_remember')==='true'
+  if(!remember) return
   _sb.auth.getSession().then(function(res){
-    const session = res.data && res.data.session
+    const session=res.data&&res.data.session
     if(session){
-      _sb.from('profiles').select('*').eq('id', session.user.id).single().then(function(r){
-        const profile = r.data
-        const base = DEMOS['demo@restaurant.com']
-        user = Object.assign({}, base, profile||{}, {email:session.user.email, plan:(profile&&profile.plan)||'starter'})
+      _sb.from('profiles').select('*').eq('id',session.user.id).single().then(function(r){
+        const profile=r.data
+        const base=DEMOS['demo@restaurant.com']
+        user=Object.assign({},base,profile||{},{email:session.user.email,plan:(profile&&profile.plan)||'starter'})
         launchDash()
       }).catch(function(){})
     }
   }).catch(function(){})
 })
-
 </script>
 </body>
 </html>
