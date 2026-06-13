@@ -494,15 +494,47 @@ function showMsg(msg,type='err'){
   document.getElementById('auth-msg').innerHTML=`<div class="auth-${type}">${msg}</div>`
 }
 
-function doLogin(){
+async function doLogin(){
   const email=document.getElementById('l-email').value.trim()
   const pass=document.getElementById('l-pass').value
+  if(!email||!pass){showMsg('Entrez votre email et mot de passe.');return}
+  const btn=document.getElementById('btn-login')
+  btn.disabled=true;btn.textContent='Connexion...'
+
+  // Comptes démo
   const acc=DEMOS[email]
   if(acc&&acc.pass===pass){
     user={email,...acc}
+    btn.disabled=false;btn.textContent='Se connecter →'
+    launchDash();return
+  }
+
+  // Supabase Auth
+  try{
+    const {data,error}=await _sb.auth.signInWithPassword({email,password:pass})
+    if(error){
+      showMsg(error.message.includes('Invalid')||error.message.includes('credentials')?'Email ou mot de passe incorrect.':error.message)
+      btn.disabled=false;btn.textContent='Se connecter →';return
+    }
+    // Charger le profil réel
+    const {data:profile}=await _sb.from('profiles').select('*').eq('id',data.user.id).single()
+    const base=DEMOS['demo@restaurant.com']
+    user={
+      ...base,
+      ...(profile||{}),
+      email:data.user.email,
+      prenom:profile?.prenom||data.user.user_metadata?.prenom||'',
+      nom:profile?.nom||data.user.user_metadata?.nom||'',
+      commerce:profile?.commerce||data.user.user_metadata?.commerce||'Mon commerce',
+      type:profile?.type_commerce||data.user.user_metadata?.type_commerce||'Commerce',
+      tel:profile?.tel||data.user.user_metadata?.tel||'',
+      plan:(profile?.plan)||'starter',
+    }
+    btn.disabled=false;btn.textContent='Se connecter →'
     launchDash()
-  }else{
-    showMsg('Email ou mot de passe incorrect. Utilisez un compte démo.')
+  }catch(e){
+    showMsg('Erreur de connexion. Réessayez.')
+    btn.disabled=false;btn.textContent='Se connecter →'
   }
 }
 
@@ -520,69 +552,66 @@ async function doSignup(){
   if(!email.includes('@')){showMsg('Adresse email invalide.');return}
 
   const btn=document.getElementById('btn-signup')
-  btn.disabled=true
-  btn.textContent='Création en cours...'
+  btn.disabled=true;btn.textContent='Création en cours...'
 
-  // Afficher l'écran de confirmation email
   const p=PLANS[selectedPlan]
-  document.getElementById('auth-card').innerHTML=`
-    <div class="email-confirm-screen">
-      <div class="ec-icon">📧</div>
-      <div class="ec-title">Confirmez votre adresse email</div>
-      <div class="ec-desc">Nous avons envoyé un lien de confirmation à :</div>
-      <div class="ec-email-box">${email}</div>
-      <div class="ec-steps">
-        <div class="ec-step"><span style="color:var(--green)">✅</span> Compte créé — ${commerce} · Forfait ${p.name}</div>
-        <div class="ec-step"><span style="color:var(--gold)">📧</span> Email de confirmation envoyé</div>
-        <div class="ec-step"><span style="color:var(--muted)">📞</span> Un fondateur vous contacte dans les 24h</div>
-        <div class="ec-step"><span style="color:var(--muted)">🚀</span> Setup en 10 minutes · Résultats cette semaine</div>
-      </div>
-      <button class="btn-resend" onclick="resendEmail('${email}','${commerce}','${p.name}')">Renvoyer l'email</button>
-      <div style="margin-top:16px;font-size:13px;color:var(--muted)">Déjà confirmé ? <span style="color:var(--gold);cursor:pointer" onclick="location.reload()">Se connecter →</span></div>
-      <div style="margin-top:10px;font-size:12px;color:#3a4560">Vérifiez aussi vos courriers indésirables (spam)</div>
-    </div>`
 
-  // Envoyer email via EmailJS (si configuré) ou ouvrir mailto comme fallback
   try{
-    if(window.emailjs&&window.emailjs.send){
-      await emailjs.send('service_fivestarai','template_confirm',{
-        to_email:email,
-        to_name:prenom+' '+nom,
-        commerce:commerce,
-        forfait:p.name,
-        prix:p.price+'$/mois',
-        reply_to:'support@fivestarai.ca'
-      })
-      // Notifier les fondateurs
-      await emailjs.send('service_fivestarai','template_nouveau_client',{
-        commerce:commerce,
-        type_commerce:type,
-        nom_complet:prenom+' '+nom,
-        email:email,
-        tel:tel,
-        forfait:p.name,
-        prix:p.price+'$/mois'
-      })
-    }else{
-      // Fallback: ouvrir mailto
-      setTimeout(()=>{
-        const subj=encodeURIComponent('🆕 Nouveau client FiveStar AI — '+commerce)
-        const body=encodeURIComponent('Nouveau compte créé!\n\nNom: '+prenom+' '+nom+'\nCommerce: '+commerce+'\nType: '+type+'\nEmail: '+email+'\nTél: '+tel+'\nForfait: '+p.name+' — '+p.price+'$/mois\n\nAction: Contacter dans les 24h pour setup.')
-        window.open('mailto:support@fivestarai.ca?subject='+subj+'&body='+body)
-        localStorage.setItem('fivestar_user', JSON.stringify({
-          prenom: prenom, nom: nom, email: email,
-          commerce: commerce, type: type,
-          plan: p.name.toLowerCase(),
-          since: new Date().toISOString()
-        }))
-      },1500)
+    // 1. Créer le compte Supabase Auth
+    const {data,error}=await _sb.auth.signUp({
+      email,password:pass,
+      options:{
+        emailRedirectTo:'https://fivestarai.ca/confirmation.html',
+        data:{prenom,nom,commerce,type_commerce:type,tel,plan:selectedPlan}
+      }
+    })
+    if(error){
+      showMsg(error.message.includes('already')?'Un compte existe déjà avec cet email. Connectez-vous.':error.message)
+      btn.disabled=false;btn.textContent='Créer mon compte →';return
     }
-  }catch(e){console.log('EmailJS non configuré — fallback mailto utilisé')}
+
+    // 2. Sauvegarder le profil dans la table profiles
+    if(data.user){
+      await _sb.from('profiles').upsert({
+        id:data.user.id,
+        prenom,nom,commerce,
+        type_commerce:type,
+        tel,email,
+        plan:selectedPlan,
+        forfait_nom:p.name,
+        forfait_prix:p.price,
+        created_at:new Date().toISOString()
+      })
+    }
+
+    // 3. Afficher l'écran de confirmation
+    document.getElementById('auth-card').innerHTML=`
+      <div class="email-confirm-screen">
+        <div class="ec-icon">📧</div>
+        <div class="ec-title">Confirmez votre adresse email</div>
+        <div class="ec-desc">Nous avons envoyé un lien de confirmation à :</div>
+        <div class="ec-email-box">${email}</div>
+        <div class="ec-steps">
+          <div class="ec-step"><span style="color:var(--green)">✅</span> Compte créé — ${commerce} · Forfait ${p.name}</div>
+          <div class="ec-step"><span style="color:var(--gold)">📧</span> Cliquez le lien dans votre email pour activer votre compte</div>
+          <div class="ec-step"><span style="color:var(--gold)">📞</span> Un fondateur vous contacte dans les <strong>24h</strong> pour le paiement et le setup</div>
+          <div class="ec-step"><span style="color:var(--muted)">🚀</span> Système actif dès le setup complété</div>
+        </div>
+        <button class="btn-resend" onclick="resendConfirm('${email}')">Renvoyer l'email</button>
+        <div style="margin-top:16px;font-size:13px;color:var(--muted)">Déjà confirmé ? <span style="color:var(--gold);cursor:pointer" onclick="location.reload()">Se connecter →</span></div>
+        <div style="margin-top:10px;font-size:12px;color:#3a4560">Vérifiez aussi vos courriers indésirables (spam)</div>
+      </div>`
+  }catch(e){
+    showMsg('Erreur lors de la création. Réessayez.')
+    btn.disabled=false;btn.textContent='Créer mon compte →'
+  }
 }
 
-function resendEmail(email,commerce,forfait){
-  const subj=encodeURIComponent('Confirmation FiveStar AI — '+commerce)
-  alert('Email de confirmation renvoyé à '+email)
+async function resendConfirm(email){
+  try{
+    await _sb.auth.resend({type:'signup',email})
+    alert('Email renvoyé à '+email)
+  }catch(e){alert('Erreur lors du renvoi.')}
 }
 
 // ── DASHBOARD ──
@@ -948,7 +977,7 @@ function renderForfait(){
       <div class="plan-card-name">${p.name}</div>
       <div class="plan-card-price">${p.price}$<span style="font-size:14px;font-weight:400;color:var(--muted)">/mois</span></div>
       ${['QR Code & capture auto','SMS automatiques','Réponses IA',p.dashboard?'Dashboard complet':'Dashboard','SMS promo mensuel','Rapport mensuel',p.recrutement?'Recrutement IA':'Recrutement IA'].map((f,i)=>`<div class="plan-card-feat ${i>2&&!([3,4,5,6].slice(0,p.dashboard?3:0+p.smsPromo?1:0+p.rapport?1:0+p.recrutement?1:0).includes(i))&&!p[['dashboard','smsPromo','rapport','recrutement'][i-3]]?'off':''}">${f}</div>`).join('')}
-      <button class="plan-card-btn ${k===user.plan?'current-btn':''}" onclick="${k!==user.plan?`alert('Contactez support@fivestarai.ca pour changer de forfait.')`:''}">${k===user.plan?'Forfait actuel':p.price>cp.price?'Passer à '+p.name:'Rétrograder'}</button>
+      <button class="plan-card-btn ${k===user.plan?'current-btn':''}" onclick="${k!==user.plan?`alert('Contactez admin@fivestarai.ca pour changer de forfait.')`:''}">${k===user.plan?'Forfait actuel':p.price>cp.price?'Passer à '+p.name:'Rétrograder'}</button>
     </div>`).join('')}
   </div>
   <div class="settings-section" style="margin-top:16px">
@@ -993,7 +1022,7 @@ function renderAide(){
         <div style="font-size:28px;margin-bottom:10px">📧</div>
         <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Email</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Réponse dans les 24h</div>
-        <a href="mailto:support@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">support@fivestarai.ca</a>
+        <a href="mailto:admin@fivestarai.ca" style="background:var(--gold);color:#000;font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;text-decoration:none;display:inline-block">admin@fivestarai.ca</a>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
         <div style="font-size:28px;margin-bottom:10px">📱</div>
@@ -1065,13 +1094,45 @@ if(up.get('signup')==='true'){
   }
 }
 
-// Accès restreint — ex: quelqu'un essaie d'aller sur onboarding.html sans plan
+// Accès restreint
 if(up.get('access')==='restricted'){
   switchTab('signup')
-  const msg = document.getElementById('auth-msg')
-  if(msg){
-    msg.innerHTML = '<div style="background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--gold);margin-bottom:16px;text-align:center">⭐ Choisissez un forfait pour accéder à cette page.</div>'
-  }
+  const msg=document.getElementById('auth-msg')
+  if(msg){msg.innerHTML='<div style="background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--gold);margin-bottom:16px;text-align:center">⭐ Choisissez un forfait pour accéder à cette page.</div>'}
+}
+
+// Reconnexion auto Supabase si session active
+const forcedLogin=up.get('login')==='true'
+if(!forcedLogin){
+  document.addEventListener('DOMContentLoaded',function(){
+    if(typeof _sb==='undefined')return
+    _sb.auth.getSession().then(function(res){
+      const session=res.data&&res.data.session
+      if(!session)return
+      _sb.from('profiles').select('*').eq('id',session.user.id).single().then(function(r){
+        const profile=r.data
+        const base=DEMOS['demo@restaurant.com']
+        user={
+          ...base,
+          ...(profile||{}),
+          email:session.user.email,
+          prenom:profile?.prenom||session.user.user_metadata?.prenom||'',
+          nom:profile?.nom||session.user.user_metadata?.nom||'',
+          commerce:profile?.commerce||session.user.user_metadata?.commerce||'Mon commerce',
+          type:profile?.type_commerce||session.user.user_metadata?.type_commerce||'Commerce',
+          tel:profile?.tel||session.user.user_metadata?.tel||'',
+          plan:(profile?.plan)||'starter',
+        }
+        launchDash()
+      }).catch(function(){})
+    }).catch(function(){})
+  })
+}
+
+// Banner bienvenue après confirmation email
+if(up.get('login')==='true'){
+  const banner=document.getElementById('welcome-banner')
+  if(banner)banner.style.display='flex'
 }
 </script>
 </body>
