@@ -157,8 +157,17 @@
     .rb-count{font-size:12px;color:var(--muted)}
     .rb-amount{font-size:14px;font-weight:700;color:var(--gold)}
 
+    .ham-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+    .ham-btn span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+    .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .ham-btn.open span:nth-child(2){opacity:0}
+    .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9;backdrop-filter:blur(2px)}
+    .mob-overlay.show{display:block}
     @media(max-width:900px){
-      .sidebar{display:none}
+      .ham-btn{display:flex}
+      .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:10;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 32px rgba(0,0,0,.5)}
+      .sidebar.open{transform:translateX(0)}
       .main{margin-left:0}
       .kpi-grid{grid-template-columns:repeat(2,1fr)}
       .detail-grid{grid-template-columns:repeat(2,1fr)}
@@ -173,7 +182,7 @@
   <div class="login-page">
     <div class="login-glow"></div>
     <div class="login-card">
-      <div class="login-logo">⭐ FiveStar AI</div>
+      <div class="login-logo"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div>
       <div class="login-badge">Accès fondateurs uniquement</div>
       <div id="login-err"></div>
       <div class="field"><label>Email admin</label><input id="a-email" type="email" placeholder="admin@fivestarai.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
@@ -190,10 +199,11 @@
 <div id="admin-panel" style="display:none">
   <div class="admin">
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <div class="mob-overlay" id="admin-overlay" onclick="closeAdminSidebar()"></div>
+    <div class="sidebar" id="admin-sidebar">
       <div class="sb-logo">
         <div>
-          <div class="sb-logo-text">⭐ FiveStar AI</div>
+          <div class="sb-logo-text"><span style="margin-right:6px">⭐</span>Five<span>Star</span> AI</div>
         </div>
         <div class="sb-badge">ADMIN</div>
       </div>
@@ -204,19 +214,13 @@
         <div class="sb-section">Clients</div>
         <div class="sb-item" onclick="showPage('clients',this)"><span>🏪</span> Tous les commerces</div>
         <div class="sb-item" onclick="showPage('revenus',this)"><span>💰</span> Revenus</div>
-        <div class="sb-section">QR — Avis Google</div>
-        <div class="sb-item" onclick="showPage('qr_avis_create',this)"><span>➕</span> Créer QR Avis Google</div>
-        <div class="sb-item" onclick="showPage('qr_avis_list',this)"><span>⭐</span> Mes QR Avis <span id="qr-avis-count" style="display:none;background:var(--gold);color:#000;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
-        <div class="sb-item" onclick="showPage('clients_captures',this)"><span>📋</span> Clients capturés <span id="captured-count" style="display:none;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
-        <div class="sb-section">QR — Candidatures</div>
-        <div class="sb-item" onclick="showPage('qr_recr_create',this)"><span>➕</span> Créer QR Recrutement</div>
-        <div class="sb-item" onclick="showPage('qr_recr_list',this)"><span>👥</span> Mes QR Recrutement <span id="qr-recr-count" style="display:none;background:#a78bfa;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
-        <div class="sb-item" onclick="showPage('candidatures',this)"><span>📋</span> Candidatures <span id="cand-count" style="display:none;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
         <div class="sb-section">Opérations</div>
+        <div class="sb-item" onclick="showPage('qrclients',this)"><span>📲</span> QR Code clients</div>
+        <div class="sb-item" onclick="showPage('clients_captures',this)"><span>📋</span> Clients capturés <span id="captured-count" style="display:none;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
         <div class="sb-item" onclick="showPage('setup',this)"><span>⚙️</span> Setups à faire</div>
         <div class="sb-item" onclick="showPage('annulations',this)"><span>❌</span> Annulations</div>
+        <div class="sb-item" onclick="showPage('candidatures',this)"><span>📋</span> Candidatures <span id="cand-count" style="display:none;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:auto"></span></div>
         <div class="sb-item" onclick="showPage('recrutement',this)"><span>👥</span> Recrutement IA</div>
-      
       </div>
       <div class="sb-bottom">
         <div class="sb-founders">
@@ -234,7 +238,12 @@
     <!-- MAIN -->
     <div class="main">
       <div class="topbar" id="topbar">
-        <div class="tb-title"><span>📊</span> Dashboard</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="ham-btn" id="admin-ham" onclick="toggleAdminSidebar()">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="tb-title"><span>📊</span> <span id="admin-page-title">Dashboard</span></div>
+        </div>
         <div class="tb-right">
           <div class="tb-time" id="current-time"></div>
           <div style="font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)"></div>Système actif</div>
@@ -329,18 +338,8 @@
             <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">💰 Revenus FiveStar AI</div>
             <div style="font-size:13px;color:var(--muted)">Juin 2026</div>
           </div>
-          <div class="rev-grid">
-            <div class="rev-card"><div class="rev-label">Revenu mensuel brut</div><div class="rev-val" style="color:var(--gold)">3 491$</div><div class="rev-sub">7 clients actifs</div></div>
-            <div class="rev-card"><div class="rev-label">Coûts mensuels</div><div class="rev-val" style="color:var(--red)">~220$</div><div class="rev-sub">Make, notre système SMS, Claude, notre base de données...</div></div>
-            <div class="rev-card"><div class="rev-label">Profit net estimé</div><div class="rev-val" style="color:var(--green)">3 271$</div><div class="rev-sub">Marge ~93.7%</div></div>
-          </div>
-          <div class="rev-breakdown">
-            <div class="rb-title">Répartition par forfait</div>
-            <div class="rb-row"><div><div class="rb-plan">Starter — 297$/mois</div><div class="rb-count">2 clients</div></div><div class="rb-amount">594$</div></div>
-            <div class="rb-row"><div><div class="rb-plan">Pro — 499$/mois</div><div class="rb-count">4 clients</div></div><div class="rb-amount">1 996$</div></div>
-            <div class="rb-row"><div><div class="rb-plan">Premium — 599$/mois</div><div class="rb-count">1 client</div></div><div class="rb-amount">599$</div></div>
-            <div class="rb-row" style="border-top:1px solid rgba(245,200,66,.1);padding-top:12px;margin-top:4px"><div><div class="rb-plan" style="color:var(--gold);font-weight:700">Total</div><div class="rb-count">7 clients</div></div><div class="rb-amount" style="font-size:18px">3 491$</div></div>
-          </div>
+          <div class="rev-grid" id="rev-grid-dynamic"></div>
+          <div class="rev-breakdown" id="rev-breakdown-dynamic"></div>
           <div class="chart-card">
             <div class="card-title" style="margin-bottom:16px">📈 Projection si on signe 3 clients de plus</div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
@@ -366,13 +365,86 @@
             <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">❌ Demandes d'annulation</div>
             <div style="font-size:13px;color:var(--muted)">Clients ayant soumis une demande d'annulation</div>
           </div>
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center;color:var(--muted);font-size:14px">
-            <div style="font-size:32px;margin-bottom:12px">✅</div>
-            Aucune demande d'annulation en cours. Tous vos clients sont actifs.
+          <div style="background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.15);border-radius:12px;padding:16px 18px;margin-bottom:16px;font-size:13px;color:var(--muted)">
+            <strong style="color:var(--orange)">📧 Les demandes d'annulation arrivent par email</strong> à support@fivestarai.ca avec le sujet "🚨 Demande d'annulation". Traitez chaque demande dans les 24h ouvrables.
+          </div>
+          <div id="ann-list">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center;color:var(--muted);font-size:14px">
+              <div style="font-size:32px;margin-bottom:12px">✅</div>
+              Aucune demande d'annulation active. Tous vos clients sont actifs.
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <a href="mailto:support@fivestarai.ca" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:9px;text-decoration:none;display:inline-block">📧 Voir les emails d'annulation →</a>
           </div>
         </div>
 
+        <!-- QR CLIENTS -->
+        <div id="page-qrclients" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">📲 Générateur QR Code clients</div>
+            <div style="font-size:13px;color:var(--muted)">Créez un QR Code unique pour chaque commerce. Le client scanne et entre son prénom + téléphone.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
+              <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px">⚙️ Configuration</div>
+              <div class="field" style="margin-bottom:14px">
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Nom du commerce</label>
+                <input id="qr-nom" placeholder="Restaurant Le Bon Goût" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateQRPreview()"/>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Type de commerce</label>
+                <select id="qr-type" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit;cursor:pointer" onchange="updateQRPreview()">
+                  <option value="restaurant">🍽️ Restaurant / Bar</option>
+                  <option value="salon">✂️ Salon de coiffure / Spa</option>
+                  <option value="gym">💪 Gym / Studio fitness</option>
+                  <option value="cafe">☕ Café / Boulangerie</option>
+                  <option value="garage">🔧 Garage / Auto</option>
+                  <option value="clinique">🏥 Clinique / Santé</option>
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">ID unique (optionnel)</label>
+                <input id="qr-id" placeholder="ex: marco-pizza-mtl" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateQRPreview()"/>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px">Pour distinguer vos commerces dans la liste des clients capturés</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid rgba(245,200,66,.15);border-radius:9px;padding:12px 14px;margin-bottom:16px">
+                <div style="font-size:10px;color:var(--muted);margin-bottom:5px">LIEN GÉNÉRÉ</div>
+                <div id="qr-lien-display" style="font-size:12px;color:var(--gold);word-break:break-all;font-family:monospace">Entrez le nom du commerce</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onclick="copierLienQR()" style="background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📋 Copier le lien</button>
+                <button onclick="downloadQRClient()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">⬇️ Télécharger QR</button>
+                <button onclick="emailQRClient()" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">✉️ Envoyer au gérant</button>
+              </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center">
+              <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px">👁️ Aperçu QR Code</div>
+              <div id="qr-client-preview" style="display:flex;align-items:center;justify-content:center;min-height:160px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
+                <div style="font-size:13px;color:var(--muted)">Entrez le nom du commerce pour générer le QR Code</div>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Le client scanne ce QR Code → entre son prénom + numéro → vous recevez une notification email</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12);border-radius:12px;padding:16px 18px">
+            <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px">💡 Comment ça marche</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+              ${['1. Générez le QR Code','2. Imprimez et affichez à la caisse','3. Le client scanne et s'inscrit','4. Vous recevez ses infos → envoyez le SMS Google'].map((s,i) => '<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);text-align:center">'+s+'</div>').join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIENTS CAPTURÉS -->
+        <div id="page-clients_captures" class="client-detail">
+          <div style="margin-bottom:20px">
+            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">📋 Clients capturés</div>
+            <div style="font-size:13px;color:var(--muted)">Tous les clients qui ont scanné un QR Code et laissé leur numéro</div>
+          </div>
+          <div id="captured-list"></div>
+        </div>
+
         <!-- CANDIDATURES -->
+
         <div id="page-candidatures" class="client-detail">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
             <div>
@@ -448,7 +520,7 @@
                     <div style="padding:5px 0;border-bottom:1px solid var(--border)">1. Envoie ce lien au gérant par email</div>
                     <div style="padding:5px 0;border-bottom:1px solid var(--border)">2. Il partage le lien sur ses réseaux ou affiche le QR Code</div>
                     <div style="padding:5px 0;border-bottom:1px solid var(--border)">3. Les candidats remplissent le formulaire en 4 étapes</div>
-                    <div style="padding:5px 0">4. Les candidatures arrivent à admin@fivestarai.ca</div>
+                    <div style="padding:5px 0">4. Les candidatures arrivent à support@fivestarai.ca</div>
                   </div>
                 </div>
                 <button id="r-email-btn" onclick="emailGerant()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:11px 18px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;width:100%">📧 Envoyer le lien au gérant</button>
@@ -462,128 +534,6 @@
             <div style="font-size:13px;color:var(--muted)">Le lien et le QR Code apparaîtront automatiquement.</div>
           </div>
         </div>
-
-        <!-- QR AVIS GOOGLE — CRÉER -->
-        <div id="page-qr_avis_create" class="client-detail">
-          <div style="margin-bottom:20px">
-            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">📲 Créer un QR Code — Avis Google</div>
-            <div style="font-size:13px;color:var(--muted)">Le client scanne et entre son prénom + numéro pour recevoir des offres et laisser un avis Google.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
-              <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px">⚙️ Configuration</div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Nom du commerce</label>
-                <input id="av-nom" placeholder="Restaurant Le Bon Goût" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateAvisQR()"/>
-              </div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Type de commerce</label>
-                <select id="av-type" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit;cursor:pointer" onchange="updateAvisQR()">
-                  <option value="restaurant">🍽️ Restaurant / Bar</option>
-                  <option value="salon">✂️ Salon / Spa</option>
-                  <option value="gym">💪 Gym / Studio fitness</option>
-                  <option value="cafe">☕ Café / Boulangerie</option>
-                  <option value="garage">🔧 Garage / Auto</option>
-                  <option value="clinique">🏥 Clinique / Santé</option>
-                </select>
-              </div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Ville</label>
-                <input id="av-ville" placeholder="Montréal, Laval, Québec..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateAvisQR()"/>
-              </div>
-              <div style="margin-bottom:20px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">ID unique (optionnel)</label>
-                <input id="av-id" placeholder="ex: marco-pizza-mtl" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateAvisQR()"/>
-              </div>
-              <div style="background:var(--bg);border:1px solid rgba(245,200,66,.15);border-radius:9px;padding:12px 14px;margin-bottom:16px">
-                <div style="font-size:10px;color:var(--muted);margin-bottom:5px">LIEN GÉNÉRÉ</div>
-                <div id="av-lien" style="font-size:12px;color:var(--gold);word-break:break-all;font-family:monospace">Entrez le nom du commerce</div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button onclick="copierAvisQR()" style="background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📋 Copier</button>
-                <button onclick="downloadAvisQR()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">⬇️ PNG</button>
-                <button onclick="saveAvisQR()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:var(--green);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">💾 Enregistrer</button>
-              </div>
-            </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center">
-              <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px">👁️ Aperçu QR Code</div>
-              <div id="av-qr-preview" style="display:flex;align-items:center;justify-content:center;min-height:160px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-                <div style="font-size:13px;color:var(--muted)">Entrez le nom pour générer</div>
-              </div>
-              <div style="font-size:12px;color:var(--muted)">Client scanne → prénom + téléphone → vous recevez les infos</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- QR AVIS GOOGLE — LISTE -->
-        <div id="page-qr_avis_list" class="client-detail">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-            <div>
-              <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">⭐ Mes QR Codes — Avis Google</div>
-              <div style="font-size:13px;color:var(--muted)">Tous les QR Codes créés pour la collecte de numéros clients</div>
-            </div>
-            <button onclick="showPage('qr_avis_create',null)" style="background:var(--gold);color:#000;border:none;border-radius:9px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">+ Nouveau QR</button>
-          </div>
-          <div id="avis-qr-list"></div>
-        </div>
-
-        <!-- QR RECRUTEMENT — CRÉER -->
-        <div id="page-qr_recr_create" class="client-detail">
-          <div style="margin-bottom:20px">
-            <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">👥 Créer un QR Code — Recrutement</div>
-            <div style="font-size:13px;color:var(--muted)">Le candidat scanne et arrive sur le formulaire de candidature pour ce commerce.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
-              <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:16px">⚙️ Configuration</div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Nom du commerce</label>
-                <input id="rc-nom" placeholder="Restaurant Le Bon Goût" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateRecrQR()"/>
-              </div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Poste à pourvoir</label>
-                <input id="rc-poste" placeholder="Serveur, Cuisinier..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateRecrQR()"/>
-              </div>
-              <div style="margin-bottom:14px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Ville</label>
-                <input id="rc-ville" placeholder="Montréal, Laval, Québec..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateRecrQR()"/>
-              </div>
-              <div style="margin-bottom:20px">
-                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">ID unique (optionnel)</label>
-                <input id="rc-id" placeholder="ex: marco-pizza-serveur" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit" oninput="updateRecrQR()"/>
-              </div>
-              <div style="background:var(--bg);border:1px solid rgba(167,139,250,.2);border-radius:9px;padding:12px 14px;margin-bottom:16px">
-                <div style="font-size:10px;color:var(--muted);margin-bottom:5px">LIEN GÉNÉRÉ</div>
-                <div id="rc-lien" style="font-size:12px;color:#a78bfa;word-break:break-all;font-family:monospace">Entrez le nom du commerce</div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button onclick="copierRecrQR()" style="background:#a78bfa;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📋 Copier</button>
-                <button onclick="downloadRecrQR()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">⬇️ PNG</button>
-                <button onclick="saveRecrQR()" style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);color:#a78bfa;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">💾 Enregistrer</button>
-              </div>
-            </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center">
-              <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:16px">👁️ Aperçu QR Code</div>
-              <div id="rc-qr-preview" style="display:flex;align-items:center;justify-content:center;min-height:160px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">
-                <div style="font-size:13px;color:var(--muted)">Entrez le nom pour générer</div>
-              </div>
-              <div style="font-size:12px;color:var(--muted)">Candidat scanne → formulaire de candidature → vous recevez les infos</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- QR RECRUTEMENT — LISTE -->
-        <div id="page-qr_recr_list" class="client-detail">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-            <div>
-              <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">👥 Mes QR Codes — Recrutement</div>
-              <div style="font-size:13px;color:var(--muted)">Tous les QR Codes créés pour le recrutement par commerce</div>
-            </div>
-            <button onclick="showPage('qr_recr_create',null)" style="background:#a78bfa;color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">+ Nouveau QR</button>
-          </div>
-          <div id="recr-qr-list"></div>
-        </div>
-
 
       </div>
     </div>
@@ -656,8 +606,25 @@ const SETUP_PENDING = [
 
 // ── AUTH ──
 const ADMINS = {
-  'admin@fivestarai.ca': 'fivestar2026',
+  'support@fivestarai.ca': 'fivestar2026',
   'oli@fivestarai.ca': 'fivestar2026',
+}
+
+function toggleAdminSidebar() {
+  const sb = document.getElementById('admin-sidebar')
+  const ov = document.getElementById('admin-overlay')
+  const btn = document.getElementById('admin-ham')
+  const isOpen = sb.classList.contains('open')
+  sb.classList.toggle('open', !isOpen)
+  ov.classList.toggle('show', !isOpen)
+  btn.classList.toggle('open', !isOpen)
+  document.body.style.overflow = isOpen ? '' : 'hidden'
+}
+function closeAdminSidebar() {
+  document.getElementById('admin-sidebar').classList.remove('open')
+  document.getElementById('admin-overlay').classList.remove('show')
+  document.getElementById('admin-ham').classList.remove('open')
+  document.body.style.overflow = ''
 }
 
 function doLogin() {
@@ -689,8 +656,9 @@ function initAdmin(email) {
   renderClientsTable(CLIENTS)
   renderAlerts()
   renderSetup()
+  renderRevenusDynamic()
+  renderClientsCaptures()
   checkNewCandidatures()
-  // Vérifier toutes les 30 secondes si nouvelles candidatures
   setInterval(checkNewCandidatures, 30000)
 }
 
@@ -701,13 +669,17 @@ function updateClock() {
 
 // ── NAVIGATION ──
 function showPage(page, el) {
+  if (window.innerWidth <= 900) closeAdminSidebar();
   document.querySelectorAll('.client-detail').forEach(p => p.classList.remove('show'))
   document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'))
   document.getElementById('page-' + page).classList.add('show')
   if (el) el.classList.add('active')
-  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client', recrutement:'👥 Recrutement IA', candidatures:'📋 Candidatures'}
+  const titles = {overview:'📊 Dashboard', alerts:'🔔 Alertes', clients:'🏪 Tous les commerces', revenus:'💰 Revenus', setup:'⚙️ Setups à faire', annulations:'❌ Annulations', 'client-detail':'🏪 Détail client', recrutement:'👥 Recrutement IA', candidatures:'📋 Candidatures', qrclients:'📲 QR Code clients', clients_captures:'📋 Clients capturés'}
+  const titleEl = document.getElementById('admin-page-title')
+  if (titleEl) titleEl.textContent = titles[page] || '📊 Dashboard'
   document.querySelector('.tb-title').innerHTML = '<span>' + (titles[page] || '📊') + '</span>'
   if (page === 'candidatures') renderCandidatures()
+  if (page === 'clients_captures') renderClientsCaptures()
 }
 
 // ── CANDIDATURES ──
@@ -857,6 +829,7 @@ function genQR(url) {
   const size = 140
   const script = document.createElement('script')
   script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+  script.onerror = function() { qrContainer.innerHTML = '<div style="font-size:12px;color:var(--muted)">QR Code disponible après setup</div>'; }
   script.onload = () => {
     new QRCode(qrContainer, {
       text: url,
@@ -906,9 +879,54 @@ function emailGerant() {
     '• Générer un QR Code pour l\'afficher dans votre commerce\n\n' +
     'Les candidatures vous seront transmises automatiquement après analyse par notre IA.\n\n' +
     'Bonne chance dans votre recrutement !\n\n' +
-    'L\'équipe FiveStar AI\nadmin@fivestarai.ca'
+    'L\'équipe FiveStar AI\nsupport@fivestarai.ca'
   )
   window.open('mailto:?subject=' + subj + '&body=' + body)
+}
+
+// ── REVENUS DYNAMIQUES ──
+function renderRevenusDynamic() {
+  const actifs = CLIENTS.filter(c => c.status === 'active')
+  const starter = actifs.filter(c => c.plan === 'starter')
+  const pro = actifs.filter(c => c.plan === 'pro')
+  const premium = actifs.filter(c => c.plan === 'premium')
+  const mrr = starter.length*297 + pro.length*499 + premium.length*599
+  const couts = 220
+  const profit = mrr - couts
+  const marge = mrr > 0 ? Math.round(profit/mrr*100) : 0
+
+  const grid = document.getElementById('rev-grid-dynamic')
+  if (grid) grid.innerHTML = `
+    <div class="rev-card"><div class="rev-label">MRR (revenus mensuels)</div><div class="rev-val" style="color:var(--gold)">${mrr.toLocaleString('fr-CA')}$</div><div class="rev-sub">${actifs.length} clients actifs</div></div>
+    <div class="rev-card"><div class="rev-label">Coûts mensuels estimés</div><div class="rev-val" style="color:var(--red)">~${couts}$</div><div class="rev-sub">SMS, IA, stockage, automatisation</div></div>
+    <div class="rev-card"><div class="rev-label">Profit net estimé</div><div class="rev-val" style="color:var(--green)">${profit.toLocaleString('fr-CA')}$</div><div class="rev-sub">Marge ~${marge}%</div></div>
+  `
+
+  const breakdown = document.getElementById('rev-breakdown-dynamic')
+  if (breakdown) breakdown.innerHTML = `
+    <div class="rb-title">Répartition par forfait</div>
+    <div class="rb-row"><div><div class="rb-plan">Starter — 297$/mois</div><div class="rb-count">${starter.length} client${starter.length>1?'s':''}</div></div><div class="rb-amount">${(starter.length*297).toLocaleString('fr-CA')}$</div></div>
+    <div class="rb-row"><div><div class="rb-plan">Pro — 499$/mois</div><div class="rb-count">${pro.length} client${pro.length>1?'s':''}</div></div><div class="rb-amount">${(pro.length*499).toLocaleString('fr-CA')}$</div></div>
+    <div class="rb-row"><div><div class="rb-plan">Premium — 599$/mois</div><div class="rb-count">${premium.length} client${premium.length>1?'s':''}</div></div><div class="rb-amount">${(premium.length*599).toLocaleString('fr-CA')}$</div></div>
+    <div class="rb-row" style="border-top:1px solid rgba(245,200,66,.1);padding-top:12px;margin-top:4px">
+      <div><div class="rb-plan" style="color:var(--gold);font-weight:700">Total</div><div class="rb-count">${actifs.length} clients</div></div>
+      <div class="rb-amount" style="font-size:18px">${mrr.toLocaleString('fr-CA')}$</div>
+    </div>
+    <div style="margin-top:16px;padding:14px 16px;background:rgba(245,200,66,.04);border:1px solid rgba(245,200,66,.1);border-radius:10px">
+      <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px">📈 Projections</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        ${[10,15,20].map(n => {
+          const proj = Math.round(mrr/actifs.length*n)
+          const diff = proj - mrr
+          return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px">${n} CLIENTS</div>
+            <div style="font-size:20px;font-weight:900;color:var(--gold)">${proj.toLocaleString('fr-CA')}$</div>
+            <div style="font-size:11px;color:var(--green)">+${diff.toLocaleString('fr-CA')}$</div>
+          </div>`
+        }).join('')}
+      </div>
+    </div>
+  `
 }
 
 // ── CHART ──
@@ -922,6 +940,196 @@ function renderChart() {
       <div class="bar" style="height:${d.v > 0 ? Math.max((d.v / max) * 100, 8) : 4}px;${d.v === 0 ? 'background:var(--surface2)' : ''}" title="${d.v}$/mois"></div>
       <div class="bar-label">${d.m}</div>
     </div>`).join('')
+}
+
+// ── QR CODE CLIENTS ──
+let currentQRClientUrl = ''
+
+function updateQRPreview() {
+  const nom = document.getElementById('qr-nom').value.trim()
+  const type = document.getElementById('qr-type').value
+  const id = document.getElementById('qr-id').value.trim() || nom.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')
+  
+  if (!nom) {
+    document.getElementById('qr-lien-display').textContent = 'Entrez le nom du commerce'
+    document.getElementById('qr-client-preview').innerHTML = '<div style="font-size:13px;color:var(--muted)">Entrez le nom du commerce pour générer le QR Code</div>'
+    return
+  }
+  
+  const base = 'https://fivestarai.ca/capture.html'
+  const params = new URLSearchParams({c: nom, type: type, id: id})
+  currentQRClientUrl = base + '?' + params.toString()
+  
+  document.getElementById('qr-lien-display').textContent = currentQRClientUrl
+  
+  // Générer le QR Code
+  const container = document.getElementById('qr-client-preview')
+  container.innerHTML = ''
+  
+  const loadQR = () => {
+    try {
+      new QRCode(container, {
+        text: currentQRClientUrl,
+        width: 160, height: 160,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      })
+    } catch(e) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--muted)">QR Code généré<br><span style="color:var(--gold)">' + nom + '</span></div>'
+    }
+  }
+  
+  if (window.QRCode) {
+    loadQR()
+  } else {
+    const s = document.createElement('script')
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+    s.onload = loadQR
+    s.onerror = () => { container.innerHTML = '<div style="font-size:12px;color:var(--muted)">Lien copié — QR Code disponible hors ligne</div>' }
+    document.head.appendChild(s)
+  }
+}
+
+function copierLienQR() {
+  if (!currentQRClientUrl) return
+  navigator.clipboard.writeText(currentQRClientUrl).then(() => {
+    const btn = event.target
+    const orig = btn.textContent
+    btn.textContent = '✓ Copié!'
+    btn.style.background = 'var(--green)'
+    setTimeout(() => { btn.textContent = orig; btn.style.background = 'var(--gold)' }, 2000)
+  })
+}
+
+function downloadQRClient() {
+  const canvas = document.querySelector('#qr-client-preview canvas')
+  if (!canvas) { alert('Générez d\'abord un QR Code.'); return }
+  const link = document.createElement('a')
+  const nom = document.getElementById('qr-nom').value.trim() || 'qrcode'
+  link.download = 'qr-' + nom.toLowerCase().replace(/\s+/g,'-') + '.png'
+  link.href = canvas.toDataURL()
+  link.click()
+}
+
+function emailQRClient() {
+  if (!currentQRClientUrl) { alert('Générez d\'abord un QR Code.'); return }
+  const nom = document.getElementById('qr-nom').value.trim()
+  const sujet = encodeURIComponent('Votre QR Code FiveStar AI — ' + nom)
+  const corps = encodeURIComponent(
+    "Bonjour,\n\nVoici votre lien d'inscription client FiveStar AI pour " + nom + " :\n\n" +
+    currentQRClientUrl + "\n\n" +
+    "Comment l'utiliser :\n" +
+    "- Imprimez le QR Code et affichez-le a votre caisse\n" +
+    "- Le client scanne et entre son prenom + telephone\n" +
+    "- Vous recevez ses infos pour envoyer le SMS Google\n\n" +
+    "Equipe FiveStar AI\nsupport@fivestarai.ca"
+  )
+  window.open('mailto:?subject=' + sujet + '&body=' + corps)
+}
+
+// ── CLIENTS CAPTURÉS ──
+function renderClientsCaptures() {
+  let clients = []
+  try { clients = JSON.parse(localStorage.getItem('fivestar_clients') || '[]') } catch(e) {}
+  
+  const badge = document.getElementById('captured-count')
+  const nouveaux = clients.filter(c => c.statut === 'nouveau').length
+  if (badge) {
+    badge.style.display = nouveaux > 0 ? 'inline' : 'none'
+    badge.textContent = nouveaux
+  }
+  
+  const list = document.getElementById('captured-list')
+  if (!list) return
+  
+  if (clients.length === 0) {
+    list.innerHTML = '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center"><div style="font-size:32px;margin-bottom:12px">📭</div><div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Aucun client capturé pour l\'instant</div><div style="font-size:13px;color:var(--muted)">Les clients qui scannent votre QR Code apparaîtront ici.</div></div>'
+    return
+  }
+  
+  list.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:14px;color:var(--muted)">' + clients.length + ' client(s) au total</div><button onclick="exportClients()" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">⬇️ Exporter CSV</button></div>' +
+  clients.map((c, i) => {
+    const date = new Date(c.date).toLocaleDateString('fr-CA', {day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    return '<div style="background:var(--surface);border:1px solid ' + (c.statut==='nouveau'?'rgba(34,197,94,.3)':'var(--border)') + ';border-radius:12px;padding:18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">' +
+      '<div>' +
+        '<div style="font-size:15px;font-weight:700;color:#fff">' + c.prenom + '</div>' +
+        '<div style="font-size:13px;color:var(--gold);font-weight:600;margin-top:2px">' + c.tel + '</div>' +
+        '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + c.commerce + ' · ' + date + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;align-items:center">' +
+        (c.statut === 'nouveau' ? '<span style="background:rgba(34,197,94,.1);color:var(--green);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px">Nouveau</span>' : '') +
+        '<a href="sms:' + c.tel + '?body=' + encodeURIComponent('Merci de votre visite chez ' + c.commerce + ' ! Laissez-nous un avis Google ⭐ → ') + '" style="background:var(--gold);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex">📱 SMS Google</a>' +
+        '<button onclick="marquerContacte(' + i + ')" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer;font-family:inherit">✓ Contacté</button>' +
+      '</div>' +
+    '</div>'
+  }).join('')
+}
+
+function marquerContacte(i) {
+  let clients = []
+  try { clients = JSON.parse(localStorage.getItem('fivestar_clients') || '[]') } catch(e) {}
+  if (clients[i]) {
+    clients[i].statut = 'contacte'
+    localStorage.setItem('fivestar_clients', JSON.stringify(clients))
+    renderClientsCaptures()
+  }
+}
+
+function exportClients() {
+  let clients = []
+  try { clients = JSON.parse(localStorage.getItem('fivestar_clients') || '[]') } catch(e) {}
+  if (!clients.length) return
+  
+  const header = "Prenom,Telephone,Commerce,Date,Statut"
+  const rows = clients.map(function(c) { return [c.prenom, c.tel, c.commerce, new Date(c.date).toLocaleString('fr-CA'), c.statut].join(',') })
+  const csv = [header].concat(rows).join("\n")
+  
+  const blob = new Blob([csv], {type:'text/csv'})
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'clients-fivestarai.csv'
+  a.click()
+}
+
+// ── UPDATE CLIENT NOTE ──
+function updateClientNote(id) {
+  const input = document.getElementById('new-note-input')
+  if (!input) return
+  const newNote = parseFloat(input.value)
+  if (isNaN(newNote) || newNote < 1 || newNote > 5) {
+    alert('Note invalide (entre 1 et 5)')
+    return
+  }
+  const client = CLIENTS.find(c => c.id === id)
+  if (client) {
+    client.noteActuelle = newNote
+    renderClientsTable(CLIENTS)
+    renderTopClients()
+    renderRevenusDynamic()
+    input.style.borderColor = 'var(--green)'
+    setTimeout(() => input.style.borderColor = 'var(--border)', 2000)
+  }
+}
+
+// ── MARK SETUP DONE ──
+function markSetupDone(id) {
+  const idx = SETUP_PENDING.findIndex(s => s.id === id)
+  if (idx !== -1) {
+    SETUP_PENDING.splice(idx, 1)
+    renderSetup()
+    // Mettre à jour le client dans CLIENTS
+    const client = CLIENTS.find(c => c.id === id)
+    if (client) {
+      client.status = 'active'
+      renderClientsTable(CLIENTS)
+    }
+    // Notification
+    const alertCount = document.getElementById('alert-count')
+    const current = parseInt(alertCount.textContent) || 0
+    if (current > 0) alertCount.textContent = current - 1
+  }
 }
 
 // ── TOP CLIENTS ──
@@ -1019,10 +1227,22 @@ function viewClient(id) {
           <span class="s-pill ${s.statut==='ok'?'s-ok':'s-sent'}">${s.statut==='ok'?'Avis laissé':'Envoyé'}</span>
         </div>`).join('')}
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-        <a href="mailto:${c.email}?subject=FiveStar AI — Votre commerce ${c.name}" style="color:var(--gold);font-size:13px;font-weight:600;text-decoration:none">✉️ Écrire à ce client →</a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="mailto:${c.email}?subject=FiveStar AI — Votre commerce ${c.name}" style="background:var(--surface2);border:1px solid var(--border);color:var(--gold);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:5px">✉️ Email</a>
+          ${c.tel ? `<a href="sms:${c.tel}?body=Bonjour ! Équipe FiveStar AI ici." style="background:var(--surface2);border:1px solid var(--border);color:var(--green);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:5px">📱 SMS</a>` : ''}
+        </div>
       </div>
     </div>`
 
+  // Ajouter bouton update note
+  const updateNoteHtml = `
+    <div style="margin-top:16px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--muted)">Mettre à jour la note Google :</span>
+      <input id="new-note-input" type="number" min="1" max="5" step="0.1" value="${c.noteActuelle}" style="width:70px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 10px;color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+      <button onclick="updateClientNote(${c.id})" style="background:var(--gold);color:#000;border:none;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✓ Sauvegarder</button>
+    </div>
+  `
+  document.getElementById('detail-kpis').insertAdjacentHTML('afterend', updateNoteHtml)
   showPage('client-detail', null)
 }
 
@@ -1046,6 +1266,7 @@ function renderSetup() {
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
           <div><div style="font-size:16px;font-weight:700;color:#fff">${s.name}</div><div style="font-size:13px;color:var(--muted)">Forfait ${s.plan} · Inscrit le ${new Date(s.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long'})}</div></div>
           <span style="background:rgba(249,115,22,.1);color:var(--orange);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px">Setup en cours</span>
+          <button onclick="markSetupDone(${s.id})" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:var(--green);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;cursor:pointer;font-family:inherit">✓ Marquer complété</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div><div style="font-size:11px;color:var(--green);font-weight:700;letter-spacing:1px;margin-bottom:8px">✓ COMPLÉTÉ</div>${s.done.map(d=>`<div style="font-size:13px;color:var(--muted);padding:4px 0;display:flex;gap:6px"><span style="color:var(--green)">✓</span>${d}</div>`).join('')}</div>
@@ -1053,296 +1274,6 @@ function renderSetup() {
         </div>
       </div>`).join('')
 }
-
-
-// ── QR AVIS GOOGLE ──
-var currentAvisUrl = ''
-var currentRecrUrl = ''
-
-function loadQRLib(cb) {
-  if (window.QRCode) { cb(); return }
-  var s = document.createElement('script')
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
-  s.onload = cb
-  s.onerror = function() {}
-  document.head.appendChild(s)
-}
-
-function genQRInto(containerId, url) {
-  var container = document.getElementById(containerId)
-  if (!container) return
-  container.innerHTML = ''
-  loadQRLib(function() {
-    try {
-      new QRCode(container, {text:url, width:160, height:160, colorDark:'#000', colorLight:'#fff', correctLevel:QRCode.CorrectLevel.H})
-    } catch(e) {
-      container.innerHTML = '<div style="font-size:12px;color:var(--muted)">QR généré</div>'
-    }
-  })
-}
-
-function updateAvisQR() {
-  var nom = document.getElementById('av-nom').value.trim()
-  var type = document.getElementById('av-type').value
-  var id = document.getElementById('av-id').value.trim() || nom.toLowerCase().replace(/[^a-z0-9]/gi,'-')
-  if (!nom) { document.getElementById('av-lien').textContent = 'Entrez le nom du commerce'; return }
-  var ville = document.getElementById('av-ville') ? document.getElementById('av-ville').value.trim() : ''
-  var params = new URLSearchParams({c:nom, type:type, id:id})
-  if (ville) params.set('ville', ville)
-  currentAvisUrl = 'https://fivestarai.ca/capture.html?' + params.toString()
-  document.getElementById('av-lien').textContent = currentAvisUrl
-  genQRInto('av-qr-preview', currentAvisUrl)
-}
-
-function copierAvisQR() {
-  if (!currentAvisUrl) return
-  navigator.clipboard.writeText(currentAvisUrl).then(function() {
-    var btn = event.target; var orig = btn.textContent
-    btn.textContent = '✓ Copié!'; btn.style.background = 'var(--green)'
-    setTimeout(function() { btn.textContent = orig; btn.style.background = 'var(--gold)' }, 2000)
-  })
-}
-
-function downloadAvisQR() {
-  var canvas = document.querySelector('#av-qr-preview canvas')
-  if (!canvas) { alert('Générez un QR Code.'); return }
-  var nom = document.getElementById('av-nom').value.trim() || 'avis'
-  var a = document.createElement('a'); a.download = 'qr-avis-' + nom.toLowerCase().replace(/\s+/g,'-') + '.png'; a.href = canvas.toDataURL(); a.click()
-}
-
-function saveAvisQR() {
-  var nom = document.getElementById('av-nom').value.trim()
-  if (!nom) { alert('Entrez le nom du commerce.'); return }
-  var type = document.getElementById('av-type').value
-  var id = document.getElementById('av-id').value.trim() || nom.toLowerCase().replace(/[^a-z0-9]/gi,'-')
-  var list = getQRList('avis')
-  var idx = list.findIndex(function(q){return q.id===id})
-  var ville = document.getElementById('av-ville') ? document.getElementById('av-ville').value.trim() : ''
-  var item = {id:id, nom:nom, type:type, ville:ville, url:currentAvisUrl, createdAt:idx>=0?list[idx].createdAt:new Date().toISOString()}
-  if (idx>=0) list[idx]=item; else list.unshift(item)
-  localStorage.setItem('fivestar_qr_avis', JSON.stringify(list))
-  updateQRCounts()
-  renderAvisQRList()
-  var btn = event.target; btn.textContent = '✓ Enregistré!'
-  setTimeout(function(){btn.textContent='💾 Enregistrer'},2000)
-}
-
-// ── QR RECRUTEMENT ──
-function updateRecrQR() {
-  var nom = document.getElementById('rc-nom').value.trim()
-  var poste = document.getElementById('rc-poste').value.trim()
-  var id = document.getElementById('rc-id').value.trim() || (nom+'-'+poste).toLowerCase().replace(/[^a-z0-9]/gi,'-')
-  if (!nom) { document.getElementById('rc-lien').textContent = 'Entrez le nom du commerce'; return }
-  var ville = document.getElementById('rc-ville') ? document.getElementById('rc-ville').value.trim() : ''
-  var params = new URLSearchParams({commerce:nom, poste:poste||'Non précisé', id:id})
-  if (ville) params.set('ville', ville)
-  currentRecrUrl = 'https://fivestarai.ca/candidature.html?' + params.toString()
-  document.getElementById('rc-lien').textContent = currentRecrUrl
-  genQRInto('rc-qr-preview', currentRecrUrl)
-}
-
-function copierRecrQR() {
-  if (!currentRecrUrl) return
-  navigator.clipboard.writeText(currentRecrUrl).then(function() {
-    var btn = event.target; var orig = btn.textContent
-    btn.textContent = '✓ Copié!'; btn.style.background = 'var(--green)'
-    setTimeout(function() { btn.textContent = orig; btn.style.background = '#a78bfa' }, 2000)
-  })
-}
-
-function downloadRecrQR() {
-  var canvas = document.querySelector('#rc-qr-preview canvas')
-  if (!canvas) { alert('Générez un QR Code.'); return }
-  var nom = document.getElementById('rc-nom').value.trim() || 'recrutement'
-  var a = document.createElement('a'); a.download = 'qr-recr-' + nom.toLowerCase().replace(/\s+/g,'-') + '.png'; a.href = canvas.toDataURL(); a.click()
-}
-
-function saveRecrQR() {
-  var nom = document.getElementById('rc-nom').value.trim()
-  if (!nom) { alert('Entrez le nom du commerce.'); return }
-  var poste = document.getElementById('rc-poste').value.trim()
-  var id = document.getElementById('rc-id').value.trim() || (nom+'-'+poste).toLowerCase().replace(/[^a-z0-9]/gi,'-')
-  var list = getQRList('recr')
-  var idx = list.findIndex(function(q){return q.id===id})
-  var ville = document.getElementById('rc-ville') ? document.getElementById('rc-ville').value.trim() : ''
-  var item = {id:id, nom:nom, poste:poste, ville:ville, url:currentRecrUrl, createdAt:idx>=0?list[idx].createdAt:new Date().toISOString()}
-  if (idx>=0) list[idx]=item; else list.unshift(item)
-  localStorage.setItem('fivestar_qr_recr', JSON.stringify(list))
-  updateQRCounts()
-  renderRecrQRList()
-  var btn = event.target; btn.textContent = '✓ Enregistré!'
-  setTimeout(function(){btn.textContent='💾 Enregistrer'},2000)
-}
-
-// ── STORAGE QR ──
-function getQRList(cat) {
-  try { return JSON.parse(localStorage.getItem('fivestar_qr_' + cat) || '[]') } catch(e) { return [] }
-}
-
-function deleteQR(cat, id) {
-  if (!confirm('Supprimer ce QR Code ?')) return
-  var list = getQRList(cat).filter(function(q){return q.id!==id})
-  localStorage.setItem('fivestar_qr_' + cat, JSON.stringify(list))
-  updateQRCounts()
-  if (cat==='avis') renderAvisQRList(); else renderRecrQRList()
-}
-
-function editQR(cat, id) {
-  var list = getQRList(cat)
-  var item = list.find(function(q){return q.id===id})
-  if (!item) return
-
-  // Créer une modal inline
-  var overlay = document.createElement('div')
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px'
-
-  var modal = document.createElement('div')
-  modal.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:420px;width:100%'
-  modal.innerHTML =
-    '<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:20px">✏️ Modifier le QR Code</div>' +
-    '<div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Nom du commerce</label>' +
-    '<input id="edit-nom" value="' + item.nom + '" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit"/></div>' +
-    '<div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Ville</label>' +
-    '<input id="edit-ville" value="' + (item.ville||'') + '" placeholder="Montréal, Laval..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit"/></div>' +
-    (item.poste !== undefined ? '<div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Poste</label>' +
-    '<input id="edit-poste" value="' + (item.poste||'') + '" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit"/></div>' : '') +
-    '<div style="display:flex;gap:10px;justify-content:flex-end">' +
-    '<button id="edit-cancel" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:inherit">Annuler</button>' +
-    '<button id="edit-save" style="background:var(--gold);color:#000;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Sauvegarder</button>' +
-    '</div>'
-
-  overlay.appendChild(modal)
-  document.body.appendChild(overlay)
-  document.getElementById('edit-nom').focus()
-
-  document.getElementById('edit-cancel').onclick = function() { document.body.removeChild(overlay) }
-  overlay.onclick = function(e) { if (e.target === overlay) document.body.removeChild(overlay) }
-
-  document.getElementById('edit-save').onclick = function() {
-    var newNom = document.getElementById('edit-nom').value.trim()
-    var newVille = document.getElementById('edit-ville').value.trim()
-    var newPoste = document.getElementById('edit-poste') ? document.getElementById('edit-poste').value.trim() : item.poste
-    if (!newNom) return
-    item.nom = newNom
-    item.ville = newVille
-    if (newPoste !== undefined) item.poste = newPoste
-    // Mettre à jour l'URL avec les nouvelles infos
-    if (cat === 'avis') {
-      var params = new URLSearchParams({c: newNom, type: item.type||'restaurant', id: item.id})
-      if (newVille) params.set('ville', newVille)
-      item.url = 'https://fivestarai.ca/capture.html?' + params.toString()
-    } else {
-      var params2 = new URLSearchParams({commerce: newNom, poste: newPoste||'Non précisé', id: item.id})
-      if (newVille) params2.set('ville', newVille)
-      item.url = 'https://fivestarai.ca/candidature.html?' + params2.toString()
-    }
-    localStorage.setItem('fivestar_qr_' + cat, JSON.stringify(list))
-    document.body.removeChild(overlay)
-    if (cat==='avis') renderAvisQRList(); else renderRecrQRList()
-  }
-}
-
-function downloadQRById(cat, id) {
-  var list = getQRList(cat)
-  var item = list.find(function(q){return q.id===id})
-  if (!item) return
-  var tmp = document.createElement('div')
-  tmp.style.cssText = 'position:fixed;left:-9999px;top:0'
-  document.body.appendChild(tmp)
-  loadQRLib(function() {
-    try {
-      new QRCode(tmp, {text:item.url, width:256, height:256, colorDark:'#000', colorLight:'#fff', correctLevel:QRCode.CorrectLevel.H})
-      setTimeout(function() {
-        var canvas = tmp.querySelector('canvas')
-        if (canvas) { var a=document.createElement('a'); a.href=canvas.toDataURL(); a.download='qr-'+item.nom.toLowerCase().replace(/\s+/g,'-')+'.png'; a.click() }
-        document.body.removeChild(tmp)
-      }, 400)
-    } catch(e) { document.body.removeChild(tmp) }
-  })
-}
-
-function updateQRCounts() {
-  var av = getQRList('avis').length
-  var rc = getQRList('recr').length
-  var avB = document.getElementById('qr-avis-count')
-  var rcB = document.getElementById('qr-recr-count')
-  if (avB) { avB.style.display = av>0?'inline':'none'; avB.textContent = av }
-  if (rcB) { rcB.style.display = rc>0?'inline':'none'; rcB.textContent = rc }
-}
-
-function renderQRTable(containerId, items, cat, color) {
-  var container = document.getElementById(containerId)
-  if (!container) return
-  container.innerHTML = ''
-  if (items.length === 0) {
-    var empty = document.createElement('div')
-    empty.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:36px;text-align:center'
-    empty.innerHTML = '<div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px">Aucun QR Code enregistré</div><div style="font-size:13px;color:var(--muted)">Créez un QR Code et cliquez sur Enregistrer.</div>'
-    container.appendChild(empty)
-    return
-  }
-  items.forEach(function(q) {
-    var date = new Date(q.createdAt).toLocaleDateString('fr-CA')
-    var row = document.createElement('div')
-    row.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px'
-
-    var info = document.createElement('div')
-    info.style.cssText = 'flex:1;min-width:180px'
-    var infoHtml = '<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px">' + q.nom + (q.ville ? ' <span style="font-size:12px;color:var(--muted);font-weight:400">· ' + q.ville + '</span>' : '') + '</div>'
-    if (q.poste) infoHtml += '<div style="font-size:12px;color:'+color+';font-weight:600;margin-bottom:3px">Poste : ' + q.poste + '</div>'
-    infoHtml += '<div style="font-size:11px;color:var(--muted);margin-bottom:3px">Créé le ' + date + '</div>'
-    infoHtml += '<div style="font-size:11px;color:var(--muted);word-break:break-all;opacity:.7">' + q.url + '</div>'
-    info.innerHTML = infoHtml
-
-    var btns = document.createElement('div')
-    btns.style.cssText = 'display:flex;gap:7px;flex-wrap:wrap;align-items:center'
-
-    // Bouton Copier
-    var bCopy = document.createElement('button')
-    bCopy.textContent = '📋 Lien'
-    bCopy.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit'
-    bCopy.onclick = (function(url, btn) { return function() {
-      navigator.clipboard.writeText(url).then(function() {
-        btn.textContent = '✓ Copié!'; btn.style.color = 'var(--green)'
-        setTimeout(function(){ btn.textContent = '📋 Lien'; btn.style.color = 'var(--muted)' }, 2000)
-      })
-    }})(q.url, bCopy)
-
-    // Bouton Modifier
-    var bEdit = document.createElement('button')
-    bEdit.textContent = '✏️ Modifier'
-    bEdit.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit'
-    bEdit.onclick = (function(c, id) { return function() { editQR(c, id) }})(cat, q.id)
-
-    // Bouton PNG
-    var bDl = document.createElement('button')
-    bDl.textContent = '📥 PNG'
-    bDl.style.cssText = 'background:var(--surface2);border:1px solid '+color+';color:'+color+';border-radius:8px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit'
-    bDl.onclick = (function(c, id) { return function() { downloadQRById(c, id) }})(cat, q.id)
-
-    // Bouton Supprimer
-    var bDel = document.createElement('button')
-    bDel.textContent = '🗑️'
-    bDel.style.cssText = 'background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red);border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer;font-family:inherit'
-    bDel.onclick = (function(c, id) { return function() { deleteQR(c, id) }})(cat, q.id)
-
-    btns.appendChild(bCopy)
-    btns.appendChild(bEdit)
-    btns.appendChild(bDl)
-    btns.appendChild(bDel)
-    row.appendChild(info)
-    row.appendChild(btns)
-    container.appendChild(row)
-  })
-}
-
-function renderAvisQRList() {
-  renderQRTable('avis-qr-list', getQRList('avis'), 'avis', 'var(--gold)')
-}
-function renderRecrQRList() {
-  renderQRTable('recr-qr-list', getQRList('recr'), 'recr', '#a78bfa')
-}
-
 </script>
 </body>
 </html>
